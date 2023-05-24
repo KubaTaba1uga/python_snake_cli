@@ -15,7 +15,7 @@ dependencies = [
 
 
 [tool.setuptools]
-packages = ["python_snake_cli"]
+packages = ["src"]
 
 [project.optional-dependencies]
 dev = ["ruff==0.0.265",
