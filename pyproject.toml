@@ -1,9 +1,9 @@
 [project]
-name = "project_name"
+name = "python_snake_cli"
 authors = [
  {name = "Jakub Buczyński", email = "jakub@buczynski.net.pl"},
 ]
-description = "Project description"
+description = "Package which allow playing snake in terminal."
 readme = "README.md"
 requires-python = ">=3.10"
 classifiers = [
@@ -15,7 +15,7 @@ dependencies = [
 
 
 [tool.setuptools]
-packages = ["src"]
+packages = ["python_snake_cli"]
 
 [project.optional-dependencies]
 dev = ["ruff==0.0.265",
