@@ -1,10 +1,8 @@
-from time import sleep
+from test.conftest import game_engine as GameEngine
 
 from pynput import keyboard as _keyboard
 
 from src.controller import Controller
-
-from test.conftest import game_engine as GameEngine
 
 
 def simulate_key_press(key):
@@ -43,11 +41,10 @@ def test_controller_ctx_manager():
     with controller(game_engine):
         pass
 
-    assert controller.does_thread_exsists() is False
+    assert controller._does_thread_exsists() is False
 
 
 def test_controller_unrecognizable_key():
-
     unrecognizable_key, expected_value = _keyboard.Key.ctrl, "foo"
 
     game_engine, controller = GameEngine(), Controller
@@ -61,7 +58,6 @@ def test_controller_unrecognizable_key():
 
 
 def test_controller_recognizable_key():
-
     unrecognizable_key, expected_value = _keyboard.Key.esc, "escape"
 
     game_engine, controller = GameEngine(), Controller

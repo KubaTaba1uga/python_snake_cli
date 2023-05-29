@@ -1,10 +1,10 @@
-import typing
 import functools
+import typing
 
 from pynput import keyboard as _keyboard
 
 from src.constants import VALUES_KEYS_MAP
-from src.user_input import UserInput
+from src.errors import PleaseUseContextManagerError
 from src.errors import UnableToRecognizeKey
 
 
@@ -13,7 +13,7 @@ def _does_thread_exsist(obj: typing.Any) -> bool:
 
 
 class _validate_thread_exsists:
-    """ Decorator whih cheks `cls._thread` exsistance. """
+    """Decorator whih cheks `cls._thread` exsistance."""
 
     def __init__(self, should_exsists: bool):
         self.should_exsists = should_exsists
@@ -24,7 +24,12 @@ class _validate_thread_exsists:
             thread_exsists = _does_thread_exsist(cls)
 
             if thread_exsists is not self.should_exsists:
-                raise NotImplementedError(cls, *args, **kwargs)
+                raise PleaseUseContextManagerError(
+                    function,
+                    cls,
+                    *args,
+                    **kwargs,
+                )
 
             return function(cls, *args, **kwargs)
 
@@ -32,7 +37,7 @@ class _validate_thread_exsists:
 
 
 class Controller:
-    """ Take's user input in seperate thread. """
+    """Take's user input in seperate thread. Only one controller allowed."""
 
     _thread: typing.Optional[_keyboard.Listener] = None
 
@@ -40,7 +45,7 @@ class Controller:
         self.game_engine = game_engine
 
     def __enter__(self):
-        if not self.does_thread_exsists():
+        if not self._does_thread_exsists():
             self.start(self.game_engine)
 
     def __exit__(self, exc_type, exc_value, exc_tryceback):
@@ -63,7 +68,7 @@ class Controller:
     def map_key_to_value(cls, key) -> str:
         for value_key_map in VALUES_KEYS_MAP.values():
             if key is value_key_map["key"]:
-                return value_key_map["value"]
+                return str(value_key_map["value"])
 
         raise UnableToRecognizeKey(key)
 
@@ -96,10 +101,9 @@ class Controller:
         cls._thread = None
 
     @classmethod
-    @_validate_thread_exsists(True)
     def is_active(cls) -> bool:
-        return cls._thread.running
+        return cls._does_thread_exsists() and cls._thread.running  # type: ignore
 
     @classmethod
-    def does_thread_exsists(cls) -> bool:
+    def _does_thread_exsists(cls) -> bool:
         return _does_thread_exsist(cls)

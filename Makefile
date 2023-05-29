@@ -32,6 +32,7 @@ install:
 
 install-dev: 
 	pip install .[dev]
+	mypy --install-types --non-interactive 
 
 install-test: 
 	pip install .[test]
