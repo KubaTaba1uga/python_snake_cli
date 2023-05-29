@@ -1,20 +1,32 @@
 import typing
-from dataclasses import dataclass
+import functools
 
 from pynput import keyboard as _keyboard
 
 from src.constants import VALUES_KEYS_MAP
+from src.user_input import UserInput
+from src.errors import UnableToRecognizeKey
 
 
-@dataclass
-class UserInput:
-    _value: int
+class _validate_thread_exsists:
+    """ Decorator whih cheks `cls._thread` exsistance. """
 
-    def write(self, value):
-        self._value = value
+    def __init__(self, exsists):
+        self.exsists = exsists
 
-    def get(self):
-        return self._value
+    def __call__(self, function):
+        @functools.wraps(function)
+        def wrapper(cls, *args, **kwargs):
+            thread_exsists = cls._thread is not None
+
+            if thread_exsists is not self.exsists:
+                raise NotImplementedError(cls, *args, **kwargs)
+
+            print(args)
+
+            return function(cls, *args, **kwargs)
+
+        return wrapper
 
 
 class Controller:
@@ -24,26 +36,27 @@ class Controller:
 
     @classmethod
     def _write_key_to_game_engine(cls, game_engine, key):
-        value = cls.map_key_to_value(key)
-        game_engine.user_input.write(value)
+        try:
+            value = cls.map_key_to_value(key)
+        except UnableToRecognizeKey:
+            return
+
+        print("AAA:", value)
+
+        game_engine.user_input.set(value)
 
     @classmethod
-    def _validate_thread_not_exsist(cls, func):
-        if cls._thread is not None:
-            raise NotImplementedError()
+    def map_key_to_value(cls, key) -> str:
+        for value_key_map in VALUES_KEYS_MAP.values():
+            if key is value_key_map["key"]:
+                return value_key_map["value"]
+
+        raise UnableToRecognizeKey(key)
 
     @classmethod
-    def map_key_to_value(cls, key) -> bool:
-        for value, local_key in VALUES_KEYS_MAP.items():
-            if key is local_key:
-                return value
-
-        raise NotImplementedError(key, VALUES_KEYS_MAP)
-
-    @classmethod
+    @_validate_thread_exsists(False)
     def start(cls, game_engine):
         " Start a thread which will take user's input. "
-        attr_to_write_to: UserInput = game_engine.user_input
 
         def write_key_to_game_engine(key):
             cls._write_key_to_game_engine(game_engine, key)
@@ -55,5 +68,6 @@ class Controller:
         cls._thread = thread
 
     @classmethod
+    @_validate_thread_exsists(True)
     def stop(cls):
         cls._thread.stop()
