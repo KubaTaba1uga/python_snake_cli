@@ -23,8 +23,6 @@ class _validate_thread_exsists:
         def wrapper(cls, *args, **kwargs):
             thread_exsists = _does_thread_exsist(cls)
 
-            print(function, cls._thread, self.should_exsists)
-
             if thread_exsists is not self.should_exsists:
                 raise NotImplementedError(cls, *args, **kwargs)
 
@@ -70,6 +68,7 @@ class Controller:
         raise UnableToRecognizeKey(key)
 
     @classmethod
+    @_validate_thread_exsists(False)
     def start(cls, game_engine):
         """Take user's input as a keyboard key and transform it to form
         understandable by game engine. This is sth like peripheral abstraction."""

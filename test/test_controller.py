@@ -58,3 +58,17 @@ def test_controller_unrecognizable_key():
         simulate_key_press(unrecognizable_key)
 
     assert game_engine.user_input.get() == expected_value
+
+
+def test_controller_recognizable_key():
+
+    unrecognizable_key, expected_value = _keyboard.Key.esc, "escape"
+
+    game_engine, controller = GameEngine(), Controller
+
+    game_engine.user_input.set(expected_value)
+
+    with controller(game_engine):
+        simulate_key_press(unrecognizable_key)
+
+    assert game_engine.user_input.get() == expected_value
