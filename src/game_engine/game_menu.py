@@ -12,12 +12,12 @@ _MENU_FIELDS_MAP_TEMPLATE = {
                 "next_ctx": GAME_MENU_CTX.CREATE_NEW_SESSION,
                 "disabled": False,
             },
-            # "save_current_session": {
-            #     "display_name": "Start New Game",
-            #     "selected": False,
-            #     "next_ctx": GAME_MENU_CTX.SAVE_CURRENT_SESSION,
-            #     "disabled": False,
-            # },
+            "save_current_session": {
+                "display_name": "Start New Game",
+                "selected": False,
+                "next_ctx": GAME_MENU_CTX.SAVE_CURRENT_SESSION,
+                "disabled": False,
+            },
         },
     },
     GAME_MENU_CTX.CREATE_NEW_SESSION: {
