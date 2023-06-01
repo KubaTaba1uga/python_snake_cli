@@ -18,10 +18,12 @@ class GAME_MENU_CTX(StrEnum):
 
     # session creation start
     CREATE_NEW_SESSION = (
-        auto()
-    )  # user needs to pick board and difficulty, user_name is picked from cli
-    CHOOSE_BOARD = auto()
+        CHOOSE_BOARD
+    ) = auto()  ## user needs to pick board and difficulty, user_name is picked from cli
     CHOOSE_DIFFICULTY = auto()
+    PLAY = (
+        auto()
+    )  ## tells game_engine that game_engine.ctx can be moved back to Game_ENGINE_CTX.GAME
     # session creation end
 
     SAVE_CURRENT_SESSION = (
