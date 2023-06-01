@@ -1,3 +1,4 @@
+import typing
 from copy import deepcopy
 
 from src.constants import GAME_MENU_CTX
@@ -82,33 +83,38 @@ def _overload_field_id(function):
 
 
 class GameMenu:
+    """ Interface between GameEngine and GameSession creation."""
+
     DEFAULT_GAME_MENU_CTX = GAME_MENU_CTX.MENU
 
-    def __init__(self):
+    def __init__(self, session=None):
         self.ctx = self.DEFAULT_GAME_MENU_CTX
         self.fields_map = deepcopy(_MENU_FIELDS_MAP_TEMPLATE)
-        self.current_session = None
+        self.current_session = session
 
     def select_next_field(self):
-        for field_id, field in self._get_fields().items():
-            if field["selected"]:
-                self.select_field(field_id + 1)
-                return
-
-        raise NotImplementedError(self)
+        field_id, _ = self._get_selected_field()
+        self.select_field(field_id + 1)
 
     def select_previous_field(self):
-        for field_id, field in self._get_fields().items():
-            if field["selected"]:
-                self.select_field(field_id - 1)
-                return
-
-        raise NotImplementedError(self)
+        field_id, _ = self._get_selected_field()
+        self.select_field(field_id - 1)
 
     @_overload_field_id
     @_unselect_all_fields_before_execution
     def select_field(self, field_id: str):
         self._get_field(field_id)["selected"] = True
+
+    def process_selected_field(self):
+        _, field = self._get_selected_field()
+        self.ctx = field["next_ctx"]
+
+    def _get_selected_field(self) -> tuple:
+        for field_id, field in self._get_fields().items():
+            if field["selected"]:
+                return field_id, field
+
+        raise NotImplementedError(self.fields_map, self.ctx)
 
     def _unselect_field(self, field_id: str):
         self._get_field(field_id)["selected"] = False
@@ -121,9 +127,3 @@ class GameMenu:
 
     def _get_fields(self) -> dict:
         return self.fields_map[self.ctx]["fields"]
-
-    def process_selected_field(self):
-        for field in self._get_fields().values():
-            if field["selected"]:
-                self.ctx = field["next_ctx"]
-                return
