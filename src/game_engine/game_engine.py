@@ -1,3 +1,5 @@
+from time import sleep
+
 from src.user_input import UserInput
 from src.constants import GAME_ENGINE_CTX, GAME_MENU_CTX
 from src.game_engine.game_menu import GameMenu
@@ -8,6 +10,8 @@ class GameEngine:
 
     # Game has to start from menu to load first session
     DEFAULT_GAME_ENGINE_CTX = GAME_ENGINE_CTX.MENU
+
+    DEFAULT_SPEED_IN_SEC = 1 / 10
 
     def __init__(self):
         self.user_input: UserInput = UserInput(self.DEFAULT_USER_INPUT_VALUE)
@@ -20,10 +24,20 @@ class GameEngine:
 
         self._session = None
 
+    @classmethod
+    def sleep(cls):
+        sleep(cls.DEFAULT_SPEED_IN_SEC)
+
+    def _start(self):
+        while True:
+            self._process_ctx()
+            self.sleep()
+
     def _process_ctx(self):
         self._ENGINE_CTX_PROCESS_FUNC_MAP[self.ctx]()
 
     def _process_menu_ctx(self):
+        """ Finds and loads new session to game engine. """
         game_menu = GameMenu(self._session)
 
         while game_menu.ctx != GAME_MENU_CTX.PLAY:
