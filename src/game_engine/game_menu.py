@@ -59,6 +59,8 @@ def _unselect_all_fields_before_execution(function):
 
         return function(self, *args, **kwargs)
 
+    return wrapped_function
+
 
 class GameMenu:
     DEFAULT_GAME_MENU_CTX = GAME_MENU_CTX.MENU
