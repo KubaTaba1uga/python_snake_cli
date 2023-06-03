@@ -83,14 +83,14 @@ def _overload_field_id(function):
 
 
 class GameMenu:
-    """ Interface between GameEngine and GameSession creation."""
+    """ Manages GameSession for GameEngine."""
 
     DEFAULT_GAME_MENU_CTX = GAME_MENU_CTX.MENU
 
     def __init__(self, session=None):
         self.ctx = self.DEFAULT_GAME_MENU_CTX
         self.fields_map = deepcopy(_MENU_FIELDS_MAP_TEMPLATE)
-        self.current_session = session
+        self.session = session
 
     def select_next_field(self):
         field_id, _ = self._get_selected_field()
@@ -105,7 +105,10 @@ class GameMenu:
     def select_field(self, field_id: str):
         self._get_field(field_id)["selected"] = True
 
-    def process_selected_field(self):
+    def process_ctx(self):
+        self._process_selected_field()
+
+    def _process_selected_field(self):
         _, field = self._get_selected_field()
         self.ctx = field["next_ctx"]
 
