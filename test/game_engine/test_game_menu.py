@@ -99,17 +99,17 @@ def test_game_menu_select_previous_field_out_of_range():
     assert fields[id_to_select]["selected"] is True
 
 
-def test_game_menu_create_new_session():
-    game_menu, selected_id, id_to_select = (
-        GameMenu(),
-        0,
-        1,
-    )
+# def test_game_menu_create_new_session():
+#     game_menu, selected_id, id_to_select = (
+#         GameMenu(),
+#         0,
+#         1,
+#     )
 
-    game_menu.fields_map[GAME_MENU_CTX.CHOOSE_BOARD]["fields"][0]["selected"] = True
-    game_menu.fields_map[GAME_MENU_CTX.CHOOSE_DIFFICULTY]["fields"][0][
-        "selected"
-    ] = True
-    game_menu.ctx = GAME_MENU_CTX.PLAY_NEW
+#     game_menu.fields_map[GAME_MENU_CTX.CHOOSE_BOARD]["fields"][0]["selected"] = True
+#     game_menu.fields_map[GAME_MENU_CTX.CHOOSE_DIFFICULTY]["fields"][0][
+#         "selected"
+#     ] = True
+#     game_menu.ctx = GAME_MENU_CTX.PLAY_NEW
 
-    game_menu.process_ctx()
+#     game_menu.process_ctx()

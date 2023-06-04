@@ -36,3 +36,11 @@ class GAME_MENU_CTX(StrEnum):
     # session load end
 
     EXIT = auto()
+
+
+FIELD_TEMPLATE = {
+    "display_name": "string",
+    "selected": False,
+    "next_ctx": None,
+    "disabled": False,
+}

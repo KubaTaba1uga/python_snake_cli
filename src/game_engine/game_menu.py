@@ -142,7 +142,8 @@ class GameMenu:
         finally:
             self.ctx = current_ctx
 
-        get_board_class_by_id(board_field_id)
+        # board_class = get_board_class_by_id(board_field_id)
+        difficulty_class = get_difficulty_class_by_id(difficulty_field_id)
 
     def _get_selected_field(self) -> tuple:
         for field_id, field in self._get_fields().items():
