@@ -2,6 +2,8 @@ import typing
 from copy import deepcopy
 
 from src.constants import GAME_MENU_CTX
+from src.game_engine.board import BoardAbs, generate_board_fields
+from src.game_engine.difficulty import DifficultyAbs, generate_difficulty_fields
 
 _MENU_FIELDS_MAP_TEMPLATE = {
     GAME_MENU_CTX.MENU: {
@@ -23,29 +25,11 @@ _MENU_FIELDS_MAP_TEMPLATE = {
     },
     GAME_MENU_CTX.CHOOSE_BOARD: {
         "title": "Board Choice",
-        "fields": {
-            # this part should be generated dynamically based on BoardABS children.
-            # below is only ex.
-            0: {
-                "display_name": "No walls",
-                "selected": False,
-                "next_ctx": GAME_MENU_CTX.CHOOSE_DIFFICULTY,
-                "disabled": False,
-            },
-        },
+        "fields": generate_board_fields(),
     },
     GAME_MENU_CTX.CHOOSE_DIFFICULTY: {
         "title": "Difficulty Choice",
-        "fields": {
-            # this part should be generated dynamically based on DifficultyABS children.
-            # below is only ex.
-            0: {
-                "display_name": "Easy",
-                "selected": False,
-                "next_ctx": GAME_MENU_CTX.PLAY_NEW,
-                "disabled": False,
-            },
-        },
+        "fields": generate_difficulty_fields(),
     },
 }
 
@@ -143,7 +127,7 @@ class GameMenu:
             self.ctx = current_ctx
 
         # board_class = get_board_class_by_id(board_field_id)
-        difficulty_class = get_difficulty_class_by_id(difficulty_field_id)
+        difficulty_class = DifficultyAbs.get_difficulty_class_by_id(difficulty_field_id)
 
     def _get_selected_field(self) -> tuple:
         for field_id, field in self._get_fields().items():

@@ -1,11 +1,11 @@
 import typing
 from copy import copy
-from abc import abstractclassmethod, abstractproperty
+from abc import abstractclassmethod
 
-from src.constants import FIELD_TEMPLATE, GAME_MENU_CTX
+from src.constants import GAME_MENU_CTX, FIELD_TEMPLATE
 
 
-class DifficultyAbs:
+class BoardAbs:
     id: typing.Optional[int] = None
 
     @abstractclassmethod
@@ -19,30 +19,18 @@ class DifficultyAbs:
             sub_class.id = i
 
 
-class DifficultyEasy(DifficultyAbs):
+class BoardNoWalls(BoardAbs):
     @classmethod
     def display_name(cls) -> str:
         return "Easy"
 
 
-class DifficultyMedium(DifficultyAbs):
-    @classmethod
-    def display_name(cls) -> str:
-        return "Medium"
-
-
-class DifficultyHard(DifficultyAbs):
-    @classmethod
-    def display_name(cls) -> str:
-        return "Hard"
-
-
-def generate_difficulty_fields():
-    DifficultyAbs.add_ids_to_children_classes()
+def generate_board_fields():
+    BoardAbs.add_ids_to_children_classes()
 
     fields, next_ctx = {}, GAME_MENU_CTX.CHOOSE_DIFFICULTY
 
-    for sub_class in DifficultyAbs.__subclasses__():
+    for sub_class in BoardAbs.__subclasses__():
         new_field = copy(FIELD_TEMPLATE)
         new_field["display_name"] = sub_class.display_name()
         new_field["next_ctx"] = next_ctx
@@ -50,7 +38,7 @@ def generate_difficulty_fields():
         fields[sub_class.id] = new_field
 
     if len(fields) == 0:
-        raise NotImplementedError("At least one difficulty is required to play.")
+        raise NotImplementedError("At least one board is required to play.")
 
     fields[0]["selected"] = True
 
