@@ -6,6 +6,7 @@ from src.constants import FIELD_TEMPLATE, GAME_MENU_CTX
 
 
 class DifficultyAbs:
+    # Id is required by Menu, to reognize which field is seleted.
     id: typing.Optional[int] = None
 
     @abstractclassmethod
@@ -14,9 +15,16 @@ class DifficultyAbs:
 
     @classmethod
     def add_ids_to_children_classes(cls):
-        """ Ids are required by Menu, to reognize which field is seleted. """
         for i, sub_class in enumerate(cls.__subclasses__()):
             sub_class.id = i
+
+    @classmethod
+    def get_children_class_by_id(cls, id_):
+        for sub_class in cls.__subclasses__():
+            if sub_class.id == id_:
+                return sub_class
+
+        raise NotImplementedError(cls, id_)
 
 
 class DifficultyEasy(DifficultyAbs):

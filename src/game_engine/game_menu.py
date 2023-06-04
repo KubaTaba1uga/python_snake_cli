@@ -4,6 +4,7 @@ from copy import deepcopy
 from src.constants import GAME_MENU_CTX
 from src.game_engine.board import BoardAbs, generate_board_fields
 from src.game_engine.difficulty import DifficultyAbs, generate_difficulty_fields
+from src.game_engine.session import Session
 
 _MENU_FIELDS_MAP_TEMPLATE = {
     GAME_MENU_CTX.MENU: {
@@ -100,12 +101,12 @@ class GameMenu:
 
     def process_ctx(self):
         GAME_MENU_CTX_PROCESS_FUNC_MAP = {
-            GAME_MENU_CTX.PLAY_NEW: self._save_session,
+            GAME_MENU_CTX.PLAY_NEW: self._create_session,
         }
 
         GAME_MENU_CTX_PROCESS_FUNC_MAP[self.ctx]()
 
-    def _save_session(self):
+    def _create_session(self):
         """create session based on selected:
         1. board
         2. difficulty
@@ -126,8 +127,12 @@ class GameMenu:
         finally:
             self.ctx = current_ctx
 
-        # board_class = get_board_class_by_id(board_field_id)
-        difficulty_class = DifficultyAbs.get_difficulty_class_by_id(difficulty_field_id)
+        board_class, difficulty_class = (
+            BoardAbs.get_children_class_by_id(board_field_id),
+            DifficultyAbs.get_children_class_by_id(difficulty_field_id),
+        )
+
+        self.session = Session(board_class=board_class, difficulty=difficulty_class())
 
     def _get_selected_field(self) -> tuple:
         for field_id, field in self._get_fields().items():

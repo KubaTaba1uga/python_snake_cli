@@ -18,11 +18,19 @@ class BoardAbs:
         for i, sub_class in enumerate(cls.__subclasses__()):
             sub_class.id = i
 
+    @classmethod
+    def get_children_class_by_id(cls, id_):
+        for sub_class in cls.__subclasses__():
+            if sub_class.id == id_:
+                return sub_class
+
+        raise NotImplementedError(cls, id_)
+
 
 class BoardNoWalls(BoardAbs):
     @classmethod
     def display_name(cls) -> str:
-        return "Easy"
+        return "No walls"
 
 
 def generate_board_fields():
