@@ -111,6 +111,8 @@ def test_game_menu_create_new_session():
         1,
     )
 
+    assert game_menu.session is None
+
     game_menu.fields_map[GAME_MENU_CTX.CHOOSE_BOARD]["fields"][0]["selected"] = True
     game_menu.fields_map[GAME_MENU_CTX.CHOOSE_DIFFICULTY]["fields"][0][
         "selected"

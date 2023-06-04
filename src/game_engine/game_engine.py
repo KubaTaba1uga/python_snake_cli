@@ -1,27 +1,27 @@
+import typing
+
 from time import sleep
 
 from src.user_input import UserInput
 from src.constants import GAME_ENGINE_CTX, GAME_MENU_CTX
 from src.game_engine.game_menu import GameMenu
-
-
-def _get_se_from_hz(hz) -> int:
-    return 1 / hz
+from src.game_engine.utils.si_utils import get_seconds_from_hz
 
 
 def _manage_game_menu_and_session(function):
-    """ Manages the current session or creates a new one. """
+    """Manages the current session or creates a new one.
+    Makes sure that game_menu is always available."""
 
     def wrapped_func(self, *args, **kwargs):
 
-        if self._game_menu is None:
-            self._game_menu = GameMenu(self._session)
+        if self.game_menu is None:
+            self.game_menu = GameMenu(self._session)
 
         result = function(self, *args, **kwargs)
 
-        if self._game_menu.is_session_ready():
-            self._session = self._game_menu.session
-            self._game_menu = None
+        if self.game_menu.is_session_ready():
+            self._session = self.game_menu.session
+            self.game_menu = None
 
         return result
 
@@ -29,7 +29,7 @@ def _manage_game_menu_and_session(function):
 
 
 # TO-DO
-#  less internal states usage, more passing as argument
+#  less internal states usage, more passing as argument -> more @classmethod and interfaes to them
 #  session keeps board & snake
 class GameEngine:
     DEFAULT_USER_INPUT_VALUE = "None"
@@ -41,13 +41,14 @@ class GameEngine:
 
     @classmethod
     def sleep(cls):
-        sleep(_get_se_from_hz(cls.DEFAULT_FREQ_IN_HZ))
+        sleep(get_seconds_from_hz(cls.DEFAULT_FREQ_IN_HZ))
 
     def __init__(self):
         self.user_input: UserInput = UserInput(self.DEFAULT_USER_INPUT_VALUE)
         self.ctx: GAME_ENGINE_CTX = self.DEFAULT_GAME_ENGINE_CTX
+        self.game_menu = None
+
         self._session = None
-        self._game_menu = None
 
     def _start(self):
         while True:
@@ -61,7 +62,7 @@ class GameEngine:
 
     def _process_user_input(self):
         USER_INPUT_PROCESS_FUNC_MAP = {
-            GAME_ENGINE_CTX.MENU: self._game_menu.USER_INPUT_FUNC_MAP,
+            GAME_ENGINE_CTX.MENU: self.game_menu.USER_INPUT_FUNC_MAP,
             GAME_ENGINE_CTX.GAME: self.USER_INPUT_FUNC_MAP,
         }
 
@@ -76,7 +77,7 @@ class GameEngine:
         GAME_ENGINE_CTX_PROCESS_FUNC_MAP[self.ctx]()
 
     def _process_menu_ctx(self):
-        self._game_menu.process_ctx()
+        self.game_menu.process_ctx()
 
     def _process_game_ctx(self):
         """ Performs game logic. """
