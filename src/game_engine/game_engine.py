@@ -19,7 +19,7 @@ def _manage_game_menu_and_session(function):
 
         result = function(self, *args, **kwargs)
 
-        if self._game_menu.ctx == GAME_MENU_CTX.PLAY:
+        if self._game_menu.is_session_ready():
             self._session = self._game_menu.session
             self._game_menu = None
 

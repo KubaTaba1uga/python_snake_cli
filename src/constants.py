@@ -21,7 +21,7 @@ class GAME_MENU_CTX(StrEnum):
         CHOOSE_BOARD
     ) = auto()  ## user needs to pick board and difficulty, user_name is picked from cli
     CHOOSE_DIFFICULTY = auto()
-    PLAY = (
+    PLAY_NEW = (
         auto()
     )  ## tells game_engine that game_engine.ctx can be moved back to Game_ENGINE_CTX.GAME
     # session creation end
@@ -30,6 +30,9 @@ class GAME_MENU_CTX(StrEnum):
         auto()
     )  # this is available only if session is created already
 
+    # session load start
     LOAD_SESSION = auto()  # show lists of saves, user can select one and hit enter
+    PLAY_LOADED = auto()
+    # session load end
 
     EXIT = auto()

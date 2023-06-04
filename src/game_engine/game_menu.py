@@ -10,18 +10,18 @@ _MENU_FIELDS_MAP_TEMPLATE = {
             0: {
                 "display_name": "Start New Game",
                 "selected": False,
-                "next_ctx": GAME_MENU_CTX.CREATE_NEW_SESSION,
+                "next_ctx": GAME_MENU_CTX.CHOOSE_BOARD,
                 "disabled": False,
             },
             1: {
-                "display_name": "Start New Game",
+                "display_name": "Save Current Game",
                 "selected": False,
                 "next_ctx": GAME_MENU_CTX.SAVE_CURRENT_SESSION,
                 "disabled": False,
             },
         },
     },
-    GAME_MENU_CTX.CREATE_NEW_SESSION: {
+    GAME_MENU_CTX.CHOOSE_BOARD: {
         "title": "Board Choice",
         "fields": {
             # this part should be generated dynamically based on BoardABS children.
@@ -42,8 +42,7 @@ _MENU_FIELDS_MAP_TEMPLATE = {
             0: {
                 "display_name": "Easy",
                 "selected": False,
-                "next_ctx": GAME_MENU_CTX.MENU,
-                # "next_ctx": GAME_MENU_CTX.PLAY,
+                "next_ctx": GAME_MENU_CTX.PLAY_NEW,
                 "disabled": False,
             },
         },
@@ -93,10 +92,12 @@ class GameMenu:
         self.session = session
 
     def select_next_field(self):
+        # Mapped to: arrow up
         field_id, _ = self._get_selected_field()
         self.select_field(field_id + 1)
 
     def select_previous_field(self):
+        # Mapped to: arrow down
         field_id, _ = self._get_selected_field()
         self.select_field(field_id - 1)
 
@@ -105,12 +106,43 @@ class GameMenu:
     def select_field(self, field_id: str):
         self._get_field(field_id)["selected"] = True
 
-    def process_ctx(self):
-        self._process_selected_field()
-
-    def _process_selected_field(self):
+    def set_new_ctx(self):
+        # Mapped to: Enter
         _, field = self._get_selected_field()
         self.ctx = field["next_ctx"]
+
+    def is_session_ready(self):
+        return self.ctx in [GAME_MENU_CTX.PLAY_NEW, GAME_MENU_CTX.PLAY_LOADED]
+
+    def process_ctx(self):
+        GAME_MENU_CTX_PROCESS_FUNC_MAP = {
+            GAME_MENU_CTX.PLAY_NEW: self._save_session,
+        }
+
+        GAME_MENU_CTX_PROCESS_FUNC_MAP[self.ctx]()
+
+    def _save_session(self):
+        """create session based on selected:
+        1. board
+        2. difficulty
+        """
+
+        board_ctx, difficulty_ctx, current_ctx = (
+            GAME_MENU_CTX.CHOOSE_BOARD,
+            GAME_MENU_CTX.CHOOSE_DIFFICULTY,
+            self.ctx,
+        )
+
+        try:
+            self.ctx = board_ctx
+            board_field_id, _ = self._get_selected_field()
+
+            self.ctx = difficulty_ctx
+            difficulty_field_id, _ = self._get_selected_field()
+        finally:
+            self.ctx = current_ctx
+
+        get_board_class_by_id(board_field_id)
 
     def _get_selected_field(self) -> tuple:
         for field_id, field in self._get_fields().items():
