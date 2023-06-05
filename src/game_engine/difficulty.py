@@ -48,7 +48,7 @@ class DifficultyHard(DifficultyAbs):
 def generate_difficulty_fields():
     DifficultyAbs.add_ids_to_children_classes()
 
-    fields, next_ctx = {}, GAME_MENU_CTX.CHOOSE_DIFFICULTY
+    fields, next_ctx = {}, GAME_MENU_CTX.PLAY_NEW
 
     for sub_class in DifficultyAbs.__subclasses__():
         new_field = copy(FIELD_TEMPLATE)
