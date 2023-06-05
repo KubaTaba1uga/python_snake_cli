@@ -12,7 +12,7 @@ _MENU_FIELDS_MAP_TEMPLATE = {
         "fields": {
             0: {
                 "display_name": "Start New Game",
-                "selected": False,
+                "selected": True,
                 "next_ctx": GAME_MENU_CTX.CHOOSE_BOARD,
                 "disabled": False,
             },
@@ -39,7 +39,7 @@ def _unselect_all_fields_before_execution(function):
     """ only one field can be selected in the ctx """
 
     def wrapped_function(self, *args, **kwargs):
-        for field in self._get_fields():
+        for field in self.get_fields():
             self._unselect_field(field)
 
         return function(self, *args, **kwargs)
@@ -52,7 +52,7 @@ def _overload_field_id(function):
     If field_id raises over the biggest id assign 0 to it."""
 
     def wrapped_function(self, field_id, *args, **kwargs):
-        fields = self._get_fields()
+        fields = self.get_fields()
 
         max_id, min_id = len(fields) - 1, 0
 
@@ -135,7 +135,7 @@ class GameMenu:
         self.session = Session(board_class=board_class, difficulty=difficulty_class())
 
     def _get_selected_field(self) -> tuple:
-        for field_id, field in self._get_fields().items():
+        for field_id, field in self.get_fields().items():
             if field["selected"]:
                 return field_id, field
 
@@ -150,5 +150,8 @@ class GameMenu:
     def _get_field(self, field_id: str) -> dict:
         return self.fields_map[self.ctx]["fields"][field_id]
 
-    def _get_fields(self) -> dict:
+    def get_fields(self) -> dict:
         return self.fields_map[self.ctx]["fields"]
+
+    def get_title(self) -> dict:
+        return self.fields_map[self.ctx]["title"]

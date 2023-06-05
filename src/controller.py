@@ -6,6 +6,7 @@ from pynput import keyboard as _keyboard
 from src.constants import VALUES_KEYS_MAP
 from src.errors import PleaseUseContextManagerError
 from src.errors import UnableToRecognizeKey
+from src.utils.abc_utils import ContextManagerAbs
 
 
 def _does_thread_exsist(obj: typing.Any) -> bool:
@@ -36,7 +37,7 @@ class _validate_thread_exsists:
         return wrapper
 
 
-class Controller:
+class Controller(ContextManagerAbs):
     """Take's user input in seperate thread. Only one controller allowed."""
 
     _thread: typing.Optional[_keyboard.Listener] = None

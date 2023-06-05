@@ -46,19 +46,19 @@ class GameEngine:
     def __init__(self):
         self.user_input: UserInput = UserInput(self.DEFAULT_USER_INPUT_VALUE)
         self.ctx: GAME_ENGINE_CTX = self.DEFAULT_GAME_ENGINE_CTX
-        self.game_menu = None
+        self.game_menu: GameMenu = GameMenu()
 
         self._session = None
 
     def _start(self):
         while True:
             self._process()
+            self.sleep()
 
     @_manage_game_menu_and_session
     def _process(self):
         self._process_user_input()
         self._process_ctx()
-        self.sleep()
 
     def _process_user_input(self):
         USER_INPUT_PROCESS_FUNC_MAP = {

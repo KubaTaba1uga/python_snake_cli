@@ -61,6 +61,7 @@ def test_game_menu_select_previous_field_sucess():
     fields = game_menu.fields_map[game_menu.ctx]["fields"]
 
     fields[selected_id]["selected"] = True
+    fields[id_to_select]["selected"] = False
 
     game_menu.select_previous_field()
 
@@ -78,6 +79,7 @@ def test_game_menu_select_next_field_out_of_range():
     fields = game_menu.fields_map[game_menu.ctx]["fields"]
 
     fields[selected_id]["selected"] = True
+    fields[id_to_select]["selected"] = False
 
     game_menu.select_next_field()
 
