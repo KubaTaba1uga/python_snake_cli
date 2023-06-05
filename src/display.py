@@ -6,7 +6,7 @@ from threading import Thread, Event
 from src.constants import GAME_ENGINE_CTX
 from src.game_engine.utils.si_utils import get_seconds_from_hz
 from src.utils.abc_utils import ContextManagerAbs
-from src.utils.ansi_utils import paint_red
+from src.utils.ansi_utils import paint_red, paint_bold
 
 if typing.TYPE_CHECKING:
     from src.game_engine.game_menu import GameMenu
@@ -83,14 +83,14 @@ class BashDisplay(DisplayAbs):
             game_engine.game_menu,
         )
 
-        title_line = cls.format_title_line(game_menu.get_title())
+        title_line = cls.format_title(game_menu.get_title())
 
         lines_to_print = [title_line]
 
         for field in game_menu_fields.values():
             lines_to_print.append(cls.format_field(field))
 
-        for _ in range(height - len(lines_to_print)):
+        for _ in range(height - len(lines_to_print) - 1):
             # Add empty strings to fill space
             lines_to_print.append("")
 
@@ -117,10 +117,13 @@ class BashDisplay(DisplayAbs):
             raise ValueError(width, max_field_length)
 
     @classmethod
-    def format_title_line(cls, title: str) -> str:
+    def format_title(cls, title: str) -> str:
         TITLE_LINE_SYNTAX = "   {title}"
 
-        return TITLE_LINE_SYNTAX.format(title=title.capitalize())
+        title = title.capitalize()
+        title = paint_bold(title)
+
+        return TITLE_LINE_SYNTAX.format(title=title)
 
     @classmethod
     def format_field(cls, field: dict) -> str:

@@ -6,7 +6,9 @@ from test.conftest import game_engine as _game_engine
 
 def test_bash_display_render_menu():
     expected_menu = (
-        "   Game menu\n      - 0\n      - 1\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+        "   \x1b[1mGame menu\x1b[0m\n   "
+        "   - \x1b[41mStart New Game\x1b[0m\n   "
+        "   - Save Current Game\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
     )
 
     game_engine, terminal_x, terminal_y = _game_engine(), 30, 20

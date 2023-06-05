@@ -10,5 +10,8 @@ class COLORS_BACKGROUND:
 
 
 def paint_red(string: str, is_background: bool = False) -> str:
-
     return f"{COLORS_BACKGROUND.RED if is_background else COLORS_FOREGROUND.RED}{string}{COLORS_FOREGROUND.ENDC}"
+
+
+def paint_bold(string: str) -> str:
+    return f"{COLORS_FOREGROUND.BOLD}{string}{COLORS_FOREGROUND.ENDC}"
