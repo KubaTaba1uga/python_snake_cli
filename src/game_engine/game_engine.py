@@ -15,14 +15,12 @@ def _manage_game_menu_and_session(function):
 
     def wrapped_func(self, *args, **kwargs):
 
-        if self.game_menu is None:
-            self.game_menu = GameMenu(self._session)
-
         result = function(self, *args, **kwargs)
 
         if self.game_menu.is_session_ready():
-            self._session = self.game_menu.session
-            self.game_menu = None
+            self._session, self.ctx = self.game_menu.session, GAME_ENGINE_CTX.GAME
+
+            self.game_menu = GameMenu(self._session)
 
         return result
 
@@ -62,7 +60,6 @@ class GameEngine:
             self._process()
             self.sleep()
 
-    @_manage_game_menu_and_session
     def _process(self):
         self._process_user_input()
         self._process_ctx()
@@ -88,10 +85,11 @@ class GameEngine:
 
         GAME_ENGINE_CTX_PROCESS_FUNC_MAP[self.ctx]()
 
+    @_manage_game_menu_and_session
     def _process_menu_ctx(self):
         self.game_menu.process_ctx()
 
     def _process_game_ctx(self):
         """ Performs game logic. """
-        # add game logi here
+        # add game logic here
         raise NotImplementedError(self)

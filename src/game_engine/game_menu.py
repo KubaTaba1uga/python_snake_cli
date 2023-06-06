@@ -33,12 +33,12 @@ _MENU_FIELDS_MAP_TEMPLATE = {
         "fields": generate_difficulty_fields(),
     },
     GAME_MENU_CTX.PLAY_NEW: {
-        "title": "",
+        "title": "Game is loading ...",
         "fields": {
             0: {
                 "display_name": "Game is loading ...",
                 "selected": False,
-                "next_ctx": GAME_MENU_CTX.CHOOSE_BOARD,
+                "next_ctx": GAME_MENU_CTX.PLAY_NEW,
                 "disabled": False,
             },
         },

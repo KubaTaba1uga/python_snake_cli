@@ -1,4 +1,5 @@
 import typing
+import sys
 from abc import abstractclassmethod
 from time import sleep
 from threading import Thread, Event
@@ -6,7 +7,7 @@ from threading import Thread, Event
 from src.constants import GAME_ENGINE_CTX
 from src.game_engine.utils.si_utils import get_seconds_from_hz
 from src.utils.abc_utils import ContextManagerAbs
-from src.utils.ansi_utils import paint_red, paint_bold
+from src.utils.ansi_utils import paint_red, paint_bold, move_cursor_to_line_beginning
 
 if typing.TYPE_CHECKING:
     from src.game_engine.game_menu import GameMenu
@@ -14,7 +15,7 @@ if typing.TYPE_CHECKING:
 
 
 class DisplayAbs(ContextManagerAbs):
-    DEFAULT_FREQ_IN_HZ = 100
+    DEFAULT_FREQ_IN_HZ = 500
 
     @classmethod
     def sleep(cls):
@@ -77,6 +78,7 @@ class BashDisplay(DisplayAbs):
         cls, game_engine: "GameEngine", width: int, height: int
     ) -> str:
         """ Display game's menu. Returns string of what was displayed. """
+
         game_menu_fields, game_menu = (
             game_engine.game_menu.get_fields(),
             game_engine.game_menu,
@@ -122,7 +124,7 @@ class BashDisplay(DisplayAbs):
         title = title.capitalize()
         title = paint_bold(title)
 
-        return TITLE_LINE_SYNTAX.format(title=title)
+        return cls.format_line(TITLE_LINE_SYNTAX.format(title=title))
 
     @classmethod
     def format_field(cls, field: dict) -> str:
@@ -133,7 +135,11 @@ class BashDisplay(DisplayAbs):
         if field["selected"]:
             field_name = cls.render_selected(field_name)
 
-        return FIELD_LINE_SYNTAX.format(field_name=field_name)
+        return cls.format_line(FIELD_LINE_SYNTAX.format(field_name=field_name))
+
+    @classmethod
+    def format_line(cls, line: str) -> str:
+        return move_cursor_to_line_beginning(line)
 
     @classmethod
     def render_selected(cls, line: str) -> str:
@@ -145,4 +151,5 @@ class BashDisplay(DisplayAbs):
 
     @classmethod
     def print(cls, lines: str):
-        print(lines)
+        sys.stdout.write(lines)
+        sys.stdout.flush()
