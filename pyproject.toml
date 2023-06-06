@@ -16,7 +16,7 @@ dependencies = [
 
 
 [tool.setuptools]
-packages = ["src"]
+packages = ["src", "src.game_engine", "src.utils", "src.game_engine.utils"]
 
 [project.optional-dependencies]
 dev = ["ruff==0.0.265",

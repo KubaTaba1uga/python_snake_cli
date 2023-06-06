@@ -5,7 +5,14 @@ from pynput import keyboard as _keyboard
 
 VALUES_KEYS_MAP: typing.Dict[
     str, typing.Dict[str, typing.Union[_keyboard.Key, str]]
-] = {"escape": {"key": _keyboard.Key.esc, "value": "escape"}}
+] = {
+    "escape": {"key": _keyboard.Key.esc, "value": "escape"},
+    "enter": {"key": _keyboard.Key.enter, "value": "enter"},
+    "arrow-up": {"key": _keyboard.Key.up, "value": "arrow-up"},
+    "arrow-down": {"key": _keyboard.Key.down, "value": "arrow-down"},
+    "arrow-left": {"key": _keyboard.Key.left, "value": "arrow-left"},
+    "arrow-right": {"key": _keyboard.Key.right, "value": "arrow-right"},
+}
 
 
 class GAME_ENGINE_CTX(StrEnum):

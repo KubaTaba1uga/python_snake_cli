@@ -1,6 +1,7 @@
 import typing
 
 from time import sleep
+from threading import Thread
 
 from src.user_input import UserInput
 from src.constants import GAME_ENGINE_CTX, GAME_MENU_CTX
@@ -48,7 +49,11 @@ class GameEngine:
         self.ctx: GAME_ENGINE_CTX = self.DEFAULT_GAME_ENGINE_CTX
         self.game_menu: GameMenu = GameMenu()
 
+        self._thread: Thread = Thread(target=self._start)
         self._session = None
+
+    def start(self):
+        self._thread.start()
 
     def _start(self):
         while True:
