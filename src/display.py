@@ -14,7 +14,7 @@ if typing.TYPE_CHECKING:
 
 
 class DisplayAbs(ContextManagerAbs):
-    DEFAULT_FREQ_IN_HZ = 1
+    DEFAULT_FREQ_IN_HZ = 100
 
     @classmethod
     def sleep(cls):
@@ -39,14 +39,8 @@ class DisplayAbs(ContextManagerAbs):
         """ Display gameplay. """
         pass
 
-    @classmethod
-    def _render(cls, game_engine: "GameEngine"):
-        CTX_RENDER_MAP = {
-            GAME_ENGINE_CTX.GAME: cls.render_game_engine,
-            GAME_ENGINE_CTX.MENU: cls.render_game_menu,
-        }
-
-        CTX_RENDER_MAP[game_engine.ctx](game_engine)
+    def _render_game_menu(self):
+        self.render_game_menu(self._game_engine, self._width, self._height)
 
     def __enter__(self):
         self.start()
@@ -55,7 +49,12 @@ class DisplayAbs(ContextManagerAbs):
         self.stop()
 
     def render(self):
-        self._render(self._game_engine)
+        CTX_RENDER_MAP = {
+            GAME_ENGINE_CTX.GAME: self.render_game_engine,
+            GAME_ENGINE_CTX.MENU: self._render_game_menu,
+        }
+
+        CTX_RENDER_MAP[self._game_engine.ctx]()
 
     def _start(self):
         while True:

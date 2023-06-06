@@ -115,7 +115,10 @@ class GameMenu:
             GAME_MENU_CTX.PLAY_NEW: self._create_session,
         }
 
-        GAME_MENU_CTX_PROCESS_FUNC_MAP[self.ctx]()
+        try:
+            GAME_MENU_CTX_PROCESS_FUNC_MAP[self.ctx]()
+        except KeyError:
+            pass
 
     def _create_session(self):
         """create session based on selected:

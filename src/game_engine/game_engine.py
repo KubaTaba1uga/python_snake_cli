@@ -38,7 +38,9 @@ class GameEngine:
     # Game has to start from menu to load first session
     DEFAULT_GAME_ENGINE_CTX = GAME_ENGINE_CTX.MENU
 
-    DEFAULT_FREQ_IN_HZ = 1
+    DEFAULT_FREQ_IN_HZ = 100
+
+    USER_INPUT_FUNC_MAP = {}
 
     @classmethod
     def sleep(cls):
@@ -71,7 +73,12 @@ class GameEngine:
             GAME_ENGINE_CTX.GAME: self.USER_INPUT_FUNC_MAP,
         }
 
-        USER_INPUT_PROCESS_FUNC_MAP[self.ctx][self.user_input.value]()
+        try:
+            USER_INPUT_PROCESS_FUNC_MAP[self.ctx][self.user_input.get()]()
+        except KeyError:
+            pass
+
+        self.user_input.set(self.DEFAULT_USER_INPUT_VALUE)
 
     def _process_ctx(self):
         GAME_ENGINE_CTX_PROCESS_FUNC_MAP = {

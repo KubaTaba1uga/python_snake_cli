@@ -13,8 +13,8 @@ def main():
     )
 
     game_engine.start()
-    # controller.start(controller.game_engine)
-    # display.start()
+    controller.start(controller.game_engine)
+    display.start()
 
     from time import sleep
 
