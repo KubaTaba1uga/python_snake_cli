@@ -1,6 +1,5 @@
-from src.game_engine.board import generate_board_fields
-
 from src.constants import GAME_MENU_CTX
+from src.game_engine.board import generate_board_fields
 
 
 def test_generate_fields_success():

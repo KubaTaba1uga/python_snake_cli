@@ -1,6 +1,5 @@
-from src.game_engine.difficulty import generate_difficulty_fields
-
 from src.constants import GAME_MENU_CTX
+from src.game_engine.difficulty import generate_difficulty_fields
 
 
 def test_generate_fields_success():

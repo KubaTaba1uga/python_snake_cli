@@ -1,12 +1,12 @@
 import typing
-
-from time import sleep
 from threading import Thread
+from time import sleep
 
-from src.user_input import UserInput
-from src.constants import GAME_ENGINE_CTX, GAME_MENU_CTX
+from src.constants import GAME_ENGINE_CTX
+from src.constants import GAME_MENU_CTX
 from src.game_engine.game_menu import GameMenu
 from src.game_engine.utils.si_utils import get_seconds_from_hz
+from src.user_input import UserInput
 
 
 def _manage_game_menu_and_session(function):
@@ -14,7 +14,6 @@ def _manage_game_menu_and_session(function):
     Makes sure that game_menu is always available."""
 
     def wrapped_func(self, *args, **kwargs):
-
         result = function(self, *args, **kwargs)
 
         if self.game_menu.is_session_ready():
@@ -90,6 +89,6 @@ class GameEngine:
         self.game_menu.process_ctx()
 
     def _process_game_ctx(self):
-        """ Performs game logic. """
+        """Performs game logic."""
         # add game logic here
         raise NotImplementedError(self)

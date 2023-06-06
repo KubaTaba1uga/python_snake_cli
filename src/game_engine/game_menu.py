@@ -1,9 +1,12 @@
 import typing
 from copy import deepcopy
 
-from src.constants import GAME_MENU_CTX, VALUES_KEYS_MAP
-from src.game_engine.board import BoardAbs, generate_board_fields
-from src.game_engine.difficulty import DifficultyAbs, generate_difficulty_fields
+from src.constants import GAME_MENU_CTX
+from src.constants import VALUES_KEYS_MAP
+from src.game_engine.board import BoardAbs
+from src.game_engine.board import generate_board_fields
+from src.game_engine.difficulty import DifficultyAbs
+from src.game_engine.difficulty import generate_difficulty_fields
 from src.game_engine.session import Session
 
 _MENU_FIELDS_MAP_TEMPLATE = {
@@ -47,7 +50,7 @@ _MENU_FIELDS_MAP_TEMPLATE = {
 
 
 def _unselect_all_fields_before_execution(function):
-    """ only one field can be selected in the ctx """
+    """only one field can be selected in the ctx"""
 
     def wrapped_function(self, *args, **kwargs):
         for field in self.get_fields():
@@ -78,7 +81,7 @@ def _overload_field_id(function):
 
 
 class GameMenu:
-    """ Manages GameSession for GameEngine."""
+    """Manages GameSession for GameEngine."""
 
     DEFAULT_GAME_MENU_CTX = GAME_MENU_CTX.MENU
 

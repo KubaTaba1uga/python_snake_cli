@@ -1,10 +1,10 @@
 from copy import deepcopy
 
+from src.constants import GAME_MENU_CTX
+from src.game_engine.board import BoardNoWalls
+from src.game_engine.difficulty import DifficultyEasy
 from src.game_engine.game_menu import GameMenu
 from src.game_engine.session import Session
-from src.game_engine.difficulty import DifficultyEasy
-from src.game_engine.board import BoardNoWalls
-from src.constants import GAME_MENU_CTX
 
 
 def test_game_menu_select_field():

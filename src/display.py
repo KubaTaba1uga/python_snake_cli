@@ -1,17 +1,20 @@
-import typing
 import sys
+import typing
 from abc import abstractclassmethod
+from threading import Event
+from threading import Thread
 from time import sleep
-from threading import Thread, Event
 
 from src.constants import GAME_ENGINE_CTX
 from src.game_engine.utils.si_utils import get_seconds_from_hz
 from src.utils.abc_utils import ContextManagerAbs
-from src.utils.ansi_utils import paint_red, paint_bold, move_cursor_to_line_beginning
+from src.utils.ansi_utils import move_cursor_to_line_beginning
+from src.utils.ansi_utils import paint_bold
+from src.utils.ansi_utils import paint_red
 
 if typing.TYPE_CHECKING:
-    from src.game_engine.game_menu import GameMenu
     from src.game_engine.game_engine import GameEngine
+    from src.game_engine.game_menu import GameMenu
 
 
 class DisplayAbs(ContextManagerAbs):
@@ -32,12 +35,12 @@ class DisplayAbs(ContextManagerAbs):
     def render_game_menu(
         cls, game_engine: "GameEngine", width: int, height: int
     ) -> str:
-        """ Display game's menu. GameEngine """
+        """Display game's menu. GameEngine"""
         pass
 
     # @abstractclassmethod
     def render_game_engine(cls, game_engine: "GameEngine"):
-        """ Display gameplay. """
+        """Display gameplay."""
         pass
 
     def _render_game_menu(self):
@@ -77,7 +80,7 @@ class BashDisplay(DisplayAbs):
     def render_game_menu(
         cls, game_engine: "GameEngine", width: int, height: int
     ) -> str:
-        """ Display game's menu. Returns string of what was displayed. """
+        """Display game's menu. Returns string of what was displayed."""
 
         game_menu_fields, game_menu = (
             game_engine.game_menu.get_fields(),
@@ -108,7 +111,6 @@ class BashDisplay(DisplayAbs):
 
     @classmethod
     def validate_width(cls, width: int, fields: dict):
-
         max_field_length = 0
         for field in fields.values():
             if (field_length := len(cls.format_field(field))) > max_field_length:

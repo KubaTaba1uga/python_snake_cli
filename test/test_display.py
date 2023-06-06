@@ -1,7 +1,6 @@
-from src.display import BashDisplay
-
-
 from test.conftest import game_engine as _game_engine
+
+from src.display import BashDisplay
 
 
 def test_bash_display_render_menu_menu():

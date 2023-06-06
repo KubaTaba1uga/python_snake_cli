@@ -1,5 +1,6 @@
 import typing
-from enum import StrEnum, auto
+from enum import auto
+from enum import StrEnum
 
 from pynput import keyboard as _keyboard
 

@@ -1,8 +1,9 @@
 import typing
-from copy import copy
 from abc import abstractclassmethod
+from copy import copy
 
-from src.constants import GAME_MENU_CTX, FIELD_TEMPLATE
+from src.constants import FIELD_TEMPLATE
+from src.constants import GAME_MENU_CTX
 
 
 class BoardAbs:
@@ -14,7 +15,7 @@ class BoardAbs:
 
     @classmethod
     def add_ids_to_children_classes(cls):
-        """ Ids are required by Menu, to reognize which field is seleted. """
+        """Ids are required by Menu, to reognize which field is seleted."""
         for i, sub_class in enumerate(cls.__subclasses__()):
             sub_class.id = i
 

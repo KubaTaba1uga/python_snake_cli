@@ -1,8 +1,10 @@
 import typing
+from abc import abstractclassmethod
+from abc import abstractproperty
 from copy import copy
-from abc import abstractclassmethod, abstractproperty
 
-from src.constants import FIELD_TEMPLATE, GAME_MENU_CTX
+from src.constants import FIELD_TEMPLATE
+from src.constants import GAME_MENU_CTX
 
 
 class DifficultyAbs:
