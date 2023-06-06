@@ -1,18 +1,19 @@
 import typing
-from abc import abstractclassmethod
-from abc import abstractproperty
+from abc import ABCMeta
+from abc import abstractmethod
 from copy import copy
 
 from src.constants import FIELD_TEMPLATE
 from src.constants import GAME_MENU_CTX
 
 
-class DifficultyAbs:
+class DifficultyAbs(metaclass=ABCMeta):
     # Id is required by Menu, to reognize which field is seleted.
     id: typing.Optional[int] = None
 
-    @abstractclassmethod
-    def display_name(cls) -> str:
+    @classmethod
+    @abstractmethod
+    def display_name(_) -> str:
         raise NotImplementedError()
 
     @classmethod

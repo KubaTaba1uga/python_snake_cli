@@ -1,5 +1,3 @@
-from copy import deepcopy
-
 from src.constants import GAME_MENU_CTX
 from src.game_engine.board import BoardNoWalls
 from src.game_engine.difficulty import DifficultyEasy
@@ -107,16 +105,18 @@ def test_game_menu_select_previous_field_out_of_range():
 def test_game_menu_create_new_session():
     expected_session = Session(difficulty=DifficultyEasy(), board_class=BoardNoWalls)
 
-    game_menu, selected_id, id_to_select = (
+    game_menu, board_id, difficulty_id = (
         GameMenu(),
         0,
-        1,
+        0,
     )
 
     assert game_menu.session is None
 
-    game_menu.fields_map[GAME_MENU_CTX.CHOOSE_BOARD]["fields"][0]["selected"] = True
-    game_menu.fields_map[GAME_MENU_CTX.CHOOSE_DIFFICULTY]["fields"][0][
+    game_menu.fields_map[GAME_MENU_CTX.CHOOSE_BOARD]["fields"][board_id][
+        "selected"
+    ] = True
+    game_menu.fields_map[GAME_MENU_CTX.CHOOSE_DIFFICULTY]["fields"][difficulty_id][
         "selected"
     ] = True
     game_menu.ctx = GAME_MENU_CTX.PLAY_NEW

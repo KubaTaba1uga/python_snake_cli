@@ -1,6 +1,6 @@
 import sys
 import typing
-from abc import abstractclassmethod
+from abc import abstractmethod
 from threading import Event
 from threading import Thread
 from time import sleep
@@ -14,7 +14,6 @@ from src.utils.ansi_utils import paint_red
 
 if typing.TYPE_CHECKING:
     from src.game_engine.game_engine import GameEngine
-    from src.game_engine.game_menu import GameMenu
 
 
 class DisplayAbs(ContextManagerAbs):
@@ -31,7 +30,8 @@ class DisplayAbs(ContextManagerAbs):
         self._thread: Thread = Thread(target=self._start)
         self._stop_thread: Event = Event()
 
-    @abstractclassmethod
+    @classmethod
+    @abstractmethod
     def render_game_menu(
         cls, game_engine: "GameEngine", width: int, height: int
     ) -> str:

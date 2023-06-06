@@ -27,16 +27,8 @@ _MENU_FIELDS_MAP_TEMPLATE = {
             },
         },
     },
-    GAME_MENU_CTX.CHOOSE_BOARD: {
-        "title": "Board Choice",
-        "fields": generate_board_fields(),
-    },
-    GAME_MENU_CTX.CHOOSE_DIFFICULTY: {
-        "title": "Difficulty Choice",
-        "fields": generate_difficulty_fields(),
-    },
     GAME_MENU_CTX.PLAY_NEW: {
-        "title": "Game is loading ...",
+        "title": "",
         "fields": {
             0: {
                 "display_name": "Game is loading ...",
@@ -45,6 +37,14 @@ _MENU_FIELDS_MAP_TEMPLATE = {
                 "disabled": False,
             },
         },
+    },
+    GAME_MENU_CTX.CHOOSE_BOARD: {
+        "title": "Board Choice",
+        "fields": generate_board_fields(),
+    },
+    GAME_MENU_CTX.CHOOSE_DIFFICULTY: {
+        "title": "Difficulty Choice",
+        "fields": generate_difficulty_fields(),
     },
 }
 
@@ -88,7 +88,7 @@ class GameMenu:
     def __init__(self, session=None):
         self.ctx = self.DEFAULT_GAME_MENU_CTX
         self.fields_map = deepcopy(_MENU_FIELDS_MAP_TEMPLATE)
-        self.session = session
+        self.session: typing.Optional[Session] = session
 
     def select_next_field(self):
         # Mapped to: arrow up
@@ -170,7 +170,7 @@ class GameMenu:
     def get_fields(self) -> dict:
         return self.fields_map[self.ctx]["fields"]
 
-    def get_title(self) -> dict:
+    def get_title(self) -> str:
         return self.fields_map[self.ctx]["title"]
 
     @property

@@ -1,5 +1,5 @@
 import typing
-from abc import abstractclassmethod
+from abc import abstractmethod
 from copy import copy
 
 from src.constants import FIELD_TEMPLATE
@@ -9,7 +9,8 @@ from src.constants import GAME_MENU_CTX
 class BoardAbs:
     id: typing.Optional[int] = None
 
-    @abstractclassmethod
+    @classmethod
+    @abstractmethod
     def display_name(cls) -> str:
         raise NotImplementedError()
 

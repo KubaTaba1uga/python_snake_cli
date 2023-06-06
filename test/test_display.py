@@ -5,9 +5,16 @@ from src.display import BashDisplay
 
 def test_bash_display_render_menu_menu():
     expected_menu = (
-        "   \x1b[1mGame menu\x1b[0m\n   "
-        "   - \x1b[41mStart New Game\x1b[0m\n   "
-        "   - Save Current Game\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+        "\x1b[1K   "
+        "\x1b[1mGame menu"
+        "\x1b[0m"
+        "\x1b[0m\n"
+        "\x1b[1K      - "
+        "\x1b[41mStart New Game"
+        "\x1b[0m"
+        "\x1b[0m\n"
+        "\x1b[1K      - Save Current Game"
+        "\x1b[0m\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
     )
 
     game_engine, terminal_x, terminal_y = _game_engine(), 30, 20
@@ -19,9 +26,14 @@ def test_bash_display_render_menu_menu():
 
 def test_bash_display_render_menu_choose_board():
     expected_menu = (
-        "   \x1b[1mBoard choice\x1b[0m\n     "
-        " - \x1b[41mNo walls\x1b[0m\n\n\n\n\n"
-        "\n\n\n\n\n\n\n\n\n\n\n\n"
+        "\x1b[1K   "
+        "\x1b[1mBoard choice"
+        "\x1b[0m"
+        "\x1b[0m\n"
+        "\x1b[1K      - "
+        "\x1b[41mNo walls"
+        "\x1b[0m"
+        "\x1b[0m\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
     )
 
     game_engine, terminal_x, terminal_y = _game_engine(), 30, 20
@@ -35,10 +47,18 @@ def test_bash_display_render_menu_choose_board():
 
 def test_bash_display_render_menu_choose_difficulty():
     expected_menu = (
-        "   \x1b[1mDifficulty choice\x1b[0m\n   "
-        "   - \x1b[41mEasy\x1b[0m\n   "
-        "   - Medium\n   "
-        "   - Hard\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+        "\x1b[1K   "
+        "\x1b[1mDifficulty choice"
+        "\x1b[0m"
+        "\x1b[0m\n"
+        "\x1b[1K      - "
+        "\x1b[41mEasy"
+        "\x1b[0m"
+        "\x1b[0m\n"
+        "\x1b[1K      - Medium"
+        "\x1b[0m\n"
+        "\x1b[1K      - Hard"
+        "\x1b[0m\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
     )
 
     game_engine, terminal_x, terminal_y = _game_engine(), 30, 20
@@ -57,10 +77,12 @@ def test_bash_display_render_menu_choose_difficulty():
 
 def test_bash_display_render_menu_waiting_screen():
     expected_menu = (
-        "   \x1b[1m\x1b[0m\n      "
-        "- Game is loading ...\n\n"
-        "\n\n\n\n\n\n\n\n\n\n\n\n\n"
-        "\n\n"
+        "\x1b[1K   "
+        "\x1b[1m"
+        "\x1b[0m"
+        "\x1b[0m\n"
+        "\x1b[1K      - Game is loading ..."
+        "\x1b[0m\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
     )
 
     game_engine, terminal_x, terminal_y = _game_engine(), 30, 20

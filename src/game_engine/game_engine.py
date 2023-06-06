@@ -3,13 +3,12 @@ from threading import Thread
 from time import sleep
 
 from src.constants import GAME_ENGINE_CTX
-from src.constants import GAME_MENU_CTX
 from src.game_engine.game_menu import GameMenu
 from src.game_engine.utils.si_utils import get_seconds_from_hz
 from src.user_input import UserInput
 
 
-def _manage_game_menu_and_session(function):
+def _manage_game_menu_and_session(function) -> typing.Any:
     """Manages the current session or creates a new one.
     Makes sure that game_menu is always available."""
 
@@ -27,7 +26,8 @@ def _manage_game_menu_and_session(function):
 
 
 # TO-DO
-#  less internal states usage, more passing as argument -> more @classmethod and interfaes to them
+#  less internal states usage, more passing as argument -> more @classmethod
+#   and interfaces to them
 #  session keeps board & snake
 class GameEngine:
     DEFAULT_USER_INPUT_VALUE = "None"
@@ -37,7 +37,7 @@ class GameEngine:
 
     DEFAULT_FREQ_IN_HZ = 100
 
-    USER_INPUT_FUNC_MAP = {}
+    USER_INPUT_FUNC_MAP: typing.Dict[str, typing.Callable] = {}
 
     @classmethod
     def sleep(cls):
