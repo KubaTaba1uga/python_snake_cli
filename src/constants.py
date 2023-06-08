@@ -19,12 +19,12 @@ KEYS_VALUES_MAP: typing.Dict[_keyboard.Key, str] = {
 
 # Interface to pynput keys
 DISPLAY_NAMES_KEYS_MAP: typing.Dict[str, _keyboard.Key] = {
-    "ESC": _keyboard.Key.esc,
-    "ENTER": _keyboard.Key.enter,
-    "UP": _keyboard.Key.up,
-    "DOWN": _keyboard.Key.down,
-    "LEFT": _keyboard.Key.left,
-    "RIGHT": _keyboard.Key.right,
+    "ESC key": _keyboard.Key.esc,
+    "ENTER key": _keyboard.Key.enter,
+    "UP ARROW key": _keyboard.Key.up,
+    "DOWN ARROW key": _keyboard.Key.down,
+    "LEFT ARROW key": _keyboard.Key.left,
+    "RIGHT ARROW key": _keyboard.Key.right,
 }
 
 

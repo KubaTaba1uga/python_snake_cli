@@ -18,3 +18,11 @@ class PleaseUseContextManagerError(BaseException):
         self.cls = cls
 
         super().__init__(function, args, kwargs)
+
+
+class NoSelectedField(BaseException):
+    def __init__(self, fields_map, ctx):
+        self.fields_map = fields_map
+        self.ctx = ctx
+
+        super().__init__(fields_map, ctx)

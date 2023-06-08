@@ -8,7 +8,7 @@ from src.game_engine.session import Session
 def test_game_menu_select_field():
     game_menu, id_to_select = GameMenu(), 0
 
-    game_menu.select_field(id_to_select)
+    game_menu._select_field(id_to_select)
 
     assert (
         game_menu.fields_map[game_menu.ctx]["fields"][id_to_select]["selected"] is True
@@ -26,7 +26,7 @@ def test_game_menu_select_field_only_one_allowed():
 
     fields[id_to_unselect]["selected"] = True
 
-    game_menu.select_field(id_to_select)
+    game_menu._select_field(id_to_select)
 
     assert fields[id_to_select]["selected"] is True
     assert fields[id_to_unselect]["selected"] is False

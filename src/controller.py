@@ -6,13 +6,13 @@ from pynput import keyboard as _keyboard
 from src.constants import KEYS_VALUES_MAP
 from src.errors import PleaseUseContextManagerError
 from src.errors import UnableToRecognizeKey
-from src.utils.abc_utils import ContextManagerAbs
+from src.utils.abc_utils import ContextManagerAbs, NonBlockingAbs
 
 if typing.TYPE_CHECKING:
     from src.game_engine.game_engine import GameEngine
 
 
-class Controller(ContextManagerAbs):
+class Controller(ContextManagerAbs, NonBlockingAbs):
     """ Takes user input from keyboard and writes it to game engine. """
 
     # TO-DO
