@@ -7,7 +7,8 @@ from time import sleep
 
 from src.constants import GAME_ENGINE_CTX
 from src.game_engine.utils.si_utils import get_seconds_from_hz
-from src.utils.abc_utils import ContextManagerAbs, NonBlockingAbs
+from src.utils.abc_utils import ContextManagerAbs
+from src.utils.abc_utils import NonBlockingAbs
 from src.utils.ansi_utils import move_cursor_to_line_beginning
 from src.utils.ansi_utils import paint_bold
 from src.utils.ansi_utils import paint_red

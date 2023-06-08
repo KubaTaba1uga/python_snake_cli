@@ -4,7 +4,6 @@ from enum import StrEnum
 
 from pynput import keyboard as _keyboard
 
-
 # Please do not use pynupt directly.
 
 # Interface to pynput keys values
