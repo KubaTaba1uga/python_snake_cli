@@ -57,6 +57,13 @@ class GAME_MENU_CTX(StrEnum):
     EXIT = auto()
 
 
+class BoardFieldType(StrEnum):
+    WALL = auto()
+    SNAKE = auto()
+    FRUIT = auto()
+    GROUND = auto()
+
+
 FIELD_TEMPLATE = {
     "display_name": "string",
     "selected": False,
