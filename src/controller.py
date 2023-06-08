@@ -20,7 +20,7 @@ class Controller(ContextManagerAbs, NonBlockingAbs):
 
     def __init__(self, game_engine):
         self.game_engine = game_engine
-        self._thread = _keyboard.Listener(on_press=self._write_key_to_game_engine)
+        self._thread = _keyboard.Listener(on_press=self.write_key_to_game_engine)
 
     def __enter__(self):
         pass
@@ -29,12 +29,15 @@ class Controller(ContextManagerAbs, NonBlockingAbs):
         if self.is_active():
             self.stop()
 
+    def write_key_to_game_engine(self, key):
+        self._write_key_value_to_game_engine(self.game_engine, key)
+
     @classmethod
     def _write_key_value_to_game_engine(
         cls, game_engine: "GameEngine", key: _keyboard.Key
     ):
         try:
-            value = cls.map_key_to_value(key)
+            value = cls._map_key_to_value(key)
         except UnableToRecognizeKey:
             return
 
@@ -46,9 +49,6 @@ class Controller(ContextManagerAbs, NonBlockingAbs):
             return KEYS_VALUES_MAP[key]
         except KeyError:
             raise UnableToRecognizeKey(key)
-
-    def _write_key_to_game_engine(self, key):
-        self._write_key_value_to_game_engine(self.game_engine, key)
 
     def start(self):
         """ Controller takes user's input (no-blocking). """
