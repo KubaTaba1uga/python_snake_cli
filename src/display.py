@@ -8,6 +8,7 @@ from time import sleep
 from src.constants import GAME_ENGINE_CTX
 from src.game_engine.utils.si_utils import get_seconds_from_hz
 from src.utils.abc_utils import ContextManagerAbs
+from src.utils.abc_utils import NonBlockingAbs
 from src.utils.ansi_utils import move_cursor_to_line_beginning
 from src.utils.ansi_utils import paint_bold
 from src.utils.ansi_utils import paint_red
@@ -16,7 +17,7 @@ if typing.TYPE_CHECKING:
     from src.game_engine.game_engine import GameEngine
 
 
-class DisplayAbs(ContextManagerAbs):
+class DisplayAbs(ContextManagerAbs, NonBlockingAbs):
     DEFAULT_FREQ_IN_HZ = 500
 
     @classmethod
@@ -30,6 +31,20 @@ class DisplayAbs(ContextManagerAbs):
         self._thread: Thread = Thread(target=self._start)
         self._stop_thread: Event = Event()
 
+        self.CTX_RENDER_MAP = self._init_ctx_render_map()
+
+    def __enter__(self):
+        self.start()
+
+    def __exit__(self, exc_type, exc_value, exc_tryceback):
+        self.stop()
+
+    def _init_ctx_render_map(self) -> dict:
+        return {
+            GAME_ENGINE_CTX.GAME: self.render_game_engine,
+            GAME_ENGINE_CTX.MENU: self._render_game_menu,
+        }
+
     @classmethod
     @abstractmethod
     def render_game_menu(
@@ -38,31 +53,28 @@ class DisplayAbs(ContextManagerAbs):
         """Display game's menu. GameEngine"""
         pass
 
-    # @abstractclassmethod
+    @classmethod
     def render_game_engine(cls, game_engine: "GameEngine"):
         """Display gameplay."""
         pass
 
+    @classmethod
+    def render(
+        cls,
+        ctx_render_map: typing.Dict[GAME_ENGINE_CTX, typing.Callable],
+        game_engine_ctx: GAME_ENGINE_CTX,
+    ):
+        ctx_render_map[game_engine_ctx]()
+
+    def _render(self):
+        self.render(self.CTX_RENDER_MAP, self._game_engine.ctx)
+
     def _render_game_menu(self):
         self.render_game_menu(self._game_engine, self._width, self._height)
 
-    def __enter__(self):
-        self.start()
-
-    def __exit__(self, exc_type, exc_value, exc_tryceback):
-        self.stop()
-
-    def render(self):
-        CTX_RENDER_MAP = {
-            GAME_ENGINE_CTX.GAME: self.render_game_engine,
-            GAME_ENGINE_CTX.MENU: self._render_game_menu,
-        }
-
-        CTX_RENDER_MAP[self._game_engine.ctx]()
-
     def _start(self):
         while True:
-            self.render()
+            self._render()
             self.sleep()
 
             if self._stop_thread.is_set():

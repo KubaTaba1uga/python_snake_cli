@@ -1,110 +1,62 @@
-import functools
 import typing
 
 from pynput import keyboard as _keyboard
 
-from src.constants import VALUES_KEYS_MAP
-from src.errors import PleaseUseContextManagerError
+from src.constants import KEYS_VALUES_MAP
 from src.errors import UnableToRecognizeKey
 from src.utils.abc_utils import ContextManagerAbs
+from src.utils.abc_utils import NonBlockingAbs
+
+if typing.TYPE_CHECKING:
+    from src.game_engine.game_engine import GameEngine
 
 
-def _does_thread_exsist(obj: typing.Any) -> bool:
-    return getattr(obj, "_thread") is not None
+class Controller(ContextManagerAbs, NonBlockingAbs):
+    """Takes user input from keyboard and writes it to game engine."""
 
-
-class _validate_thread_exsists:
-    """Decorator whih cheks `cls._thread` exsistance."""
-
-    def __init__(self, should_exsists: bool):
-        self.should_exsists = should_exsists
-
-    def __call__(self, function):
-        @functools.wraps(function)
-        def wrapper(cls, *args, **kwargs):
-            thread_exsists = _does_thread_exsist(cls)
-
-            if thread_exsists is not self.should_exsists:
-                raise PleaseUseContextManagerError(
-                    function,
-                    cls,
-                    *args,
-                    **kwargs,
-                )
-
-            return function(cls, *args, **kwargs)
-
-        return wrapper
-
-
-class Controller(ContextManagerAbs):
-    """Take's user input in seperate thread. Only one controller allowed."""
-
-    _thread: typing.Optional[_keyboard.Listener] = None
+    # TO-DO
+    # do not allow creating of more than one controller
 
     def __init__(self, game_engine):
         self.game_engine = game_engine
+        self._thread = _keyboard.Listener(on_press=self.write_key_to_game_engine)
 
     def __enter__(self):
-        if not self._does_thread_exsists():
-            self.start(self.game_engine)
+        pass
 
     def __exit__(self, exc_type, exc_value, exc_tryceback):
-        try:
-            if self.is_active():
-                self.stop()
-        finally:
-            self.cleanup()
+        if self.is_active():
+            self.stop()
+
+    def write_key_to_game_engine(self, key):
+        self._write_key_value_to_game_engine(self.game_engine, key)
 
     @classmethod
-    def _write_key_value_to_game_engine(cls, game_engine, key):
+    def _write_key_value_to_game_engine(
+        cls, game_engine: "GameEngine", key: _keyboard.Key
+    ):
         try:
-            value = cls.map_key_to_value(key)
+            value = cls._map_key_to_value(key)
         except UnableToRecognizeKey:
             return
 
         game_engine.user_input.set(value)
 
     @classmethod
-    def map_key_to_value(cls, key) -> str:
-        for value_key_map in VALUES_KEYS_MAP.values():
-            if key is value_key_map["key"]:
-                return str(value_key_map["value"])
+    def _map_key_to_value(cls, key: _keyboard.Key) -> str:
+        try:
+            return KEYS_VALUES_MAP[key]
+        except KeyError:
+            raise UnableToRecognizeKey(key)
 
-        raise UnableToRecognizeKey(key)
+    def start(self):
+        """Controller takes user's input (no-blocking)."""
+        self._thread.start()
 
-    @classmethod
-    @_validate_thread_exsists(False)
-    def start(cls, game_engine):
-        """Take user's input as a keyboard key and transform it to form
-        understandable by game engine. This is sth like peripheral abstraction."""
+    def stop(self):
+        """Controller doesn't take user's input."""
+        self._thread.stop()
 
-        def write_key_to_game_engine(key):
-            cls._write_key_value_to_game_engine(game_engine, key)
-
-        def create_thread():
-            return _keyboard.Listener(on_press=write_key_to_game_engine)
-
-        thread = create_thread()
-
-        thread.start()
-
-        cls._thread = thread
-
-    @classmethod
-    @_validate_thread_exsists(True)
-    def stop(cls):
-        cls._thread.stop()
-
-    @classmethod
-    @_validate_thread_exsists(True)
-    def cleanup(cls):
-        cls._thread = None
-
-    @classmethod
-    def is_active(cls) -> bool:
-        return cls._does_thread_exsists() and cls._thread.running  # type: ignore
-
-    @classmethod
-    def _does_thread_exsists(cls) -> bool:
-        return _does_thread_exsist(cls)
+    def is_active(self) -> bool:
+        """Does controller take user's input?"""
+        return self._thread.running

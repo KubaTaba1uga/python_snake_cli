@@ -10,3 +10,13 @@ class ContextManagerAbs(ABC):
     @abstractmethod
     def __exit__(self, exc_type, exc_value, exc_tryceback):
         pass
+
+
+class NonBlockingAbs(ABC):
+    @abstractmethod
+    def start(self):
+        pass
+
+    @abstractmethod
+    def stop(self):
+        pass

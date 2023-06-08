@@ -1,8 +1,11 @@
 import typing
 from copy import deepcopy
 
+from src.constants import DISPLAY_NAMES_KEYS_MAP
 from src.constants import GAME_MENU_CTX
-from src.constants import VALUES_KEYS_MAP
+from src.constants import KEYS_VALUES_MAP
+# from src.constants import VALUES_KEYS_MAP
+from src.errors import NoSelectedField
 from src.game_engine.board import BoardAbs
 from src.game_engine.board import generate_board_fields
 from src.game_engine.difficulty import DifficultyAbs
@@ -28,15 +31,8 @@ _MENU_FIELDS_MAP_TEMPLATE = {
         },
     },
     GAME_MENU_CTX.PLAY_NEW: {
-        "title": "",
-        "fields": {
-            0: {
-                "display_name": "Game is loading ...",
-                "selected": False,
-                "next_ctx": GAME_MENU_CTX.PLAY_NEW,
-                "disabled": False,
-            },
-        },
+        "title": "Game is loading...",
+        "fields": {},
     },
     GAME_MENU_CTX.CHOOSE_BOARD: {
         "title": "Board Choice",
@@ -80,6 +76,16 @@ def _overload_field_id(function):
     return wrapped_function
 
 
+def _allow_no_fields(function):
+    def wrapped_function(self, *args, **kwargs):
+        try:
+            return function(self, *args, **kwargs)
+        except NoSelectedField:
+            return
+
+    return wrapped_function
+
+
 class GameMenu:
     """Manages GameSession for GameEngine."""
 
@@ -90,28 +96,42 @@ class GameMenu:
         self.fields_map = deepcopy(_MENU_FIELDS_MAP_TEMPLATE)
         self.session: typing.Optional[Session] = session
 
+        self.USER_INPUT_FUNC_MAP = self._init_user_input_func_map()
+
+    def _init_user_input_func_map(self):
+        return {
+            KEYS_VALUES_MAP[DISPLAY_NAMES_KEYS_MAP["ENTER key"]]: self.set_new_ctx,
+            KEYS_VALUES_MAP[
+                DISPLAY_NAMES_KEYS_MAP["UP ARROW key"]
+            ]: self.select_previous_field,
+            KEYS_VALUES_MAP[
+                DISPLAY_NAMES_KEYS_MAP["DOWN ARROW key"]
+            ]: self.select_next_field,
+        }
+
+    @_allow_no_fields
     def select_next_field(self):
-        # Mapped to: arrow up
         field_id, _ = self._get_selected_field()
-        self.select_field(field_id + 1)
+        self._select_field(field_id + 1)
 
+    @_allow_no_fields
     def select_previous_field(self):
-        # Mapped to: arrow down
         field_id, _ = self._get_selected_field()
-        self.select_field(field_id - 1)
+        self._select_field(field_id - 1)
 
-    @_overload_field_id
-    @_unselect_all_fields_before_execution
-    def select_field(self, field_id: str):
-        self._get_field(field_id)["selected"] = True
-
+    @_allow_no_fields
     def set_new_ctx(self):
-        # Mapped to: Enter
         _, field = self._get_selected_field()
         self.ctx = field["next_ctx"]
 
     def is_session_ready(self):
         return self.ctx in [GAME_MENU_CTX.PLAY_NEW, GAME_MENU_CTX.PLAY_LOADED]
+
+    def get_fields(self) -> dict:
+        return self.fields_map[self.ctx]["fields"]
+
+    def get_title(self) -> str:
+        return self.fields_map[self.ctx]["title"]
 
     def process_ctx(self):
         GAME_MENU_CTX_PROCESS_FUNC_MAP = {
@@ -151,12 +171,17 @@ class GameMenu:
 
         self.session = Session(board_class=board_class, difficulty=difficulty_class())
 
-    def _get_selected_field(self) -> tuple:
+    @_overload_field_id
+    @_unselect_all_fields_before_execution
+    def _select_field(self, field_id: str):
+        self._get_field(field_id)["selected"] = True
+
+    def _get_selected_field(self, ctx=None) -> tuple:
         for field_id, field in self.get_fields().items():
             if field["selected"]:
                 return field_id, field
 
-        raise NotImplementedError(self.fields_map, self.ctx)
+        raise NoSelectedField(self.fields_map, self.ctx)
 
     def _unselect_field(self, field_id: str):
         self._get_field(field_id)["selected"] = False
@@ -166,17 +191,3 @@ class GameMenu:
 
     def _get_field(self, field_id: str) -> dict:
         return self.fields_map[self.ctx]["fields"][field_id]
-
-    def get_fields(self) -> dict:
-        return self.fields_map[self.ctx]["fields"]
-
-    def get_title(self) -> str:
-        return self.fields_map[self.ctx]["title"]
-
-    @property
-    def USER_INPUT_FUNC_MAP(self) -> dict:
-        return {
-            VALUES_KEYS_MAP["enter"]["value"]: self.set_new_ctx,
-            VALUES_KEYS_MAP["arrow-up"]["value"]: self.select_previous_field,
-            VALUES_KEYS_MAP["arrow-down"]["value"]: self.select_next_field,
-        }

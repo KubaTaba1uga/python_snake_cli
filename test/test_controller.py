@@ -12,36 +12,36 @@ def simulate_key_press(key):
 
 
 def test_controller_thread_is_not_active():
-    game_engine, controller = GameEngine(), Controller
+    game_engine = GameEngine()
+    controller = Controller(game_engine)
 
-    controller.start(game_engine)
+    controller.start()
 
     controller.stop()
 
     assert controller.is_active() is False
 
-    controller.cleanup()
-
 
 def test_controller_thread_is_active():
-    game_engine, controller = GameEngine(), Controller
+    game_engine = GameEngine()
+    controller = Controller(game_engine)
 
-    controller.start(game_engine)
+    controller.start()
 
     try:
         assert controller.is_active() is True
     finally:
         controller.stop()
-        controller.cleanup()
 
 
 def test_controller_ctx_manager():
-    game_engine, controller = GameEngine(), Controller
+    game_engine = GameEngine()
+    controller = Controller(game_engine)
 
-    with controller(game_engine):
+    with controller:
         pass
 
-    assert controller._does_thread_exsists() is False
+    assert controller.is_active() is False
 
 
 def test_controller_unrecognizable_key():

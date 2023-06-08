@@ -7,6 +7,7 @@ from src.constants import GAME_MENU_CTX
 
 
 class BoardAbs:
+    # Id is required by Menu, to link field with board.
     id: typing.Optional[int] = None
 
     @classmethod
