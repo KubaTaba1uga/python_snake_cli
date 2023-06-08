@@ -4,15 +4,27 @@ from enum import StrEnum
 
 from pynput import keyboard as _keyboard
 
-VALUES_KEYS_MAP: typing.Dict[
-    str, typing.Dict[str, typing.Union[_keyboard.Key, str]]
-] = {
-    "escape": {"key": _keyboard.Key.esc, "value": "escape"},
-    "enter": {"key": _keyboard.Key.enter, "value": "enter"},
-    "arrow-up": {"key": _keyboard.Key.up, "value": "arrow-up"},
-    "arrow-down": {"key": _keyboard.Key.down, "value": "arrow-down"},
-    "arrow-left": {"key": _keyboard.Key.left, "value": "arrow-left"},
-    "arrow-right": {"key": _keyboard.Key.right, "value": "arrow-right"},
+
+# Please do not use pynupt directly.
+
+# Interface to pynput keys values
+KEYS_VALUES_MAP: typing.Dict[_keyboard.Key, str] = {
+    _keyboard.Key.esc: "escape",
+    _keyboard.Key.enter: "enter",
+    _keyboard.Key.up: "arrow-up",
+    _keyboard.Key.down: "arrow-down",
+    _keyboard.Key.left: "arrow-left",
+    _keyboard.Key.right: "arrow-right",
+}
+
+# Interface to pynput keys
+DISPLAY_NAMES_KEYS_MAP: typing.Dict[str, _keyboard.Key] = {
+    "ESC": _keyboard.Key.esc,
+    "ENTER": _keyboard.Key.enter,
+    "UP": _keyboard.Key.up,
+    "DOWN": _keyboard.Key.down,
+    "LEFT": _keyboard.Key.left,
+    "RIGHT": _keyboard.Key.right,
 }
 
 

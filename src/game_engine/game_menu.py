@@ -2,7 +2,8 @@ import typing
 from copy import deepcopy
 
 from src.constants import GAME_MENU_CTX
-from src.constants import VALUES_KEYS_MAP
+
+# from src.constants import VALUES_KEYS_MAP
 from src.game_engine.board import BoardAbs
 from src.game_engine.board import generate_board_fields
 from src.game_engine.difficulty import DifficultyAbs
@@ -173,10 +174,10 @@ class GameMenu:
     def get_title(self) -> str:
         return self.fields_map[self.ctx]["title"]
 
-    @property
-    def USER_INPUT_FUNC_MAP(self) -> dict:
-        return {
-            VALUES_KEYS_MAP["enter"]["value"]: self.set_new_ctx,
-            VALUES_KEYS_MAP["arrow-up"]["value"]: self.select_previous_field,
-            VALUES_KEYS_MAP["arrow-down"]["value"]: self.select_next_field,
-        }
+    # @property
+    # def USER_INPUT_FUNC_MAP(self) -> dict:
+    #     return {
+    #         VALUES_KEYS_MAP["enter"]["value"]: self.set_new_ctx,
+    #         VALUES_KEYS_MAP["arrow-up"]["value"]: self.select_previous_field,
+    #         VALUES_KEYS_MAP["arrow-down"]["value"]: self.select_next_field,
+    #     }
