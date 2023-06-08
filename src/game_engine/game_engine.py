@@ -26,8 +26,6 @@ def _manage_game_menu_and_session(function) -> typing.Any:
 
 
 # TO-DO
-#  less internal states usage, more passing as argument -> more @classmethod
-#   and interfaces to them
 #  session keeps board & snake
 class GameEngine:
     DEFAULT_USER_INPUT_VALUE = "None"
