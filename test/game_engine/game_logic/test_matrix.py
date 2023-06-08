@@ -54,7 +54,7 @@ def test_matrix_set(x, y, expected_result):
 
 
 def test_matrix_height():
-    size, expected_result = 5, 4
+    size, expected_result = 5, 5
 
     matrix = Matrix2D(size)
 
@@ -64,7 +64,7 @@ def test_matrix_height():
 
 
 def test_matrix_width():
-    size, expected_result = 5, 4
+    size, expected_result = 5, 5
 
     matrix = Matrix2D(size)
 

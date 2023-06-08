@@ -26,10 +26,10 @@ class Matrix2D:
         self._data[y][x] = value
 
     def height(self) -> int:
-        return len(self._data) - 1
+        return len(self._data)
 
     def width(self) -> int:
-        return len(self._data[0]) - 1
+        return len(self._data[0])
 
     def cast_to_list(self) -> typing.List[typing.List[typing.Any]]:
         return [[value for value in nested_l] for nested_l in self._data]
