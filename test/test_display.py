@@ -77,12 +77,11 @@ def test_bash_display_render_menu_choose_difficulty():
 
 def test_bash_display_render_menu_waiting_screen():
     expected_menu = (
-        "\x1b[1K   "
-        "\x1b[1m"
-        "\x1b[0m"
-        "\x1b[0m\n"
-        "\x1b[1K      - Game is loading ..."
-        "\x1b[0m\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+        "\x1b[1K   \x1b[1m"
+        "Game is loading..."
+        "\x1b[0m\x1b[0m\n\n"
+        "\n\n\n\n\n\n\n\n\n"
+        "\n\n\n\n\n\n\n"
     )
 
     game_engine, terminal_x, terminal_y = _game_engine(), 30, 20

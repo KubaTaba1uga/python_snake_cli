@@ -30,7 +30,7 @@ _MENU_FIELDS_MAP_TEMPLATE = {
         },
     },
     GAME_MENU_CTX.PLAY_NEW: {
-        "title": "",
+        "title": "Game is loading...",
         "fields": {},
     },
     GAME_MENU_CTX.CHOOSE_BOARD: {
@@ -175,7 +175,7 @@ class GameMenu:
     def _select_field(self, field_id: str):
         self._get_field(field_id)["selected"] = True
 
-    def _get_selected_field(self) -> tuple:
+    def _get_selected_field(self, ctx=None) -> tuple:
         for field_id, field in self.get_fields().items():
             if field["selected"]:
                 return field_id, field
