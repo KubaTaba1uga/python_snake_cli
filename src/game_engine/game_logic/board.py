@@ -1,4 +1,5 @@
 import typing
+from random import randint
 from abc import ABC
 from abc import abstractmethod
 from copy import copy
@@ -6,7 +7,7 @@ from collections import Counter
 from dataclasses import dataclass
 
 from src.constants import FIELD_TEMPLATE
-from src.constants import GAME_MENU_CTX
+from src.constants import GAME_MENU_CTX, BoardFieldType
 from src.game_engine.game_logic.matrix import Matrix2D
 from src.game_engine.game_logic.snake import SnakeAbs
 
@@ -41,7 +42,7 @@ class BoardFieldAbs(ABC):
         raise NotImplementedError(cls, id_)
 
 
-class BoardAbs(BoardFieldAbs):
+class BoardAbs(ABC):
     def __init__(self, size: int):
         self.matrix = Matrix2D(size)
 
@@ -98,18 +99,49 @@ class BoardAbs(BoardFieldAbs):
     @classmethod
     @abstractmethod
     def _render_fruits(self, matrix, fruits: typing.List[Coordinates]):
-        """Reflect fruits on matrix."""
+        """Reflect fruits on matrix.
+        If fruit coordinates are taken by snake, delete fruit from board."""
 
 
-class BoardNoWalls(BoardAbs):
+class BoardNoWalls(BoardAbs, BoardFieldAbs):
     @classmethod
     def display_name(cls) -> str:
         # This is required to generate menu's fields.
         return "No walls"
 
+    @classmethod
+    def _create_fruits(self, matrix) -> typing.List[Coordinates]:
+        """Create list of coordinates which represent fruits locations."""
+        field_types_allowed_to_overwrite = [BoardFieldType.GROUND]
+
+        max_fruits_no, min_fruits_no = 3, 1
+        max_x_i, max_y_i = matrix.width() - 1, matrix.height() - 1
+
+        desired_fruits_number = randint(min_fruits_no, max_fruits_no)
+
+        results: typing.List[Coordinates] = []
+
+        while len(results) != desired_fruits_number:
+            rand_x, rand_y = randint(0, max_x_i), randint(0, max_y_i)
+
+            if any(
+                coordinate.x == rand_x and coordinate.y == rand_y
+                for coordinate in results
+            ):
+                continue
+
+            if matrix.get(rand_x, rand_y) not in field_types_allowed_to_overwrite:
+                continue
+
+            fruit_coordinates = Coordinates(x=rand_x, y=rand_y)
+
+            results.append(fruit_coordinates)
+
+        return results
+
 
 def generate_board_fields():
-    BoardAbs.add_ids_to_children_classes()
+    BoardFieldAbs.add_ids_to_children_classes()
 
     fields, next_ctx = {}, GAME_MENU_CTX.CHOOSE_DIFFICULTY
 
@@ -126,3 +158,7 @@ def generate_board_fields():
     fields[0]["selected"] = True
 
     return fields
+
+
+# TO-DO
+# create board which moves upwords one y/x each 5 moves
