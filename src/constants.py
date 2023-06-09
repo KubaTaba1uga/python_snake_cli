@@ -70,3 +70,10 @@ FIELD_TEMPLATE = {
     "next_ctx": None,
     "disabled": False,
 }
+
+
+class SnakeDirection(StrEnum):
+    UP = auto()
+    DOWN = auto()
+    LEFT = auto()
+    RIGHT = auto()
