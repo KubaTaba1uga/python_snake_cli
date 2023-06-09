@@ -1,10 +1,14 @@
 import typing
-from abc import ABC, abstractmethod
+from abc import ABC
+from abc import abstractmethod, abstractproperty
 from dataclasses import dataclass
+from time import sleep
 
-
-from src.constants import SnakeDirection, BoardFieldType
-from src.errors import ValidationError, SnakeDied
+from src.constants import BoardFieldType
+from src.constants import SnakeDirection
+from src.errors import SnakeDied
+from src.errors import ValidationError
+from src.game_engine.utils.si_utils import get_seconds_from_hz
 
 if typing.TYPE_CHECKING:
     from src.game_engine.game_logic.matrix import Matrix2D
@@ -225,3 +229,8 @@ class NormalSnake(SnakeAbs):
 
         if is_neck_next_to_the_head:
             raise ValidationError()
+
+
+# TO-DO
+# creates lazy snake - bigger it gets slower it moves
+# create fit snake - bigger he gets quicker he moves

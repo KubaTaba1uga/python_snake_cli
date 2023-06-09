@@ -4,13 +4,12 @@ from copy import deepcopy
 from src.constants import DISPLAY_NAMES_KEYS_MAP
 from src.constants import GAME_MENU_CTX
 from src.constants import KEYS_VALUES_MAP
-
 # from src.constants import VALUES_KEYS_MAP
 from src.errors import NoSelectedField
-from src.game_engine.game_logic.board import BoardAbs
-from src.game_engine.game_logic.board import generate_board_fields
 from src.game_engine.difficulty import DifficultyAbs
 from src.game_engine.difficulty import generate_difficulty_fields
+from src.game_engine.game_logic.board import BoardAbs
+from src.game_engine.game_logic.board import generate_board_fields
 from src.game_engine.session import Session
 
 _MENU_FIELDS_MAP_TEMPLATE = {

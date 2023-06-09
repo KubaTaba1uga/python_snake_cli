@@ -2,7 +2,7 @@ import typing
 from dataclasses import dataclass
 
 if typing.TYPE_CHECKING:
-    from src.game_engine.board import BoardAbs
+    from src.game_engine.game_logic.board import BoardAbs
     from src.game_engine.difficulty import DifficultyAbs
 
 

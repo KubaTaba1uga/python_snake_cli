@@ -1,9 +1,8 @@
 import typing
-import copy
 
 
 class Matrix2D:
-    """ Fixed size two dimmensional array."""
+    """Fixed size two dimmensional array."""
 
     def __init__(self, size: int):
         if size < 1:

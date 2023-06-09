@@ -1,10 +1,20 @@
 import typing
-from abc import abstractmethod, ABC
+from abc import ABC
+from abc import abstractmethod
 from copy import copy
+from collections import Counter
+from dataclasses import dataclass
 
 from src.constants import FIELD_TEMPLATE
 from src.constants import GAME_MENU_CTX
 from src.game_engine.game_logic.matrix import Matrix2D
+from src.game_engine.game_logic.snake import SnakeAbs
+
+
+@dataclass
+class Coordinates:
+    x: int
+    y: int
 
 
 class BoardFieldAbs(ABC):
@@ -35,17 +45,60 @@ class BoardAbs(BoardFieldAbs):
     def __init__(self, size: int):
         self.matrix = Matrix2D(size)
 
-        self._initiate_board(self.matrix)
+        self._initiate_board_basic(self.matrix)
+
+        self.snake: typing.Type[SnakeAbs] = self._initiate_snake(self.matrix)
+
+        self.create_fruits()
+
+    @property
+    def size(self) -> int:
+        return self.matrix.width()
+
+    @property
+    def are_any_fruits(self) -> bool:
+        return len(self.fruits) == 0
+
+    def move_snake(self):
+        self.snake.move(self.matrix)
+
+    def process(self):
+        if not self.are_any_fruits():
+            self.create_fruits()
+
+        self.move_snake()
+
+        self._render_snake(self.matrix, self.snake)
+        self._render_fruits(self.matrix, self.fruits)
+
+    def create_fruits(self):
+        self.fruits = self._create_fruits(self.matrix)
 
     @classmethod
     @abstractmethod
-    def _initiate_board(self, matrix):
-        """Fill matrix body with field types."""
+    def _initiate_board_basic(self, matrix):
+        """Fill matrix body with field types (GROUND, WALL)."""
 
     @classmethod
     @abstractmethod
-    def _initiate_snake(self, matrix):
-        """Fill matrix body with field types."""
+    def _initiate_snake(self, matrix) -> typing.Type[SnakeAbs]:
+        """Fill matrix body with snake type fields and create snake obj."""
+
+    @classmethod
+    @abstractmethod
+    def _create_fruits(self, matrix) -> typing.List[Coordinates]:
+        """Create list of coordinates which represent fruits locations."""
+        raise NotImplementedError(self, matrix)
+
+    @classmethod
+    @abstractmethod
+    def _render_snake(self, matrix, snake) -> typing.List[Coordinates]:
+        """Reflect snake on matrix."""
+
+    @classmethod
+    @abstractmethod
+    def _render_fruits(self, matrix, fruits: typing.List[Coordinates]):
+        """Reflect fruits on matrix."""
 
 
 class BoardNoWalls(BoardAbs):
