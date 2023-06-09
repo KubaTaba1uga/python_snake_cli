@@ -26,3 +26,7 @@ class NoSelectedField(BaseException):
         self.ctx = ctx
 
         super().__init__(fields_map, ctx)
+
+
+class ValidationError(BaseException):
+    """Invalid value."""

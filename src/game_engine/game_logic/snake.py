@@ -4,6 +4,7 @@ from dataclasses import dataclass
 
 
 from src.constants import SnakeDirection, BoardFieldType
+from src.errors import ValidationError
 
 if typing.TYPE_CHECKING:
     from src.game_engine.game_logic.matrix import Matrix2D
@@ -21,8 +22,11 @@ class SnakeBody:
 
 class SnakeAbs(ABC):
     def __init__(self, start_x: int, start_y: int, direction=SnakeDirection.UP):
-        self.direction = direction
+        self._direction = direction
         self._body: typing.List[SnakeBody] = [SnakeBody(x=start_x, y=start_y)]
+
+    def __getitem__(self, i):
+        return self._body[i]
 
     def head(self):
         head_i = 0
@@ -48,6 +52,10 @@ class SnakeAbs(ABC):
     def move(self, matrix: "Matrix2D"):
         pass
 
+    @abstractmethod
+    def set_direction(self, direction: SnakeDirection):
+        pass
+
 
 class NormalSnake(SnakeAbs):
     def move(self, matrix: "Matrix2D"):
@@ -58,6 +66,26 @@ class NormalSnake(SnakeAbs):
         self._grow_head(new_head_x, new_head_y)
 
         self._shrink()
+
+    def set_direction(self, direction: SnakeDirection):
+        """Assign new direction to the snake.
+        Validates direction's value, before performing assignment."""
+
+        DIRECTION_VALIDATE_MAP = {
+            SnakeDirection.UP: self._validate_up_direction,
+            SnakeDirection.DOWN: self._validate_down_direction,
+            SnakeDirection.LEFT: self._validate_left_direction,
+            SnakeDirection.RIGHT: self._validate_right_direction,
+        }
+
+        try:
+            DIRECTION_VALIDATE_MAP[direction]()
+        except ValidationError:
+            raise ValueError(direction)
+        except KeyError:
+            pass
+
+        self._direction = direction
 
     def _process_move(self, matrix: "Matrix2D", move_x: int, move_y: int):
         FIELD_TYPE_FUNC_MAP = {
@@ -80,10 +108,8 @@ class NormalSnake(SnakeAbs):
         current_head_x, current_head_y = current_head.x, current_head.y
 
         new_head_x, new_head_y = self._calculate_new_head_x(
-            matrix, current_head_x, self.direction
-        ), self._calculate_new_head_y(matrix, current_head_y, self.direction)
-
-        print(new_head_x)
+            matrix, current_head_x, self._direction
+        ), self._calculate_new_head_y(matrix, current_head_y, self._direction)
 
         return new_head_x, new_head_y
 
@@ -147,3 +173,51 @@ class NormalSnake(SnakeAbs):
 
     def _shrink(self):
         self._body.pop()
+
+    def _validate_up_direction(self):
+        # do not allow snake to eat its neck
+        try:
+            snake_neck = self[1]
+        except IndexError:
+            return
+
+        is_neck_over_the_head = snake_neck.y == self.head().y - 1
+
+        if is_neck_over_the_head:
+            raise ValidationError()
+
+    def _validate_down_direction(self):
+        # do not allow snake to eat its neck
+        try:
+            snake_neck = self[1]
+        except IndexError:
+            return
+
+        is_neck_below_the_head = snake_neck.y == self.head().y + 1
+
+        if is_neck_below_the_head:
+            raise ValidationError()
+
+    def _validate_left_direction(self):
+        # do not allow snake to eat its neck
+        try:
+            snake_neck = self[1]
+        except IndexError:
+            return
+
+        is_neck_next_to_the_head = snake_neck.x == self.head().x - 1
+
+        if is_neck_next_to_the_head:
+            raise ValidationError()
+
+    def _validate_right_direction(self):
+        # do not allow snake to eat its neck
+        try:
+            snake_neck = self[1]
+        except IndexError:
+            return
+
+        is_neck_next_to_the_head = snake_neck.x == self.head().x + 1
+
+        if is_neck_next_to_the_head:
+            raise ValidationError()
