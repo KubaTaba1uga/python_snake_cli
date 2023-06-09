@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
 
-from src.constants import SnakeDirection
+from src.constants import SnakeDirection, BoardFieldType
 
 if typing.TYPE_CHECKING:
     from src.game_engine.game_logic.matrix import Matrix2D
@@ -46,16 +46,36 @@ class SnakeAbs(ABC):
 
     @abstractmethod
     def move(self, matrix: "Matrix2D"):
-        """Change each snake's body part coordinates based on current direction."""
+        pass
 
 
 class NormalSnake(SnakeAbs):
     def move(self, matrix: "Matrix2D"):
+        # TO-DO
+        # do not allow snake to turn back and eat itself
         new_head_x, new_head_y = self._calculate_new_head_coordinates(matrix)
-        self._grow(new_head_x, new_head_y)
+
+        self._grow_head(new_head_x, new_head_y)
+
         self._shrink()
 
-    def _calculate_new_head_coordinates(self, matrix: "Matrix2D") -> typing.Tuple[int]:
+    def _process_move(self, matrix: "Matrix2D", move_x: int, move_y: int):
+        FIELD_TYPE_FUNC_MAP = {
+            BoardFieldType.WALL: self.die,
+            BoardFieldType.SNAKE: self.die,
+            BoardFieldType.FRUIT: self._grow_dummy_tail,
+        }
+
+        field_type = matrix.get(move_x, move_y)
+
+        try:
+            FIELD_TYPE_FUNC_MAP[field_type]()
+        except KeyError:
+            pass
+
+    def _calculate_new_head_coordinates(
+        self, matrix: "Matrix2D"
+    ) -> typing.Tuple[int, int]:
         current_head = self.head()
         current_head_x, current_head_y = current_head.x, current_head.y
 
@@ -63,7 +83,7 @@ class NormalSnake(SnakeAbs):
             matrix, current_head_x, self.direction
         ), self._calculate_new_head_y(matrix, current_head_y, self.direction)
 
-        print(new_head_y)
+        print(new_head_x)
 
         return new_head_x, new_head_y
 
@@ -72,8 +92,8 @@ class NormalSnake(SnakeAbs):
         cls, matrix: "Matrix2D", current_head_x: int, direction: SnakeDirection
     ) -> int:
         DIRECTION_MOVE_MAP = {
-            SnakeDirection.LEFT: cls._move_next,
-            SnakeDirection.RIGHT: cls._move_prev,
+            SnakeDirection.LEFT: cls._move_prev,
+            SnakeDirection.RIGHT: cls._move_next,
         }
 
         matrix_max_x_i, matrix_min_x_i = matrix.width() - 1, 0
@@ -90,8 +110,8 @@ class NormalSnake(SnakeAbs):
         cls, matrix: "Matrix2D", current_head_y: int, direction: SnakeDirection
     ) -> int:
         DIRECTION_MOVE_MAP = {
-            SnakeDirection.UP: cls._move_next,
-            SnakeDirection.DOWN: cls._move_prev,
+            SnakeDirection.UP: cls._move_prev,
+            SnakeDirection.DOWN: cls._move_next,
         }
 
         matrix_max_y_i, matrix_min_y_i = matrix.height() - 1, 0
@@ -107,18 +127,23 @@ class NormalSnake(SnakeAbs):
     def _move_next(cls, current: int, max_i: int, min_i: int) -> int:
         new = current + 1
 
-        return new if new < max_i else min_i
+        return new if new <= max_i else min_i
 
     @classmethod
     def _move_prev(cls, current: int, max_i: int, min_i: int) -> int:
         new = current - 1
 
-        return new if new > min_i else max_i
+        return new if new >= min_i else max_i
 
-    def _grow(self, x, y):
+    def _grow_head(self, x, y):
         new_head = SnakeBody(x, y)
 
         self._body.insert(0, new_head)
+
+    def _grow_dummy_tail(self):
+        dummy_tail = SnakeBody(-1, -1)
+
+        self._body.append(dummy_tail)
 
     def _shrink(self):
         self._body.pop()
