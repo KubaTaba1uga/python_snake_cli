@@ -4,7 +4,7 @@ from dataclasses import dataclass
 
 
 from src.constants import SnakeDirection, BoardFieldType
-from src.errors import ValidationError
+from src.errors import ValidationError, SnakeDied
 
 if typing.TYPE_CHECKING:
     from src.game_engine.game_logic.matrix import Matrix2D
@@ -28,6 +28,9 @@ class SnakeAbs(ABC):
     def __getitem__(self, i):
         return self._body[i]
 
+    def __len__(self):
+        return len(self._body)
+
     def head(self):
         head_i = 0
 
@@ -46,7 +49,7 @@ class SnakeAbs(ABC):
 
     def die(self):
         """Kill a snake."""
-        raise NotImplementedError(self)
+        raise SnakeDied(self)
 
     @abstractmethod
     def move(self, matrix: "Matrix2D"):
@@ -59,11 +62,12 @@ class SnakeAbs(ABC):
 
 class NormalSnake(SnakeAbs):
     def move(self, matrix: "Matrix2D"):
-        # TO-DO
-        # do not allow snake to turn back and eat itself
+        """Move snake by creating new head and deleting a tail."""
         new_head_x, new_head_y = self._calculate_new_head_coordinates(matrix)
 
         self._grow_head(new_head_x, new_head_y)
+
+        self._process_move(matrix, new_head_x, new_head_y)
 
         self._shrink()
 

@@ -1,6 +1,7 @@
 import pytest
 
 from src.constants import BoardFieldType, SnakeDirection
+from src.errors import SnakeDied
 from src.game_engine.game_logic.snake import NormalSnake
 from src.game_engine.game_logic.matrix import Matrix2D
 
@@ -131,7 +132,7 @@ def test_normal_snake_move_right():
     assert snake.tail().y == 1
 
 
-def test_normal_snake_do_not_turn_around_down():
+def test_normal_snake_move_right():
     matrix_data, snake, matrix = (
         _ground_matrix(),
         NormalSnake(2, 2, SnakeDirection.RIGHT),
@@ -143,8 +144,65 @@ def test_normal_snake_do_not_turn_around_down():
 
     matrix._data = matrix_data
 
-    with pytest.raises(ValueError):
-        snake.set_direction(SnakeDirection.DOWN)
+    snake.move(matrix)
+
+    assert snake.head().x == 3
+    assert snake.head().y == 1
+
+    assert snake.tail().x == 2
+    assert snake.tail().y == 1
+
+
+def test_normal_snake_move_into_wall():
+    matrix_data, snake, matrix = (
+        _ground_matrix(),
+        NormalSnake(2, 1, SnakeDirection.RIGHT),
+        Matrix2D(5),
+    )
+
+    # make snake longer
+    snake._grow_head(2, 2)
+
+    matrix._data = matrix_data
+
+    matrix.set(BoardFieldType.WALL, 3, 2)
+
+    with pytest.raises(SnakeDied):
+        snake.move(matrix)
+
+
+def test_normal_snake_move_into_snake():
+    matrix_data, snake, matrix = (
+        _ground_matrix(),
+        NormalSnake(1, 2, SnakeDirection.RIGHT),
+        Matrix2D(5),
+    )
+
+    # make snake longer
+    snake._grow_head(2, 2)
+
+    matrix._data = matrix_data
+
+    matrix.set(BoardFieldType.SNAKE, 3, 2)
+
+    with pytest.raises(SnakeDied):
+        snake.move(matrix)
+
+
+def test_normal_snake_move_into_fruit():
+    matrix_data, snake, matrix = (
+        _ground_matrix(),
+        NormalSnake(2, 2, SnakeDirection.RIGHT),
+        Matrix2D(5),
+    )
+
+    matrix._data = matrix_data
+
+    matrix.set(BoardFieldType.FRUIT, 3, 2)
+
+    snake.move(matrix)
+
+    assert len(snake) == 2
 
 
 def test_normal_snake_do_not_turn_around_up():
