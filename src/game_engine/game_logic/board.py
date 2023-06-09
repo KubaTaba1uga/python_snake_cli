@@ -1,12 +1,13 @@
 import typing
-from abc import abstractmethod
+from abc import abstractmethod, ABC
 from copy import copy
 
 from src.constants import FIELD_TEMPLATE
 from src.constants import GAME_MENU_CTX
+from src.game_engine.game_logic.matrix import Matrix2D
 
 
-class BoardAbs:
+class BoardFieldAbs(ABC):
     # Id is required by Menu, to link field with board.
     id: typing.Optional[int] = None
 
@@ -30,9 +31,27 @@ class BoardAbs:
         raise NotImplementedError(cls, id_)
 
 
+class BoardAbs(BoardFieldAbs):
+    def __init__(self, size: int):
+        self.matrix = Matrix2D(size)
+
+        self._initiate_board(self.matrix)
+
+    @classmethod
+    @abstractmethod
+    def _initiate_board(self, matrix):
+        """Fill matrix body with field types."""
+
+    @classmethod
+    @abstractmethod
+    def _initiate_snake(self, matrix):
+        """Fill matrix body with field types."""
+
+
 class BoardNoWalls(BoardAbs):
     @classmethod
     def display_name(cls) -> str:
+        # This is required to generate menu's fields.
         return "No walls"
 
 

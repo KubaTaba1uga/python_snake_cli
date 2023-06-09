@@ -28,7 +28,7 @@ class Controller(ContextManagerAbs, NonBlockingAbs):
         if self.is_active():
             self.stop()
 
-    def write_key_to_game_engine(self, key):
+    def write_key_to_game_engine(self, key: _keyboard.Key):
         self._write_key_value_to_game_engine(self.game_engine, key)
 
     @classmethod

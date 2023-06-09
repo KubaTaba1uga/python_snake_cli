@@ -26,3 +26,16 @@ class NoSelectedField(BaseException):
         self.ctx = ctx
 
         super().__init__(fields_map, ctx)
+
+
+class ValidationError(BaseException):
+    """Invalid value."""
+
+
+class SnakeDied(BaseException):
+    """Snake is dead ."""
+
+    def __init__(self, snake):
+        self.snake = snake
+
+        super().__init__(snake)
