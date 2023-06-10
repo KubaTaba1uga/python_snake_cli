@@ -1,14 +1,16 @@
 import typing
-from random import randint
 from abc import ABC
 from abc import abstractmethod
-from copy import copy
 from collections import Counter
+from copy import copy
 from dataclasses import dataclass
+from random import randint
 
+from src.constants import BoardFieldType
 from src.constants import FIELD_TEMPLATE
-from src.constants import GAME_MENU_CTX, BoardFieldType
+from src.constants import GAME_MENU_CTX
 from src.game_engine.game_logic.matrix import Matrix2D
+from src.game_engine.game_logic.snake import NormalSnake
 from src.game_engine.game_logic.snake import SnakeAbs
 
 
@@ -48,7 +50,7 @@ class BoardAbs(ABC):
 
         self._initiate_board_basic(self.matrix)
 
-        self.snake: typing.Type[SnakeAbs] = self._initiate_snake(self.matrix)
+        self.snake: SnakeAbs = self._initiate_snake(self.matrix)
 
         self.create_fruits()
 
@@ -57,12 +59,12 @@ class BoardAbs(ABC):
         return self.matrix.width()
 
     def process(self):
+        self._render_fruits(self.matrix, self.fruits)
+
         if self.are_fruits_empty:
             self.create_fruits()
 
         self.move_snake()
-
-        self._render_fruits(self.matrix, self.fruits)
 
     @property
     def are_fruits_empty(self) -> bool:
@@ -82,7 +84,7 @@ class BoardAbs(ABC):
 
     @classmethod
     @abstractmethod
-    def _initiate_snake(self, matrix) -> typing.Type[SnakeAbs]:
+    def _initiate_snake(self, matrix) -> SnakeAbs:
         """Fill matrix body with snake type fields and create snake obj."""
         raise NotImplementedError(self, matrix)
 
@@ -91,21 +93,6 @@ class BoardAbs(ABC):
     def _create_fruits(self, matrix) -> typing.List[Coordinates]:
         """Create list of coordinates which represent fruits locations."""
         raise NotImplementedError(self, matrix)
-
-    @classmethod
-    @abstractmethod
-    def _render_snake(self, matrix, snake) -> typing.List[Coordinates]:
-        """Reflect snake move on the matrix. Understands how the snake moves.
-
-        I would rather make dependency between snake move and board render,
-        than go with cleaning and filling the board.
-
-        I choose time complexity over cleaner design. Differences in time
-        complexity are so big that it can't be overlooked.
-
-        Propably good idea would be to implement filling and cleaning
-        alghorithm for one of the boards, to compare performence gain."""
-        raise NotImplementedError(self, matrix, snake)
 
     @classmethod
     @abstractmethod
@@ -122,6 +109,22 @@ class BoardNoWalls(BoardAbs, BoardFieldAbs):
     def display_name(cls) -> str:
         # This is required to generate menu's fields.
         return "No walls"
+
+    @classmethod
+    def _initiate_board_basic(self, matrix):
+        """Fill matrix body with field types (GROUND, WALL)."""
+        for x in range(matrix.width()):
+            for y in range(matrix.height()):
+                matrix.set(BoardFieldType.GROUND, x, y)
+
+    @classmethod
+    def _initiate_snake(cls, matrix) -> NormalSnake:
+        """Fill matrix body with snake type fields and create snake obj."""
+        start_x, start_y = int(matrix.width() / 2), int(matrix.height() / 2)
+
+        matrix.set(BoardFieldType.SNAKE, start_x, start_y)
+
+        return NormalSnake(start_x, start_y)
 
     @classmethod
     def _create_fruits(self, matrix) -> typing.List[Coordinates]:

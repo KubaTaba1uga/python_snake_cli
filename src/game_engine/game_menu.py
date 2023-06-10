@@ -4,7 +4,6 @@ from copy import deepcopy
 from src.constants import DISPLAY_NAMES_KEYS_MAP
 from src.constants import GAME_MENU_CTX
 from src.constants import KEYS_VALUES_MAP
-
 # from src.constants import VALUES_KEYS_MAP
 from src.errors import NoSelectedField
 from src.game_engine.difficulty import DifficultyAbs

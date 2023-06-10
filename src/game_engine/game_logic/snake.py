@@ -1,6 +1,7 @@
 import typing
 from abc import ABC
-from abc import abstractmethod, abstractproperty
+from abc import abstractmethod
+from abc import abstractproperty
 from dataclasses import dataclass
 from time import sleep
 
@@ -36,20 +37,10 @@ class SnakeAbs(ABC):
         return len(self._body)
 
     def head(self):
-        head_i = 0
-
-        if len(self._body) == head_i:
-            raise IndexError(head_i, self._body)
-
-        return self._body[head_i]
+        return self._body[0]
 
     def tail(self):
-        tail_i = len(self._body) - 1
-
-        if tail_i < 0:
-            raise IndexError(tail_i, self._body)
-
-        return self._body[tail_i]
+        return self._body[-1]
 
     def die(self):
         """Kill a snake."""
@@ -57,6 +48,8 @@ class SnakeAbs(ABC):
 
     @abstractmethod
     def move(self, matrix: "Matrix2D"):
+        """Moves snake body and show the move on matrix."""
+
         pass
 
     @abstractmethod
@@ -66,18 +59,24 @@ class SnakeAbs(ABC):
 
 class NormalSnake(SnakeAbs):
     def move(self, matrix: "Matrix2D"):
-        """Animite move on matrix."""
-        # clear tail of not moved snake
-        tail = self.tail()
-        matrix.set(BoardFieldType.GROUND, tail.x, tail.y)
+        self._clear_tail(matrix)
 
         self._move(matrix)
 
-        # show head and tail
-        # tail needs to be rendered again cause fruit might been eaten
-        tail, head = self.tail(), self.head()
+        self._render_head(matrix)
+        self._render_tail(matrix)
+
+    def _clear_tail(self, matrix: "Matrix2D"):
+        tail = self.tail()
+        matrix.set(BoardFieldType.GROUND, tail.x, tail.y)
+
+    def _render_tail(self, matrix: "Matrix2D"):
+        tail = self.tail()
         matrix.set(BoardFieldType.SNAKE, tail.x, tail.y)
-        matrix.set(BoardFieldType.SNAKE, head.x, head.y)
+
+    def _render_head(self, matrix: "Matrix2D"):
+        tail = self.head()
+        matrix.set(BoardFieldType.SNAKE, tail.x, tail.y)
 
     def _move(self, matrix: "Matrix2D"):
         """Move snake by creating new head and deleting a tail."""
