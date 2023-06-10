@@ -87,8 +87,6 @@ def test_board_no_walls_create_fruits():
 
 
 def test_board_no_walls_render_fruits_simple():
-    max_fruits_no, min_fruits_no = 3, 1
-
     board = _no_walls_board()
     matrix = board.matrix
 
@@ -101,8 +99,6 @@ def test_board_no_walls_render_fruits_simple():
 
 
 def test_board_no_walls_render_fruits_eaten_by_snake():
-    max_fruits_no, min_fruits_no = 3, 1
-
     board = _no_walls_board()
     matrix = board.matrix
 

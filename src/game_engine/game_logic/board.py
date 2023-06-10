@@ -1,7 +1,6 @@
 import typing
 from abc import ABC
 from abc import abstractmethod
-from collections import Counter
 from copy import copy
 from dataclasses import dataclass
 from random import randint

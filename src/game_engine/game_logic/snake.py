@@ -1,15 +1,12 @@
 import typing
 from abc import ABC
 from abc import abstractmethod
-from abc import abstractproperty
 from dataclasses import dataclass
-from time import sleep
 
 from src.constants import BoardFieldType
 from src.constants import SnakeDirection
 from src.errors import SnakeDied
 from src.errors import ValidationError
-from src.game_engine.utils.si_utils import get_seconds_from_hz
 
 if typing.TYPE_CHECKING:
     from src.game_engine.game_logic.matrix import Matrix2D
@@ -193,7 +190,7 @@ class NormalSnake(SnakeAbs):
         self._body.append(dummy_tail)
 
     def _shrink(self):
-        tail = self._body.pop()
+        self._body.pop()
 
     def _validate_up_direction(self):
         # do not allow snake to eat its neck
