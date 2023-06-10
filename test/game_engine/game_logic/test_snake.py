@@ -231,3 +231,34 @@ def test_normal_snake_do_not_turn_around_right():
 
     with pytest.raises(ValueError):
         snake.set_direction(SnakeDirection.RIGHT)
+
+
+def test_normal_snake_move_show_on_board():
+    matrix_data, snake, matrix = (
+        _ground_matrix(),
+        NormalSnake(2, 2, SnakeDirection.RIGHT),
+        Matrix2D(5),
+    )
+
+    matrix._data = matrix_data
+
+    snake.move(matrix)
+
+    assert matrix.get(3, 2) == BoardFieldType.SNAKE
+    assert matrix.get(2, 2) == BoardFieldType.GROUND
+
+
+def test_normal_snake_eat_fruit_show_on_board():
+    matrix_data, snake, matrix = (
+        _ground_matrix(),
+        NormalSnake(2, 2, SnakeDirection.RIGHT),
+        Matrix2D(5),
+    )
+
+    matrix._data = matrix_data
+    matrix.set(BoardFieldType.FRUIT, 3, 2)
+
+    snake.move(matrix)
+
+    assert matrix.get(3, 2) == BoardFieldType.SNAKE
+    assert matrix.get(2, 2) == BoardFieldType.SNAKE

@@ -62,7 +62,6 @@ class BoardAbs(ABC):
 
         self.move_snake()
 
-        self._render_snake(self.matrix, self.snake)
         self._render_fruits(self.matrix, self.fruits)
 
     @property
@@ -108,8 +107,8 @@ class BoardAbs(ABC):
         alghorithm for one of the boards, to compare performence gain."""
         raise NotImplementedError(self, matrix, snake)
 
-    @abstractmethod
     @classmethod
+    @abstractmethod
     def _render_fruits(self, matrix, fruits: typing.List[Coordinates]):
         """Reflects fruits on matrix.
         If fruit coordinates are taken by snake,

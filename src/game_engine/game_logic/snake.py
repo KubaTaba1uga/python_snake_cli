@@ -66,6 +66,20 @@ class SnakeAbs(ABC):
 
 class NormalSnake(SnakeAbs):
     def move(self, matrix: "Matrix2D"):
+        """Animite move on matrix."""
+        # clear tail of not moved snake
+        tail = self.tail()
+        matrix.set(BoardFieldType.GROUND, tail.x, tail.y)
+
+        self._move(matrix)
+
+        # show head and tail
+        # tail needs to be rendered again cause fruit might been eaten
+        tail, head = self.tail(), self.head()
+        matrix.set(BoardFieldType.SNAKE, tail.x, tail.y)
+        matrix.set(BoardFieldType.SNAKE, head.x, head.y)
+
+    def _move(self, matrix: "Matrix2D"):
         """Move snake by creating new head and deleting a tail."""
         new_head_x, new_head_y = self._calculate_new_head_coordinates(matrix)
 
