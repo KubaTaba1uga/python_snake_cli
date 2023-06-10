@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from test.conftest import game_engine as _game_engine
 
 from src.display import BashDisplay
@@ -67,8 +69,6 @@ def test_bash_display_render_menu_choose_difficulty():
     game_engine.game_menu.set_new_ctx()
     # Go to choose difficulty
     game_engine.game_menu.set_new_ctx()
-    # # Go to new game
-    # game_engine.game_menu.set_new_ctx()
 
     received_menu = BashDisplay.render_game_menu(game_engine, terminal_x, terminal_y)
 
