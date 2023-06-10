@@ -3,6 +3,7 @@ from unittest.mock import patch
 from test.conftest import game_engine as _game_engine
 
 from src.display import BashDisplay
+from src.game_engine.game_logic.board import BoardNoWalls
 
 
 def test_bash_display_render_menu_menu():
@@ -96,3 +97,15 @@ def test_bash_display_render_menu_waiting_screen():
     received_menu = BashDisplay.render_game_menu(game_engine, terminal_x, terminal_y)
 
     assert received_menu == expected_menu
+
+
+def test_bash_display_render_game_engine_init():
+    expected_screen = ""
+
+    game_engine, board, terminal_x, terminal_y = _game_engine(), BoardNoWalls(5), 30, 20
+
+    display = BashDisplay(game_engine)
+
+    received_menu = display.render_game_engine(game_engine, terminal_x, terminal_y)
+
+    assert received_menu == expected_screen

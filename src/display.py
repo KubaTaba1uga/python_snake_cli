@@ -40,7 +40,7 @@ class DisplayAbs(ContextManagerAbs, NonBlockingAbs):
         pass
 
     @classmethod
-    # @abstractmethod
+    @abstractmethod
     def render_game_engine(cls, game_engine: "GameEngine", width: int, height: int):
         """Display gameplay."""
         pass
@@ -114,6 +114,11 @@ def _print_result(function):
 
 class BashDisplay(DisplayAbs):
     @classmethod
+    def render_game_engine(cls, game_engine: "GameEngine", width: int, height: int):
+        """Display gameplay."""
+        pass
+
+    @classmethod
     @_print_result
     def render_game_menu(
         cls, game_engine: "GameEngine", width: int, height: int
@@ -127,7 +132,7 @@ class BashDisplay(DisplayAbs):
 
         title_line = cls.format_title(game_menu.get_title(), width)
 
-        lines_to_print = [title_line]
+        lines_to_print = ["", title_line]
 
         for field in game_menu_fields.values():
             lines_to_print.append(cls.format_field(field, width))
@@ -135,7 +140,7 @@ class BashDisplay(DisplayAbs):
         rendered_lines_height = len(lines_to_print) - 1
 
         for _ in range(height - rendered_lines_height):
-            # Add empty strings to fill space
+            # Add empty strings to fill sace
             lines_to_print.append("")
 
         rendered_lines = cls.format_lines(lines_to_print, height)
@@ -164,8 +169,7 @@ class BashDisplay(DisplayAbs):
 
     @classmethod
     def format_line(cls, line: str, width: int) -> str:
-        max_width_i = width - 1
-        line = line[:max_width_i]
+        line = line[:width]
         return move_cursor_to_line_beginning(line)
 
     @classmethod
@@ -174,8 +178,7 @@ class BashDisplay(DisplayAbs):
 
     @classmethod
     def format_lines(cls, lines: typing.List[str], height: int) -> str:
-        max_height_i = height - 1
-        lines = lines[:max_height_i]
+        lines = lines[:height]
         return "\n".join(lines)
 
     @classmethod

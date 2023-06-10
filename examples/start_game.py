@@ -6,7 +6,7 @@ from src.game_engine.game_engine import GameEngine
 def main():
     import shutil
 
-    game_engine, terminal_dimmensions = GameEngine(), shutil.get_terminal_size()
+    game_engine = GameEngine()
 
     controller, display = Controller(game_engine), BashDisplay(game_engine)
 
