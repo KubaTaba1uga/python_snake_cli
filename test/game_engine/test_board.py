@@ -1,6 +1,7 @@
 from src.constants import GAME_MENU_CTX, BoardFieldType
 from src.game_engine.game_logic.board import generate_board_fields
 from src.game_engine.game_logic.board import BoardNoWalls
+from src.game_engine.game_logic.board import Coordinates
 from src.game_engine.game_logic.matrix import Matrix2D
 
 
@@ -77,3 +78,31 @@ def test_board_no_walls_create_fruits():
     for fruit_coordinates in received_fruits:
         assert fruit_coordinates.x < matrix.width()
         assert fruit_coordinates.y < matrix.height()
+
+
+def test_board_no_walls_render_fruits_simple():
+    max_fruits_no, min_fruits_no = 3, 1
+
+    matrix = _ground_matrix()
+
+    fruits = [Coordinates(1, 2), Coordinates(3, 4), Coordinates(4, 3)]
+
+    BoardNoWalls._render_fruits(matrix, fruits)
+
+    for fruit in fruits:
+        assert matrix.get(fruit.x, fruit.y) == BoardFieldType.FRUIT
+
+
+def test_board_no_walls_render_fruits_eaten_by_snake():
+    max_fruits_no, min_fruits_no = 3, 1
+
+    matrix = _ground_matrix()
+
+    fruits = [Coordinates(1, 2), Coordinates(2, 2), Coordinates(2, 3)]
+
+    BoardNoWalls._render_fruits(matrix, fruits)
+
+    from pprint import pprint
+
+    pprint(matrix._data)
+    assert False

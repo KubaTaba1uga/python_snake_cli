@@ -56,15 +56,8 @@ class BoardAbs(ABC):
     def size(self) -> int:
         return self.matrix.width()
 
-    @property
-    def are_any_fruits(self) -> bool:
-        return len(self.fruits) == 0
-
-    def move_snake(self):
-        self.snake.move(self.matrix)
-
     def process(self):
-        if not self.are_any_fruits():
+        if self.are_fruits_empty:
             self.create_fruits()
 
         self.move_snake()
@@ -72,18 +65,27 @@ class BoardAbs(ABC):
         self._render_snake(self.matrix, self.snake)
         self._render_fruits(self.matrix, self.fruits)
 
+    @property
+    def are_fruits_empty(self) -> bool:
+        return len(self.fruits) == 0
+
     def create_fruits(self):
         self.fruits = self._create_fruits(self.matrix)
+
+    def move_snake(self):
+        self.snake.move(self.matrix)
 
     @classmethod
     @abstractmethod
     def _initiate_board_basic(self, matrix):
         """Fill matrix body with field types (GROUND, WALL)."""
+        raise NotImplementedError(self, matrix)
 
     @classmethod
     @abstractmethod
     def _initiate_snake(self, matrix) -> typing.Type[SnakeAbs]:
         """Fill matrix body with snake type fields and create snake obj."""
+        raise NotImplementedError(self, matrix)
 
     @classmethod
     @abstractmethod
@@ -94,13 +96,26 @@ class BoardAbs(ABC):
     @classmethod
     @abstractmethod
     def _render_snake(self, matrix, snake) -> typing.List[Coordinates]:
-        """Reflect snake on matrix."""
+        """Reflect snake move on the matrix. Understands how the snake moves.
 
-    @classmethod
+        I would rather make dependency between snake move and board render,
+        than go with cleaning and filling the board.
+
+        I choose time complexity over cleaner design. Differences in time
+        complexity are so big that it can't be overlooked.
+
+        Propably good idea would be to implement filling and cleaning
+        alghorithm for one of the boards, to compare performence gain."""
+        raise NotImplementedError(self, matrix, snake)
+
     @abstractmethod
+    @classmethod
     def _render_fruits(self, matrix, fruits: typing.List[Coordinates]):
-        """Reflect fruits on matrix.
-        If fruit coordinates are taken by snake, delete fruit from board."""
+        """Reflects fruits on matrix.
+        If fruit coordinates are taken by snake,
+           deletes fruit from fruits list.
+        """
+        raise NotImplementedError(self, matrix, fruits)
 
 
 class BoardNoWalls(BoardAbs, BoardFieldAbs):
@@ -113,7 +128,6 @@ class BoardNoWalls(BoardAbs, BoardFieldAbs):
     def _create_fruits(self, matrix) -> typing.List[Coordinates]:
         """Create list of coordinates which represent fruits locations."""
         field_types_allowed_to_overwrite = [BoardFieldType.GROUND]
-
         max_fruits_no, min_fruits_no = 3, 1
         max_x_i, max_y_i = matrix.width() - 1, matrix.height() - 1
 
@@ -138,6 +152,24 @@ class BoardNoWalls(BoardAbs, BoardFieldAbs):
             results.append(fruit_coordinates)
 
         return results
+
+    @classmethod
+    def _render_fruits(self, matrix, fruits: typing.List[Coordinates]):
+        i = 0
+        for _ in range(len(fruits)):
+            fruit = fruits[i]
+
+            x, y = fruit.x, fruit.y
+
+            fruit_eaten_by_snake = matrix.get(x=x, y=y) == BoardFieldType.SNAKE
+
+            if fruit_eaten_by_snake:
+                fruits.pop(i)
+                continue
+
+            i += 1
+
+            matrix.set(x=x, y=y, value=BoardFieldType.FRUIT)
 
 
 def generate_board_fields():

@@ -180,7 +180,7 @@ class NormalSnake(SnakeAbs):
         self._body.append(dummy_tail)
 
     def _shrink(self):
-        self._body.pop()
+        tail = self._body.pop()
 
     def _validate_up_direction(self):
         # do not allow snake to eat its neck
