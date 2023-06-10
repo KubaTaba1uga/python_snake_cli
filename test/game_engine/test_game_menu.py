@@ -1,6 +1,6 @@
 from src.constants import GAME_MENU_CTX
-from src.game_engine.game_logic.board import BoardNoWalls
 from src.game_engine.difficulty import DifficultyEasy
+from src.game_engine.game_logic.board import BoardNoWalls
 from src.game_engine.game_menu import GameMenu
 from src.game_engine.session import Session
 

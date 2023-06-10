@@ -88,5 +88,4 @@ class GameEngine:
 
     def _process_game_ctx(self):
         """Performs game logic."""
-        # add game logic here
-        raise NotImplementedError(self)
+        self._session.board.process()

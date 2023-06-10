@@ -50,10 +50,11 @@ class DisplayAbs(ContextManagerAbs, NonBlockingAbs):
     def render_game_menu(
         cls, game_engine: "GameEngine", width: int, height: int
     ) -> str:
-        """Display game's menu. GameEngine"""
+        """Display game's menu."""
         pass
 
     @classmethod
+    @abstractmethod
     def render_game_engine(cls, game_engine: "GameEngine"):
         """Display gameplay."""
         pass
@@ -71,6 +72,9 @@ class DisplayAbs(ContextManagerAbs, NonBlockingAbs):
 
     def _render_game_menu(self):
         self.render_game_menu(self._game_engine, self._width, self._height)
+
+    def _render_game_engine(self):
+        self.render_game_engine(self._game_engine)
 
     def _start(self):
         while True:

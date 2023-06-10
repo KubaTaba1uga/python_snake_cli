@@ -1,10 +1,12 @@
 import typing
-from abc import ABC, abstractmethod
+from abc import ABC
+from abc import abstractmethod
 from dataclasses import dataclass
 
-
-from src.constants import SnakeDirection, BoardFieldType
-from src.errors import ValidationError, SnakeDied
+from src.constants import BoardFieldType
+from src.constants import SnakeDirection
+from src.errors import SnakeDied
+from src.errors import ValidationError
 
 if typing.TYPE_CHECKING:
     from src.game_engine.game_logic.matrix import Matrix2D
@@ -32,20 +34,10 @@ class SnakeAbs(ABC):
         return len(self._body)
 
     def head(self):
-        head_i = 0
-
-        if len(self._body) == head_i:
-            raise IndexError(head_i, self._body)
-
-        return self._body[head_i]
+        return self._body[0]
 
     def tail(self):
-        tail_i = len(self._body) - 1
-
-        if tail_i < 0:
-            raise IndexError(tail_i, self._body)
-
-        return self._body[tail_i]
+        return self._body[-1]
 
     def die(self):
         """Kill a snake."""
@@ -53,6 +45,8 @@ class SnakeAbs(ABC):
 
     @abstractmethod
     def move(self, matrix: "Matrix2D"):
+        """Moves snake body and show the move on matrix."""
+
         pass
 
     @abstractmethod
@@ -62,6 +56,26 @@ class SnakeAbs(ABC):
 
 class NormalSnake(SnakeAbs):
     def move(self, matrix: "Matrix2D"):
+        self._clear_tail(matrix)
+
+        self._move(matrix)
+
+        self._render_head(matrix)
+        self._render_tail(matrix)
+
+    def _clear_tail(self, matrix: "Matrix2D"):
+        tail = self.tail()
+        matrix.set(BoardFieldType.GROUND, tail.x, tail.y)
+
+    def _render_tail(self, matrix: "Matrix2D"):
+        tail = self.tail()
+        matrix.set(BoardFieldType.SNAKE, tail.x, tail.y)
+
+    def _render_head(self, matrix: "Matrix2D"):
+        tail = self.head()
+        matrix.set(BoardFieldType.SNAKE, tail.x, tail.y)
+
+    def _move(self, matrix: "Matrix2D"):
         """Move snake by creating new head and deleting a tail."""
         new_head_x, new_head_y = self._calculate_new_head_coordinates(matrix)
 
@@ -225,3 +239,8 @@ class NormalSnake(SnakeAbs):
 
         if is_neck_next_to_the_head:
             raise ValidationError()
+
+
+# TO-DO
+# creates lazy snake - bigger it gets slower it moves
+# create fit snake - bigger he gets quicker he moves
