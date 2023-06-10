@@ -41,6 +41,10 @@ class GameEngine:
     def sleep(cls):
         sleep(get_seconds_from_hz(cls.DEFAULT_FREQ_IN_HZ))
 
+    @property
+    def board(self):
+        return self._session.board
+
     def __init__(self):
         self.user_input: UserInput = UserInput(self.DEFAULT_USER_INPUT_VALUE)
         self.ctx: GAME_ENGINE_CTX = self.DEFAULT_GAME_ENGINE_CTX

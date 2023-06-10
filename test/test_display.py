@@ -1,9 +1,13 @@
-from unittest.mock import patch
-
 from test.conftest import game_engine as _game_engine
+from unittest.mock import MagicMock
+from unittest.mock import patch
 
 from src.display import BashDisplay
 from src.game_engine.game_logic.board import BoardNoWalls
+
+
+def _no_walls_board():
+    return BoardNoWalls(5)
 
 
 def test_bash_display_render_menu_menu():
@@ -81,13 +85,20 @@ def test_bash_display_render_menu_waiting_screen():
     assert received_menu == expected_menu
 
 
-def test_bash_display_render_game_engine_init():
+def test_bash_display_render_engine_init():
     expected_screen = ""
 
     game_engine, board, terminal_x, terminal_y = _game_engine(), BoardNoWalls(5), 30, 20
 
-    display = BashDisplay(game_engine)
+    session = MagicMock(board=board)
 
-    received_menu = display.render_game_engine(game_engine, terminal_x, terminal_y)
+    # game_engine.board = board
+
+    display = BashDisplay(game_engine)
+    with patch.object(display._game_engine, "_session", session):
+        received_menu = display.render_game_engine(game_engine, terminal_x, terminal_y)
 
     assert received_menu == expected_screen
+
+    print(session.board)
+    assert False

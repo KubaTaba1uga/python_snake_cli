@@ -1,18 +1,22 @@
+import shutil
 import sys
 import typing
-import shutil
-from abc import abstractmethod, abstractproperty
+from abc import abstractmethod
 from threading import Event
 from threading import Thread
 from time import sleep
 
+from src.constants import BoardFieldType
 from src.constants import GAME_ENGINE_CTX
 from src.game_engine.utils.si_utils import get_seconds_from_hz
 from src.utils.abc_utils import ContextManagerAbs
 from src.utils.abc_utils import NonBlockingAbs
 from src.utils.ansi_utils import move_cursor_to_line_beginning
+from src.utils.ansi_utils import paint_black
+from src.utils.ansi_utils import paint_blue
 from src.utils.ansi_utils import paint_bold
 from src.utils.ansi_utils import paint_red
+from src.utils.ansi_utils import paint_white
 
 if typing.TYPE_CHECKING:
     from src.game_engine.game_engine import GameEngine
@@ -112,11 +116,60 @@ def _print_result(function):
     return wrapped_func
 
 
+# TO-DO:
+#  make lines formatters as decorators
+#    - trimm width
+#    - trim hight
+#    - paint red
+#    - style bold
+
+
 class BashDisplay(DisplayAbs):
+    _BOARD_FIELD_STRING_MAP = {
+        BoardFieldType.GROUND: lambda: paint_white(" ", True),
+        BoardFieldType.SNAKE: lambda: paint_blue(" ", True),
+        BoardFieldType.WALL: lambda: paint_black(" ", True),
+        BoardFieldType.FRUIT: lambda: paint_red(" ", True),
+    }
+
     @classmethod
-    def render_game_engine(cls, game_engine: "GameEngine", width: int, height: int):
+    @_print_result
+    def render_game_engine(
+        cls, game_engine: "GameEngine", width: int, height: int
+    ) -> str:
         """Display gameplay."""
-        pass
+
+        max_x_i, max_y_i = game_engine.board.size, game_engine.board.size
+
+        # Count height and width in advance
+        # So trimming is redundant
+        if width < max_x_i:
+            max_x_i = width
+        if height < max_y_i:
+            max_y_i = height
+
+        lines_to_print: typing.List[str] = []
+
+        for y in range(max_y_i):
+            # format board rows
+            line_l: typing.List[str] = []
+
+            for x in range(max_x_i):
+                board_field = game_engine.board.matrix.get(x, y)
+                line_l.append(cls._render_board_field(board_field))
+
+            line: str = "".join(line_l)
+            line = cls.format_line(line, None)
+            lines_to_print.append(line)
+
+        # format board columns
+        cls._fill_empty_space(lines_to_print, height)
+
+        return cls.format_lines(lines_to_print, None)
+
+    @classmethod
+    def _render_board_field(cls, board_field: BoardFieldType) -> str:
+        return cls._BOARD_FIELD_STRING_MAP[board_field]()
 
     @classmethod
     @_print_result
@@ -137,11 +190,7 @@ class BashDisplay(DisplayAbs):
         for field in game_menu_fields.values():
             lines_to_print.append(cls.format_field(field, width))
 
-        rendered_lines_height = len(lines_to_print) - 1
-
-        for _ in range(height - rendered_lines_height):
-            # Add empty strings to fill sace
-            lines_to_print.append("")
+        cls._fill_empty_space(lines_to_print, height)
 
         rendered_lines = cls.format_lines(lines_to_print, height)
 
@@ -168,7 +217,7 @@ class BashDisplay(DisplayAbs):
         return cls.format_line(FIELD_LINE_SYNTAX.format(field_name=field_name), width)
 
     @classmethod
-    def format_line(cls, line: str, width: int) -> str:
+    def format_line(cls, line: str, width: typing.Optional[int]) -> str:
         line = line[:width]
         return move_cursor_to_line_beginning(line)
 
@@ -177,7 +226,7 @@ class BashDisplay(DisplayAbs):
         return paint_red(line, True)
 
     @classmethod
-    def format_lines(cls, lines: typing.List[str], height: int) -> str:
+    def format_lines(cls, lines: typing.List[str], height: typing.Optional[int]) -> str:
         lines = lines[:height]
         return "\n".join(lines)
 
@@ -193,3 +242,10 @@ class BashDisplay(DisplayAbs):
     @classmethod
     def height(cls):
         return shutil.get_terminal_size()[1]
+
+    @classmethod
+    def _fill_empty_space(cls, lines_to_print, height):
+        rendered_lines_height = len(lines_to_print) - 1
+        for _ in range(height - rendered_lines_height):
+            # Add empty strings to fill empty space
+            lines_to_print.append("")
