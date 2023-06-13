@@ -61,6 +61,8 @@ class NormalSnake(SnakeAbs):
         self._move(matrix)
 
         self._render_head(matrix)
+
+        # this is required in case fruit was eaten
         self._render_tail(matrix)
 
     def _clear_tail(self, matrix: "Matrix2D"):
@@ -86,7 +88,7 @@ class NormalSnake(SnakeAbs):
         self._shrink()
 
     def set_direction(self, direction: SnakeDirection):
-        """Assign new direction to the snake.
+        """Assigns new direction to the snake.
         Validates direction's value, before performing assignment."""
 
         DIRECTION_VALIDATE_MAP = {

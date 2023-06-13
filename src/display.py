@@ -1,3 +1,4 @@
+import shutil
 import sys
 import typing
 from abc import abstractmethod
@@ -5,13 +6,17 @@ from threading import Event
 from threading import Thread
 from time import sleep
 
+from src.constants import BoardFieldType
 from src.constants import GAME_ENGINE_CTX
 from src.game_engine.utils.si_utils import get_seconds_from_hz
 from src.utils.abc_utils import ContextManagerAbs
 from src.utils.abc_utils import NonBlockingAbs
 from src.utils.ansi_utils import move_cursor_to_line_beginning
+from src.utils.ansi_utils import paint_black
+from src.utils.ansi_utils import paint_blue
 from src.utils.ansi_utils import paint_bold
 from src.utils.ansi_utils import paint_red
+from src.utils.ansi_utils import paint_white
 
 if typing.TYPE_CHECKING:
     from src.game_engine.game_engine import GameEngine
@@ -21,14 +26,47 @@ class DisplayAbs(ContextManagerAbs, NonBlockingAbs):
     DEFAULT_FREQ_IN_HZ = 500
 
     @classmethod
+    @abstractmethod
+    def width(self):
+        pass
+
+    @classmethod
+    @abstractmethod
+    def height(self):
+        pass
+
+    @classmethod
+    @abstractmethod
+    def render_game_menu(
+        cls, game_engine: "GameEngine", width: int, height: int
+    ) -> str:
+        """Display game's menu."""
+        pass
+
+    @classmethod
+    @abstractmethod
+    def render_game_engine(cls, game_engine: "GameEngine", width: int, height: int):
+        """Display gameplay."""
+        pass
+
+    @classmethod
+    def render(
+        cls,
+        ctx_render_map: typing.Dict[GAME_ENGINE_CTX, typing.Callable],
+        game_engine_ctx: GAME_ENGINE_CTX,
+    ):
+        ctx_render_map[game_engine_ctx]()
+
+    @classmethod
     def sleep(cls):
         sleep(get_seconds_from_hz(cls.DEFAULT_FREQ_IN_HZ))
 
-    def __init__(self, game_engine: "GameEngine", width: int, height: int):
+    def __init__(
+        self,
+        game_engine: "GameEngine",
+    ):
         self._game_engine: "GameEngine" = game_engine
-        self._width: int = width
-        self._height: int = height
-        self._thread: Thread = Thread(target=self._start)
+        self._thread: Thread = Thread(target=self._process_display)
         self._stop_thread: Event = Event()
 
         self.CTX_RENDER_MAP = self._init_ctx_render_map()
@@ -41,42 +79,20 @@ class DisplayAbs(ContextManagerAbs, NonBlockingAbs):
 
     def _init_ctx_render_map(self) -> dict:
         return {
-            GAME_ENGINE_CTX.GAME: self.render_game_engine,
+            GAME_ENGINE_CTX.GAME: self._render_game_engine,
             GAME_ENGINE_CTX.MENU: self._render_game_menu,
         }
-
-    @classmethod
-    @abstractmethod
-    def render_game_menu(
-        cls, game_engine: "GameEngine", width: int, height: int
-    ) -> str:
-        """Display game's menu."""
-        pass
-
-    @classmethod
-    @abstractmethod
-    def render_game_engine(cls, game_engine: "GameEngine"):
-        """Display gameplay."""
-        pass
-
-    @classmethod
-    def render(
-        cls,
-        ctx_render_map: typing.Dict[GAME_ENGINE_CTX, typing.Callable],
-        game_engine_ctx: GAME_ENGINE_CTX,
-    ):
-        ctx_render_map[game_engine_ctx]()
 
     def _render(self):
         self.render(self.CTX_RENDER_MAP, self._game_engine.ctx)
 
     def _render_game_menu(self):
-        self.render_game_menu(self._game_engine, self._width, self._height)
+        self.render_game_menu(self._game_engine, self.width(), self.height())
 
     def _render_game_engine(self):
-        self.render_game_engine(self._game_engine)
+        self.render_game_engine(self._game_engine, self.width(), self.height())
 
-    def _start(self):
+    def _process_display(self):
         while True:
             self._render()
             self.sleep()
@@ -91,8 +107,74 @@ class DisplayAbs(ContextManagerAbs, NonBlockingAbs):
         self._stop_thread.set()
 
 
+def _print_result(function):
+    def wrapped_func(cls, *args, **kwargs):
+        result = function(cls, *args, **kwargs)
+        cls.print(result)
+        return result
+
+    return wrapped_func
+
+
 class BashDisplay(DisplayAbs):
+    _BOARD_FIELD_STRING_MAP = {
+        BoardFieldType.GROUND: lambda: paint_white(" ", True),
+        BoardFieldType.SNAKE: lambda: paint_blue(" ", True),
+        BoardFieldType.WALL: lambda: paint_black(" ", True),
+        BoardFieldType.FRUIT: lambda: paint_red(" ", True),
+    }
+
     @classmethod
+    @_print_result
+    def render_game_engine(
+        cls, game_engine: "GameEngine", width: int, height: int
+    ) -> str:
+        """Display gameplay."""
+
+        max_x_i, max_y_i = cls._get_max_render_size(game_engine, width, height)
+
+        lines_to_print: typing.List[str] = []
+
+        for i in range(max_y_i):
+            line = cls._format_game_engine_row(game_engine, max_x_i, i)
+            lines_to_print.append(line)
+
+        cls._fill_empty_space(lines_to_print, height)
+
+        return cls.format_lines(lines_to_print, None)
+
+    @classmethod
+    def _get_max_render_size(cls, game_engine: "GameEngine", width: int, height: int):
+        """Check how much columns and rows of current gameplay can be rendered on the display."""
+        max_x_i, max_y_i = game_engine.board.size
+
+        # Count height and width in advance
+        # So trimming is redundant
+        if width < max_x_i:
+            max_x_i = width
+        if height < max_y_i:
+            max_y_i = height
+
+        return max_x_i, max_y_i
+
+    @classmethod
+    def _format_game_engine_row(
+        cls, game_engine: "GameEngine", width: int, height: int
+    ):
+        line_l: typing.List[str] = []
+
+        for i in range(width):
+            board_field = game_engine.board.matrix.get(i, height)
+            line_l.append(cls._render_board_field(board_field))
+
+        return "".join(line_l)
+
+    @classmethod
+    def _render_board_field(cls, board_field: BoardFieldType) -> str:
+        return cls._BOARD_FIELD_STRING_MAP[board_field]()
+
+    @classmethod
+    @_print_result
     def render_game_menu(
         cls, game_engine: "GameEngine", width: int, height: int
     ) -> str:
@@ -103,49 +185,30 @@ class BashDisplay(DisplayAbs):
             game_engine.game_menu,
         )
 
-        title_line = cls.format_title(game_menu.get_title())
+        title_line = cls.format_title(game_menu.get_title(), width)
 
-        lines_to_print = [title_line]
+        lines_to_print = ["", title_line]
 
         for field in game_menu_fields.values():
-            lines_to_print.append(cls.format_field(field))
+            lines_to_print.append(cls.format_field(field, width))
 
-        for _ in range(height - len(lines_to_print) - 1):
-            # Add empty strings to fill space
-            lines_to_print.append("")
+        cls._fill_empty_space(lines_to_print, height)
 
-        rendered_lines = cls.format_lines(lines_to_print)
-
-        cls.print(rendered_lines)
+        rendered_lines = cls.format_lines(lines_to_print, height)
 
         return rendered_lines
 
     @classmethod
-    def validate_height(cls, height: int, fields_len: int):
-        if height < fields_len + 1:
-            raise ValueError(height, fields_len)
-
-    @classmethod
-    def validate_width(cls, width: int, fields: dict):
-        max_field_length = 0
-        for field in fields.values():
-            if (field_length := len(cls.format_field(field))) > max_field_length:
-                max_field_length = field_length
-
-        if width < max_field_length:
-            raise ValueError(width, max_field_length)
-
-    @classmethod
-    def format_title(cls, title: str) -> str:
+    def format_title(cls, title: str, width: int) -> str:
         TITLE_LINE_SYNTAX = "   {title}"
 
         title = title.capitalize()
         title = paint_bold(title)
 
-        return cls.format_line(TITLE_LINE_SYNTAX.format(title=title))
+        return cls.format_line(TITLE_LINE_SYNTAX.format(title=title), width)
 
     @classmethod
-    def format_field(cls, field: dict) -> str:
+    def format_field(cls, field: dict, width: int) -> str:
         FIELD_LINE_SYNTAX = "      - {field_name}"
 
         field_name = field["display_name"]
@@ -153,10 +216,11 @@ class BashDisplay(DisplayAbs):
         if field["selected"]:
             field_name = cls.render_selected(field_name)
 
-        return cls.format_line(FIELD_LINE_SYNTAX.format(field_name=field_name))
+        return cls.format_line(FIELD_LINE_SYNTAX.format(field_name=field_name), width)
 
     @classmethod
-    def format_line(cls, line: str) -> str:
+    def format_line(cls, line: str, width: int) -> str:
+        line = line[:width]
         return move_cursor_to_line_beginning(line)
 
     @classmethod
@@ -164,10 +228,30 @@ class BashDisplay(DisplayAbs):
         return paint_red(line, True)
 
     @classmethod
-    def format_lines(cls, lines: typing.List[str]) -> str:
+    def format_lines(
+        cls, lines: typing.List[str], height: typing.Optional[int] = None
+    ) -> str:
+        lines = lines[:height]
         return "\n".join(lines)
 
     @classmethod
     def print(cls, lines: str):
         sys.stdout.write(lines)
         sys.stdout.flush()
+
+    @classmethod
+    def width(cls):
+        return shutil.get_terminal_size()[0]
+
+    @classmethod
+    def height(cls):
+        return shutil.get_terminal_size()[1]
+
+    @classmethod
+    def _fill_empty_space(cls, lines_to_print, height):
+        rendered_lines_height = len(lines_to_print) - 1
+        lines_to_fill = height - rendered_lines_height
+
+        for _ in range(lines_to_fill):
+            # Add empty strings to represent empty space
+            lines_to_print.append("")

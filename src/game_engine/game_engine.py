@@ -41,18 +41,22 @@ class GameEngine:
     def sleep(cls):
         sleep(get_seconds_from_hz(cls.DEFAULT_FREQ_IN_HZ))
 
+    @property
+    def board(self):
+        return self._session.board
+
     def __init__(self):
         self.user_input: UserInput = UserInput(self.DEFAULT_USER_INPUT_VALUE)
         self.ctx: GAME_ENGINE_CTX = self.DEFAULT_GAME_ENGINE_CTX
         self.game_menu: GameMenu = GameMenu()
 
-        self._thread: Thread = Thread(target=self._start)
+        self._thread: Thread = Thread(target=self._process_game_engine)
         self._session = None
 
     def start(self):
         self._thread.start()
 
-    def _start(self):
+    def _process_game_engine(self):
         while True:
             self._process()
             self.sleep()

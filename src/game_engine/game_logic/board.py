@@ -54,8 +54,8 @@ class BoardAbs(ABC):
         self.create_fruits()
 
     @property
-    def size(self) -> int:
-        return self.matrix.width()
+    def size(self) -> typing.Tuple[int, int]:
+        return self.matrix.width(), self.matrix.height()
 
     def process(self):
         self._render_fruits(self.matrix, self.fruits)
