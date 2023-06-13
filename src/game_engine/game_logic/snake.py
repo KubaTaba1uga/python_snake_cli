@@ -3,6 +3,7 @@ from abc import ABC
 from abc import abstractmethod
 from dataclasses import dataclass
 
+from src.logging import log_info
 from src.constants import BoardFieldType
 from src.constants import SnakeDirection
 from src.errors import SnakeDied
@@ -54,7 +55,30 @@ class SnakeAbs(ABC):
         pass
 
 
+def _log_snake_head(function):
+    LOG_SYNTAX = "Snake moved from x={old_x}, y={old_y} to x={new_x}, y={new_y}"
+
+    def wrapped_func(self, *args, **kwargs):
+        head_before = self.head()
+
+        result = function(self, *args, **kwargs)
+
+        head_after = self.head()
+
+        log_info(
+            LOG_SYNTAX.format(
+                old_x=head_before.x,
+                new_x=head_after.x,
+                old_y=head_before.y,
+                new_y=head_after.y,
+            )
+        )
+
+        return result
+
+
 class NormalSnake(SnakeAbs):
+    @_log_snake_head
     def move(self, matrix: "Matrix2D"):
         self._clear_tail(matrix)
 

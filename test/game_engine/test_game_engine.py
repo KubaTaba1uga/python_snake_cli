@@ -1,5 +1,3 @@
-from 
-
 def test_game_engine_set_direction_left():
     expected_matrix, expected_snake_body = (), ()
 
