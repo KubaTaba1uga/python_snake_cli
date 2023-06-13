@@ -116,14 +116,6 @@ def _print_result(function):
     return wrapped_func
 
 
-# TO-DO:
-#  make lines formatters as decorators
-#    - trimm width
-#    - trim hight
-#    - paint red
-#    - style bold
-
-
 class BashDisplay(DisplayAbs):
     _BOARD_FIELD_STRING_MAP = {
         BoardFieldType.GROUND: lambda: paint_white(" ", True),
