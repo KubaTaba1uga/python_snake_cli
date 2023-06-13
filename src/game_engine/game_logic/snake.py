@@ -61,6 +61,8 @@ class NormalSnake(SnakeAbs):
         self._move(matrix)
 
         self._render_head(matrix)
+
+        # this is required in case fruit was eaten
         self._render_tail(matrix)
 
     def _clear_tail(self, matrix: "Matrix2D"):

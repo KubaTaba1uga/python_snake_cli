@@ -50,13 +50,13 @@ class GameEngine:
         self.ctx: GAME_ENGINE_CTX = self.DEFAULT_GAME_ENGINE_CTX
         self.game_menu: GameMenu = GameMenu()
 
-        self._thread: Thread = Thread(target=self._start)
+        self._thread: Thread = Thread(target=self._process_game_engine)
         self._session = None
 
     def start(self):
         self._thread.start()
 
-    def _start(self):
+    def _process_game_engine(self):
         while True:
             self._process()
             self.sleep()

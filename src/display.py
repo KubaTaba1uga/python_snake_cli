@@ -66,7 +66,7 @@ class DisplayAbs(ContextManagerAbs, NonBlockingAbs):
         game_engine: "GameEngine",
     ):
         self._game_engine: "GameEngine" = game_engine
-        self._thread: Thread = Thread(target=self._start)
+        self._thread: Thread = Thread(target=self._process_display)
         self._stop_thread: Event = Event()
 
         self.CTX_RENDER_MAP = self._init_ctx_render_map()
@@ -79,7 +79,7 @@ class DisplayAbs(ContextManagerAbs, NonBlockingAbs):
 
     def _init_ctx_render_map(self) -> dict:
         return {
-            GAME_ENGINE_CTX.GAME: self.render_game_engine,
+            GAME_ENGINE_CTX.GAME: self._render_game_engine,
             GAME_ENGINE_CTX.MENU: self._render_game_menu,
         }
 
@@ -92,7 +92,7 @@ class DisplayAbs(ContextManagerAbs, NonBlockingAbs):
     def _render_game_engine(self):
         self.render_game_engine(self._game_engine, self.width(), self.height())
 
-    def _start(self):
+    def _process_display(self):
         while True:
             self._render()
             self.sleep()
@@ -139,7 +139,22 @@ class BashDisplay(DisplayAbs):
     ) -> str:
         """Display gameplay."""
 
-        max_x_i, max_y_i = game_engine.board.size, game_engine.board.size
+        max_x_i, max_y_i = cls._get_max_render_size(game_engine, width, height)
+
+        lines_to_print: typing.List[str] = []
+
+        for i in range(max_y_i):
+            line = cls._format_game_engine_row(game_engine, max_x_i, i)
+            lines_to_print.append(line)
+
+        cls._fill_empty_space(lines_to_print, height)
+
+        return cls.format_lines(lines_to_print, None)
+
+    @classmethod
+    def _get_max_render_size(cls, game_engine: "GameEngine", width: int, height: int):
+        """Check how much columns and rows of current gameplay can be rendered on the display."""
+        max_x_i, max_y_i = game_engine.board.size
 
         # Count height and width in advance
         # So trimming is redundant
@@ -148,24 +163,19 @@ class BashDisplay(DisplayAbs):
         if height < max_y_i:
             max_y_i = height
 
-        lines_to_print: typing.List[str] = []
+        return max_x_i, max_y_i
 
-        for y in range(max_y_i):
-            # format board rows
-            line_l: typing.List[str] = []
+    @classmethod
+    def _format_game_engine_row(
+        cls, game_engine: "GameEngine", width: int, height: int
+    ):
+        line_l: typing.List[str] = []
 
-            for x in range(max_x_i):
-                board_field = game_engine.board.matrix.get(x, y)
-                line_l.append(cls._render_board_field(board_field))
+        for i in range(width):
+            board_field = game_engine.board.matrix.get(i, height)
+            line_l.append(cls._render_board_field(board_field))
 
-            line: str = "".join(line_l)
-            line = cls.format_line(line, None)
-            lines_to_print.append(line)
-
-        # format board columns
-        cls._fill_empty_space(lines_to_print, height)
-
-        return cls.format_lines(lines_to_print, None)
+        return "".join(line_l)
 
     @classmethod
     def _render_board_field(cls, board_field: BoardFieldType) -> str:
@@ -217,7 +227,7 @@ class BashDisplay(DisplayAbs):
         return cls.format_line(FIELD_LINE_SYNTAX.format(field_name=field_name), width)
 
     @classmethod
-    def format_line(cls, line: str, width: typing.Optional[int]) -> str:
+    def format_line(cls, line: str, width: int) -> str:
         line = line[:width]
         return move_cursor_to_line_beginning(line)
 
@@ -226,7 +236,9 @@ class BashDisplay(DisplayAbs):
         return paint_red(line, True)
 
     @classmethod
-    def format_lines(cls, lines: typing.List[str], height: typing.Optional[int]) -> str:
+    def format_lines(
+        cls, lines: typing.List[str], height: typing.Optional[int] = None
+    ) -> str:
         lines = lines[:height]
         return "\n".join(lines)
 
@@ -246,6 +258,8 @@ class BashDisplay(DisplayAbs):
     @classmethod
     def _fill_empty_space(cls, lines_to_print, height):
         rendered_lines_height = len(lines_to_print) - 1
-        for _ in range(height - rendered_lines_height):
-            # Add empty strings to fill empty space
+        lines_to_fill = height - rendered_lines_height
+
+        for _ in range(lines_to_fill):
+            # Add empty strings to represent empty space
             lines_to_print.append("")
