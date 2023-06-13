@@ -88,7 +88,7 @@ class NormalSnake(SnakeAbs):
         self._shrink()
 
     def set_direction(self, direction: SnakeDirection):
-        """Assign new direction to the snake.
+        """Assigns new direction to the snake.
         Validates direction's value, before performing assignment."""
 
         DIRECTION_VALIDATE_MAP = {
