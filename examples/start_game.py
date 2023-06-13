@@ -21,24 +21,17 @@ def main():
 
     session = MagicMock(board=board)
 
-    with patch.object(display._game_engine, "_session", session):
-        game_engine.ctx = GAME_ENGINE_CTX.GAME
-        game_engine.start()
-        controller.start()
-        display.start()
+    game_engine._session = session
 
-        i = 0
-        while i < 10:
-            i += 1
+    game_engine.ctx = GAME_ENGINE_CTX.GAME
+    game_engine.start()
+    controller.start()
+    display.start()
 
-            random_direction = SNAKE_MOVES[randint(0, len(SNAKE_MOVES) - 1)]
+    sleep(1000)
 
-            board.snake.set_direction(random_direction)
-
-            sleep(randint(0, 2))
-
-        controller.stop()
-        display.stop()
+    controller.stop()
+    display.stop()
     # game_engine.stop()
 
 
