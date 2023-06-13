@@ -86,7 +86,29 @@ def test_bash_display_render_menu_waiting_screen():
 
 
 def test_bash_display_render_engine_init():
-    expected_screen = ""
+    expected_screen = (
+        "\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m"
+        "\n\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m"
+        "\n\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[44m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m"
+        "\n\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m"
+        "\n\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m"
+        "\n"
+        "\n"
+        "\n"
+        "\n"
+        "\n"
+        "\n"
+        "\n"
+        "\n"
+        "\n"
+        "\n"
+        "\n"
+        "\n"
+        "\n"
+        "\n"
+        "\n"
+        "\n"
+    )
 
     game_engine, board, terminal_x, terminal_y = _game_engine(), BoardNoWalls(5), 30, 20
 
@@ -99,6 +121,3 @@ def test_bash_display_render_engine_init():
         received_menu = display.render_game_engine(game_engine, terminal_x, terminal_y)
 
     assert received_menu == expected_screen
-
-    print(session.board)
-    assert False
