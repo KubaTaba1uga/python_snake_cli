@@ -6,7 +6,7 @@ from threading import Event
 from threading import Thread
 from time import sleep
 
-from src.constants import BoardFieldType
+from src.constants import BoardFieldType, DEFAULT_GAME_FREQUENCY_IN_HZ
 from src.constants import GAME_ENGINE_CTX
 from src.game_engine.utils.si_utils import get_seconds_from_hz
 from src.utils.abc_utils import ContextManagerAbs
@@ -23,7 +23,7 @@ if typing.TYPE_CHECKING:
 
 
 class DisplayAbs(ContextManagerAbs, NonBlockingAbs):
-    DEFAULT_FREQ_IN_HZ = 500
+    DEFAULT_FREQ_IN_HZ = DEFAULT_GAME_FREQUENCY_IN_HZ * 2
 
     @classmethod
     @abstractmethod
@@ -139,7 +139,9 @@ class BashDisplay(DisplayAbs):
             line = cls._format_game_engine_row(game_engine, max_x_i, y_i)
             lines_to_print.append(line)
 
-        cls._fill_empty_space(lines_to_print, height - 1)
+        cls._fill_empty_space(
+            lines_to_print, height - 1  # do not delete `- 1` (hack but working),
+        )
 
         return cls.format_lines(lines_to_print, None)
 
