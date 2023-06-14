@@ -95,7 +95,7 @@ class SizeLarge(SizeFieldAbs):
 
     @classmethod
     def height(cls) -> int:
-        return 100
+        return 50
 
 
 def generate_size_fields(next_ctx: GAME_MENU_CTX):
