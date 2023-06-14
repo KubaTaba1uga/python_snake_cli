@@ -8,4 +8,5 @@
   * 1\.2 Level lead to level (max score dependent on a difficulty level)
     * 1\.2\.1 Story screens between levels
     * 1\.2\.2 Session remember which boards was played and which where not
+    * 1\.2\.3 Game ends when all boards was won
 * 2\. High scores board
