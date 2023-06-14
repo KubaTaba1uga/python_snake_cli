@@ -44,8 +44,8 @@ class BoardFieldAbs(ABC):
 
 
 class BoardAbs(ABC):
-    def __init__(self, size: int):
-        self.matrix = Matrix2D(size)
+    def __init__(self, width: int, height: int):
+        self.matrix = Matrix2D(width=width, height=height)
 
         self._initiate_board_basic(self.matrix)
 
@@ -173,10 +173,10 @@ class BoardNoWalls(BoardAbs, BoardFieldAbs):
             matrix.set(x=x, y=y, value=BoardFieldType.FRUIT)
 
 
-def generate_board_fields():
+def generate_board_fields(next_ctx: GAME_MENU_CTX):
     BoardFieldAbs.add_ids_to_children_classes()
 
-    fields, next_ctx = {}, GAME_MENU_CTX.CHOOSE_DIFFICULTY
+    fields = {}
 
     for sub_class in BoardAbs.__subclasses__():
         new_field = copy(FIELD_TEMPLATE)

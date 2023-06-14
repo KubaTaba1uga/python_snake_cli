@@ -7,7 +7,7 @@ from src.constants import FIELD_TEMPLATE
 from src.constants import GAME_MENU_CTX
 
 
-class DifficultyAbs(ABC):
+class DifficultyFieldAbs(ABC):
     # Id is required by Menu, to link field with difficulty.
     id: typing.Optional[int] = None
 
@@ -30,30 +30,30 @@ class DifficultyAbs(ABC):
         raise NotImplementedError(cls, id_)
 
 
-class DifficultyEasy(DifficultyAbs):
+class DifficultyEasy(DifficultyFieldAbs):
     @classmethod
     def display_name(cls) -> str:
         return "Easy"
 
 
-class DifficultyMedium(DifficultyAbs):
+class DifficultyMedium(DifficultyFieldAbs):
     @classmethod
     def display_name(cls) -> str:
         return "Medium"
 
 
-class DifficultyHard(DifficultyAbs):
+class DifficultyHard(DifficultyFieldAbs):
     @classmethod
     def display_name(cls) -> str:
         return "Hard"
 
 
-def generate_difficulty_fields():
-    DifficultyAbs.add_ids_to_children_classes()
+def generate_difficulty_fields(next_ctx: GAME_MENU_CTX):
+    DifficultyFieldAbs.add_ids_to_children_classes()
 
-    fields, next_ctx = {}, GAME_MENU_CTX.PLAY_NEW
+    fields = {}
 
-    for sub_class in DifficultyAbs.__subclasses__():
+    for sub_class in DifficultyFieldAbs.__subclasses__():
         new_field = copy(FIELD_TEMPLATE)
         new_field["display_name"] = sub_class.display_name()
         new_field["next_ctx"] = next_ctx

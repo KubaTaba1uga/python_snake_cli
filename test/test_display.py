@@ -7,7 +7,7 @@ from src.game_engine.game_logic.board import BoardNoWalls
 
 
 def _no_walls_board():
-    return BoardNoWalls(5)
+    return BoardNoWalls(5, 5)
 
 
 def test_bash_display_render_menu_menu():
@@ -109,7 +109,12 @@ def test_bash_display_render_engine_init():
         "\n"
     )
 
-    game_engine, board, terminal_x, terminal_y = _game_engine(), BoardNoWalls(5), 30, 20
+    game_engine, board, terminal_x, terminal_y = (
+        _game_engine(),
+        _no_walls_board(),
+        30,
+        20,
+    )
 
     session = MagicMock(board=board)
 
@@ -169,7 +174,12 @@ def test_bash_display_render_engine_snake_moves():
         "\n"
     )
 
-    game_engine, board, terminal_x, terminal_y = _game_engine(), BoardNoWalls(5), 30, 20
+    game_engine, board, terminal_x, terminal_y = (
+        _game_engine(),
+        _no_walls_board(),
+        30,
+        20,
+    )
 
     session = MagicMock(board=board)
 
