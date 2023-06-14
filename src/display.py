@@ -243,10 +243,12 @@ class BashDisplay(DisplayAbs):
 
     @classmethod
     def width(cls):
+        # this makes display to not fold the line but cut it
         return shutil.get_terminal_size()[0]
 
     @classmethod
     def height(cls):
+        # this makes display to not crash animation when terminal resized
         return shutil.get_terminal_size()[1]
 
     @classmethod
