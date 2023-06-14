@@ -39,7 +39,7 @@ class GameEngine:
     # Game has to start from menu to load first session
     DEFAULT_GAME_ENGINE_CTX = GAME_ENGINE_CTX.MENU
 
-    DEFAULT_FREQ_IN_HZ = 10
+    DEFAULT_FREQ_IN_HZ = 300
 
     @classmethod
     def sleep(cls):
