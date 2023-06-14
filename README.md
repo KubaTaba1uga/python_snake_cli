@@ -8,5 +8,8 @@
   * 1\.2 Level lead to level (max score dependent on a difficulty level)
     * 1\.2\.1 Story screens between levels
     * 1\.2\.2 Session remember which boards was played and which where not
-    * 1\.2\.3 Game ends when all boards was won
+    * 1\.2\.3 Game ends when there is no more boards to play
 * 2\. High scores board
+* 3\. Difficulty is a speed of game engine
+  * 3\.1 must be very quick (like >300hz) so snake can influence user experience (like 10hz snake speed vs 300hz engine speed makes playgtrough very slow)
+* 4\. Boards can be of 4 types 
