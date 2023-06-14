@@ -77,3 +77,7 @@ class SnakeDirection(StrEnum):
     DOWN = auto()
     LEFT = auto()
     RIGHT = auto()
+
+
+def get_key_value_by_display_name(key_display_name: str) -> str:
+    return KEYS_VALUES_MAP[DISPLAY_NAMES_KEYS_MAP[key_display_name]]

@@ -1,10 +1,9 @@
 import typing
 from copy import deepcopy
 
-from src.constants import DISPLAY_NAMES_KEYS_MAP
+from src.constants import DISPLAY_NAMES_KEYS_MAP, get_key_value_by_display_name
 from src.constants import GAME_MENU_CTX
 from src.constants import KEYS_VALUES_MAP
-# from src.constants import VALUES_KEYS_MAP
 from src.errors import NoSelectedField
 from src.game_engine.difficulty import DifficultyAbs
 from src.game_engine.difficulty import generate_difficulty_fields
@@ -100,13 +99,9 @@ class GameMenu:
 
     def _init_user_input_func_map(self):
         return {
-            KEYS_VALUES_MAP[DISPLAY_NAMES_KEYS_MAP["ENTER key"]]: self.set_new_ctx,
-            KEYS_VALUES_MAP[
-                DISPLAY_NAMES_KEYS_MAP["UP ARROW key"]
-            ]: self.select_previous_field,
-            KEYS_VALUES_MAP[
-                DISPLAY_NAMES_KEYS_MAP["DOWN ARROW key"]
-            ]: self.select_next_field,
+            get_key_value_by_display_name("ENTER key"): self.set_new_ctx,
+            get_key_value_by_display_name("UP ARROW key"): self.select_previous_field,
+            get_key_value_by_display_name("DOWN ARROW key"): self.select_next_field,
         }
 
     @_allow_no_fields

@@ -7,6 +7,7 @@ from src.constants import (
     DISPLAY_NAMES_KEYS_MAP,
     KEYS_VALUES_MAP,
     SnakeDirection,
+    get_key_value_by_display_name,
 )
 from src.game_engine.game_menu import GameMenu
 from src.game_engine.utils.si_utils import get_seconds_from_hz
@@ -60,18 +61,18 @@ class GameEngine:
 
     def _init_user_input_func_map(self) -> typing.Dict[str, typing.Callable]:
         return {
-            KEYS_VALUES_MAP[
-                DISPLAY_NAMES_KEYS_MAP["UP ARROW key"]
-            ]: lambda: self.board.snake.set_direction(SnakeDirection.UP),
-            KEYS_VALUES_MAP[
-                DISPLAY_NAMES_KEYS_MAP["DOWN ARROW key"]
-            ]: lambda: self.board.snake.set_direction(SnakeDirection.DOWN),
-            KEYS_VALUES_MAP[
-                DISPLAY_NAMES_KEYS_MAP["LEFT ARROW key"]
-            ]: lambda: self.board.snake.set_direction(SnakeDirection.LEFT),
-            KEYS_VALUES_MAP[
-                DISPLAY_NAMES_KEYS_MAP["RIGHT ARROW key"]
-            ]: lambda: self.board.snake.set_direction(SnakeDirection.RIGHT),
+            get_key_value_by_display_name(
+                "UP ARROW key"
+            ): lambda: self.board.snake.set_direction(SnakeDirection.UP),
+            get_key_value_by_display_name(
+                "DOWN ARROW key"
+            ): lambda: self.board.snake.set_direction(SnakeDirection.DOWN),
+            get_key_value_by_display_name(
+                "LEFT ARROW key"
+            ): lambda: self.board.snake.set_direction(SnakeDirection.LEFT),
+            get_key_value_by_display_name(
+                "RIGHT ARROW key"
+            ): lambda: self.board.snake.set_direction(SnakeDirection.RIGHT),
         }
 
     def start(self):
