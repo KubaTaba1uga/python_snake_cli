@@ -3,7 +3,7 @@ from abc import ABC
 from abc import abstractmethod
 from dataclasses import dataclass
 
-from src.logging import log_info
+from src.logging import log_snake_info
 from src.constants import BoardFieldType
 from src.constants import SnakeDirection
 from src.errors import SnakeDied
@@ -65,7 +65,7 @@ def _log_snake_head(function):
 
         head_after = self.head()
 
-        log_info(
+        log_snake_info(
             LOG_SYNTAX.format(
                 old_x=head_before.x,
                 new_x=head_after.x,
@@ -75,6 +75,8 @@ def _log_snake_head(function):
         )
 
         return result
+
+    return wrapped_func
 
 
 class NormalSnake(SnakeAbs):
