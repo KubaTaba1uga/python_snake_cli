@@ -61,7 +61,11 @@ def _log_snake_head(function):
     def wrapped_func(self, *args, **kwargs):
         head_before = self.head()
 
-        result = function(self, *args, **kwargs)
+        try:
+            result = function(self, *args, **kwargs)
+        except Exception as err:
+            log_snake_info("ERROR")
+            exit(1)
 
         head_after = self.head()
 
@@ -117,19 +121,12 @@ class NormalSnake(SnakeAbs):
         """Assigns new direction to the snake.
         Validates direction's value, before performing assignment."""
 
-        DIRECTION_VALIDATE_MAP = {
-            SnakeDirection.UP: self._validate_up_direction,
-            SnakeDirection.DOWN: self._validate_down_direction,
-            SnakeDirection.LEFT: self._validate_left_direction,
-            SnakeDirection.RIGHT: self._validate_right_direction,
-        }
-
         try:
-            DIRECTION_VALIDATE_MAP[direction]()
+            self._validate_direction(direction)
         except ValidationError:
-            raise ValueError(direction)
-        except KeyError:
-            pass
+            return
+
+        log_snake_info(direction)
 
         self._direction = direction
 
@@ -220,53 +217,18 @@ class NormalSnake(SnakeAbs):
     def _shrink(self):
         self._body.pop()
 
-    def _validate_up_direction(self):
-        # do not allow snake to eat its neck
-        try:
-            snake_neck = self[1]
-        except IndexError:
-            return
+    def _validate_direction(self, new_direction: SnakeDirection):
+        SELF_DIRECTION_FORBIDDEN_DIRECTION_MAP = {
+            SnakeDirection.UP: SnakeDirection.DOWN,
+            SnakeDirection.DOWN: SnakeDirection.UP,
+            SnakeDirection.LEFT: SnakeDirection.RIGHT,
+            SnakeDirection.RIGHT: SnakeDirection.LEFT,
+        }
 
-        is_neck_over_the_head = snake_neck.y == self.head().y - 1
-
-        if is_neck_over_the_head:
-            raise ValidationError()
-
-    def _validate_down_direction(self):
-        # do not allow snake to eat its neck
-        try:
-            snake_neck = self[1]
-        except IndexError:
-            return
-
-        is_neck_below_the_head = snake_neck.y == self.head().y + 1
-
-        if is_neck_below_the_head:
-            raise ValidationError()
-
-    def _validate_left_direction(self):
-        # do not allow snake to eat its neck
-        try:
-            snake_neck = self[1]
-        except IndexError:
-            return
-
-        is_neck_next_to_the_head = snake_neck.x == self.head().x - 1
-
-        if is_neck_next_to_the_head:
-            raise ValidationError()
-
-    def _validate_right_direction(self):
-        # do not allow snake to eat its neck
-        try:
-            snake_neck = self[1]
-        except IndexError:
-            return
-
-        is_neck_next_to_the_head = snake_neck.x == self.head().x + 1
-
-        if is_neck_next_to_the_head:
-            raise ValidationError()
+        if new_direction == SELF_DIRECTION_FORBIDDEN_DIRECTION_MAP[self._direction]:
+            raise ValidationError(
+                new_direction, self._direction, SELF_DIRECTION_FORBIDDEN_DIRECTION_MAP
+            )
 
 
 # TO-DO
