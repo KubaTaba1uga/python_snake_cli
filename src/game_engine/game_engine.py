@@ -2,7 +2,13 @@ import typing
 from threading import Thread
 from time import sleep
 
-from src.constants import GAME_ENGINE_CTX
+from src.constants import (
+    GAME_ENGINE_CTX,
+    DISPLAY_NAMES_KEYS_MAP,
+    KEYS_VALUES_MAP,
+    SnakeDirection,
+    get_key_value_by_display_name,
+)
 from src.game_engine.game_menu import GameMenu
 from src.game_engine.utils.si_utils import get_seconds_from_hz
 from src.user_input import UserInput
@@ -33,9 +39,7 @@ class GameEngine:
     # Game has to start from menu to load first session
     DEFAULT_GAME_ENGINE_CTX = GAME_ENGINE_CTX.MENU
 
-    DEFAULT_FREQ_IN_HZ = 100
-
-    USER_INPUT_FUNC_MAP: typing.Dict[str, typing.Callable] = {}
+    DEFAULT_FREQ_IN_HZ = 10
 
     @classmethod
     def sleep(cls):
@@ -52,6 +56,24 @@ class GameEngine:
 
         self._thread: Thread = Thread(target=self._process_game_engine)
         self._session = None
+
+        self.USER_INPUT_FUNC_MAP = self._init_user_input_func_map()
+
+    def _init_user_input_func_map(self) -> typing.Dict[str, typing.Callable]:
+        return {
+            get_key_value_by_display_name(
+                "UP ARROW key"
+            ): lambda: self.board.snake.set_direction(SnakeDirection.UP),
+            get_key_value_by_display_name(
+                "DOWN ARROW key"
+            ): lambda: self.board.snake.set_direction(SnakeDirection.DOWN),
+            get_key_value_by_display_name(
+                "LEFT ARROW key"
+            ): lambda: self.board.snake.set_direction(SnakeDirection.LEFT),
+            get_key_value_by_display_name(
+                "RIGHT ARROW key"
+            ): lambda: self.board.snake.set_direction(SnakeDirection.RIGHT),
+        }
 
     def start(self):
         self._thread.start()

@@ -135,11 +135,11 @@ class BashDisplay(DisplayAbs):
 
         lines_to_print: typing.List[str] = []
 
-        for i in range(max_y_i):
-            line = cls._format_game_engine_row(game_engine, max_x_i, i)
+        for y_i in range(max_y_i):
+            line = cls._format_game_engine_row(game_engine, max_x_i, y_i)
             lines_to_print.append(line)
 
-        cls._fill_empty_space(lines_to_print, height)
+        cls._fill_empty_space(lines_to_print, height - 1)
 
         return cls.format_lines(lines_to_print, None)
 

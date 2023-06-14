@@ -107,7 +107,6 @@ def test_bash_display_render_engine_init():
         "\n"
         "\n"
         "\n"
-        "\n"
     )
 
     game_engine, board, terminal_x, terminal_y = _game_engine(), BoardNoWalls(5), 30, 20
@@ -118,9 +117,11 @@ def test_bash_display_render_engine_init():
 
     display = BashDisplay(game_engine)
     with patch.object(display._game_engine, "_session", session):
-        received_menu = display.render_game_engine(game_engine, terminal_x, terminal_y)
+        received_screen = display.render_game_engine(
+            game_engine, terminal_x, terminal_y
+        )
 
-    assert received_menu == expected_screen
+    assert received_screen == expected_screen
 
 
 def test_bash_display_render_engine_snake_moves():
@@ -145,14 +146,12 @@ def test_bash_display_render_engine_snake_moves():
         "\n"
         "\n"
         "\n"
-        "\n"
     ), (
         "\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m"
         "\n\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[44m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m"
         "\n\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m"
         "\n\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m"
         "\n\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m"
-        "\n"
         "\n"
         "\n"
         "\n"

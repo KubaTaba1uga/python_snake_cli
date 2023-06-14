@@ -185,52 +185,44 @@ def test_normal_snake_move_into_fruit():
     assert len(snake) == 2
 
 
+def test_normal_snake_do_not_turn_around_down():
+    org_direction, new_direction = SnakeDirection.UP, SnakeDirection.DOWN
+
+    snake = NormalSnake(2, 2, org_direction)
+
+    snake.set_direction(new_direction)
+
+    assert snake._direction == org_direction
+
+
 def test_normal_snake_do_not_turn_around_up():
-    matrix_data, snake, matrix = (
-        _ground_matrix(),
-        NormalSnake(2, 2, SnakeDirection.RIGHT),
-        Matrix2D(5),
-    )
+    org_direction, new_direction = SnakeDirection.DOWN, SnakeDirection.UP
 
-    # make snake longer
-    snake._grow_head(2, 3)
+    snake = NormalSnake(2, 2, org_direction)
 
-    matrix._data = matrix_data
+    snake.set_direction(new_direction)
 
-    with pytest.raises(ValueError):
-        snake.set_direction(SnakeDirection.UP)
+    assert snake._direction == org_direction
 
 
 def test_normal_snake_do_not_turn_around_left():
-    matrix_data, snake, matrix = (
-        _ground_matrix(),
-        NormalSnake(2, 2, SnakeDirection.UP),
-        Matrix2D(5),
-    )
+    org_direction, new_direction = SnakeDirection.RIGHT, SnakeDirection.LEFT
 
-    # make snake longer
-    snake._grow_head(3, 2)
+    snake = NormalSnake(2, 2, org_direction)
 
-    matrix._data = matrix_data
+    snake.set_direction(new_direction)
 
-    with pytest.raises(ValueError):
-        snake.set_direction(SnakeDirection.LEFT)
+    assert snake._direction == org_direction
 
 
 def test_normal_snake_do_not_turn_around_right():
-    matrix_data, snake, matrix = (
-        _ground_matrix(),
-        NormalSnake(2, 2, SnakeDirection.UP),
-        Matrix2D(5),
-    )
+    org_direction, new_direction = SnakeDirection.LEFT, SnakeDirection.RIGHT
 
-    # make snake longer
-    snake._grow_head(1, 2)
+    snake = NormalSnake(2, 2, org_direction)
 
-    matrix._data = matrix_data
+    snake.set_direction(new_direction)
 
-    with pytest.raises(ValueError):
-        snake.set_direction(SnakeDirection.RIGHT)
+    assert snake._direction == org_direction
 
 
 def test_normal_snake_move_show_on_board():
