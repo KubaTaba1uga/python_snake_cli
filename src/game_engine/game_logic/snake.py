@@ -44,14 +44,21 @@ class SnakeAbs(ABC):
         """Kill a snake."""
         raise SnakeDied(self)
 
+    def set_direction(self, direction: SnakeDirection):
+        try:
+            self.validate_direction(direction)
+        except ValidationError:
+            return
+
+        self._direction = direction
+
     @abstractmethod
     def move(self, matrix: "Matrix2D"):
         """Moves snake body and show the move on matrix."""
-
         pass
 
     @abstractmethod
-    def set_direction(self, direction: SnakeDirection):
+    def validate_direction(self, new_direction: SnakeDirection):
         pass
 
 
@@ -116,19 +123,6 @@ class NormalSnake(SnakeAbs):
         self._process_move(matrix, new_head_x, new_head_y)
 
         self._shrink()
-
-    def set_direction(self, direction: SnakeDirection):
-        """Assigns new direction to the snake.
-        Validates direction's value, before performing assignment."""
-
-        try:
-            self._validate_direction(direction)
-        except ValidationError:
-            return
-
-        log_snake_info(direction)
-
-        self._direction = direction
 
     def _process_move(self, matrix: "Matrix2D", move_x: int, move_y: int):
         FIELD_TYPE_FUNC_MAP = {
@@ -217,7 +211,7 @@ class NormalSnake(SnakeAbs):
     def _shrink(self):
         self._body.pop()
 
-    def _validate_direction(self, new_direction: SnakeDirection):
+    def validate_direction(self, new_direction: SnakeDirection):
         SELF_DIRECTION_FORBIDDEN_DIRECTION_MAP = {
             SnakeDirection.UP: SnakeDirection.DOWN,
             SnakeDirection.DOWN: SnakeDirection.UP,
