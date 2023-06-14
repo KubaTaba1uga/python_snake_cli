@@ -99,6 +99,7 @@ def test_bash_display_render_engine_init():
         "\n"
         "\n"
         "\n"
+        "\n"
     )
 
     game_engine, board, terminal_x, terminal_y = (
@@ -149,7 +150,6 @@ def test_bash_display_render_engine_snake_moves():
         "\n\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m"
         "\n\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m"
         "\n\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m"
-        "\n"
         "\n"
         "\n"
         "\n"
