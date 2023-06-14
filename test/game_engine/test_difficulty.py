@@ -24,6 +24,6 @@ def test_generate_fields_success():
         },
     }
 
-    received_results = generate_difficulty_fields()
+    received_results = generate_difficulty_fields(GAME_MENU_CTX.PLAY_NEW)
 
     assert received_results == expected_results

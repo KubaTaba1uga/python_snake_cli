@@ -53,7 +53,7 @@ def test_normal_snake_move_up():
     matrix_data, snake, matrix = (
         _ground_matrix(),
         NormalSnake(2, 2, SnakeDirection.UP),
-        Matrix2D(5),
+        Matrix2D(5, 5),
     )
 
     # make snake longer
@@ -74,7 +74,7 @@ def test_normal_snake_move_down():
     matrix_data, snake, matrix = (
         _ground_matrix(),
         NormalSnake(2, 2, SnakeDirection.DOWN),
-        Matrix2D(5),
+        Matrix2D(5, 5),
     )
 
     # make snake longer
@@ -95,7 +95,7 @@ def test_normal_snake_move_left():
     matrix_data, snake, matrix = (
         _ground_matrix(),
         NormalSnake(2, 2, SnakeDirection.LEFT),
-        Matrix2D(5),
+        Matrix2D(5, 5),
     )
 
     # make snake longer
@@ -116,7 +116,7 @@ def test_normal_snake_move_right():
     matrix_data, snake, matrix = (
         _ground_matrix(),
         NormalSnake(2, 2, SnakeDirection.RIGHT),
-        Matrix2D(5),
+        Matrix2D(5, 5),
     )
 
     # make snake longer
@@ -137,7 +137,7 @@ def test_normal_snake_move_into_wall():
     matrix_data, snake, matrix = (
         _ground_matrix(),
         NormalSnake(2, 1, SnakeDirection.RIGHT),
-        Matrix2D(5),
+        Matrix2D(5, 5),
     )
 
     # make snake longer
@@ -155,7 +155,7 @@ def test_normal_snake_move_into_snake():
     matrix_data, snake, matrix = (
         _ground_matrix(),
         NormalSnake(1, 2, SnakeDirection.RIGHT),
-        Matrix2D(5),
+        Matrix2D(5, 5),
     )
 
     # make snake longer
@@ -173,7 +173,7 @@ def test_normal_snake_move_into_fruit():
     matrix_data, snake, matrix = (
         _ground_matrix(),
         NormalSnake(2, 2, SnakeDirection.RIGHT),
-        Matrix2D(5),
+        Matrix2D(5, 5),
     )
 
     matrix._data = matrix_data
@@ -229,7 +229,7 @@ def test_normal_snake_move_show_on_board():
     matrix_data, snake, matrix = (
         _ground_matrix(),
         NormalSnake(2, 2, SnakeDirection.RIGHT),
-        Matrix2D(5),
+        Matrix2D(5, 5),
     )
 
     matrix._data = matrix_data
@@ -244,7 +244,7 @@ def test_normal_snake_eat_fruit_show_on_board():
     matrix_data, snake, matrix = (
         _ground_matrix(),
         NormalSnake(2, 2, SnakeDirection.RIGHT),
-        Matrix2D(5),
+        Matrix2D(5, 5),
     )
 
     matrix._data = matrix_data

@@ -1,18 +1,23 @@
 import typing
+from abc import ABC, abstractmethod
 
 
 class Matrix2D:
-    """Fixed size two dimmensional array."""
+    """Two dimmensional matrix."""
 
-    def __init__(self, size: int):
-        if size < 1:
-            raise ValueError(size)
+    def __init__(
+        self,
+        height: int,
+        width: int,
+    ):
+        if height < 1 or width < 1:
+            raise ValueError(height, width)
 
-        self._data: typing.List[typing.List] = self._create_column(size)
+        self._data: typing.List[typing.List] = self._create_column(height, width)
 
     @classmethod
-    def _create_column(cls, size: int) -> typing.List[typing.List[None]]:
-        return [cls._create_row(size) for _ in range(size)]
+    def _create_column(cls, height: int, width) -> typing.List[typing.List[None]]:
+        return [cls._create_row(width) for _ in range(height)]
 
     @classmethod
     def _create_row(cls, size: int) -> typing.List[None]:

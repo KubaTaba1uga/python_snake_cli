@@ -8,6 +8,7 @@ from src.constants import (
     KEYS_VALUES_MAP,
     SnakeDirection,
     get_key_value_by_display_name,
+    DEFAULT_GAME_FREQUENCY_IN_HZ,
 )
 from src.game_engine.game_menu import GameMenu
 from src.game_engine.utils.si_utils import get_seconds_from_hz
@@ -39,7 +40,7 @@ class GameEngine:
     # Game has to start from menu to load first session
     DEFAULT_GAME_ENGINE_CTX = GAME_ENGINE_CTX.MENU
 
-    DEFAULT_FREQ_IN_HZ = 10
+    DEFAULT_FREQ_IN_HZ = DEFAULT_GAME_FREQUENCY_IN_HZ
 
     @classmethod
     def sleep(cls):

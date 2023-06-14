@@ -16,7 +16,7 @@ def test_generate_fields_success():
         }
     }
 
-    received_results = generate_board_fields()
+    received_results = generate_board_fields(GAME_MENU_CTX.CHOOSE_DIFFICULTY)
 
     assert received_results == expected_results
 
@@ -68,7 +68,7 @@ def _ground_matrix():
 
 
 def _no_walls_board():
-    return BoardNoWalls(5)
+    return BoardNoWalls(5, 5)
 
 
 def test_board_no_walls_create_fruits():

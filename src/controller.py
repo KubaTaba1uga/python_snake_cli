@@ -1,4 +1,6 @@
+import os
 import typing
+import sys
 
 from pynput import keyboard as _keyboard
 
@@ -9,6 +11,13 @@ from src.utils.abc_utils import NonBlockingAbs
 
 if typing.TYPE_CHECKING:
     from src.game_engine.game_engine import GameEngine
+
+
+# TO-DO
+# write Your own controller which will take one letter from sys.input
+#  and wait based on game frequency
+# this way controller won't catch accidential keyboard input
+#  from other app
 
 
 class Controller(ContextManagerAbs, NonBlockingAbs):
