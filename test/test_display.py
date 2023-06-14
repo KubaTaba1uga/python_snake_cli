@@ -2,6 +2,7 @@ from test.conftest import game_engine as _game_engine
 from unittest.mock import MagicMock
 from unittest.mock import patch
 
+from src.constants import GAME_MENU_CTX
 from src.display import BashDisplay
 from src.game_engine.game_logic.board import BoardNoWalls
 
@@ -35,7 +36,7 @@ def test_bash_display_render_menu_choose_board():
 
     game_engine, terminal_x, terminal_y = _game_engine(), 30, 20
 
-    game_engine.game_menu.set_new_ctx()
+    game_engine.game_menu.ctx = GAME_MENU_CTX.CHOOSE_BOARD
 
     received_menu = BashDisplay.render_game_menu(game_engine, terminal_x, terminal_y)
 
@@ -54,10 +55,7 @@ def test_bash_display_render_menu_choose_difficulty():
 
     game_engine, terminal_x, terminal_y = _game_engine(), 30, 20
 
-    # Go to choose board
-    game_engine.game_menu.set_new_ctx()
-    # Go to choose difficulty
-    game_engine.game_menu.set_new_ctx()
+    game_engine.game_menu.ctx = GAME_MENU_CTX.CHOOSE_DIFFICULTY
 
     received_menu = BashDisplay.render_game_menu(game_engine, terminal_x, terminal_y)
 
@@ -73,12 +71,7 @@ def test_bash_display_render_menu_waiting_screen():
 
     game_engine, terminal_x, terminal_y = _game_engine(), 30, 20
 
-    # Go to choose board
-    game_engine.game_menu.set_new_ctx()
-    # Go to choose difficulty
-    game_engine.game_menu.set_new_ctx()
-    # # Go to new game
-    game_engine.game_menu.set_new_ctx()
+    game_engine.game_menu.ctx = GAME_MENU_CTX.PLAY_NEW
 
     received_menu = BashDisplay.render_game_menu(game_engine, terminal_x, terminal_y)
 

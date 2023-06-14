@@ -8,12 +8,12 @@ if typing.TYPE_CHECKING:
 
 
 class Session:
+    """Manage board for game engine."""
+
     def __init__(
         self,
-        difficulty: "DifficultyAbs",
+        difficulty_class: typing.Type["DifficultyAbs"],
         board_class: typing.Type["BoardAbs"],
         size_class: typing.Type["SizeAbs"],
     ):
         pass
-
-    board: typing.Optional["BoardAbs"]

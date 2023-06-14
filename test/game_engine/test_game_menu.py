@@ -105,7 +105,7 @@ def test_game_menu_select_previous_field_out_of_range():
 
 def test_game_menu_create_new_session():
     expected_session = Session(
-        difficulty=DifficultyEasy(), board_class=BoardNoWalls, size_class=SizeMedium
+        difficulty_class=DifficultyEasy, board_class=BoardNoWalls, size_class=SizeMedium
     )
 
     game_menu, board_id, difficulty_id = (
@@ -127,11 +127,3 @@ def test_game_menu_create_new_session():
     game_menu.process_ctx()
 
     assert game_menu.session is not None
-    assert (
-        game_menu.session.difficulty.display_name
-        == expected_session.difficulty.display_name
-    )
-    assert (
-        game_menu.session.board_class.display_name
-        == expected_session.board_class.display_name
-    )

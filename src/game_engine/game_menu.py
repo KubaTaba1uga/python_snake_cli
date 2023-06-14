@@ -9,11 +9,12 @@ from src.game_engine.difficulty import DifficultyFieldAbs
 from src.game_engine.difficulty import generate_difficulty_fields
 from src.game_engine.game_logic.board import BoardFieldAbs
 from src.game_engine.game_logic.board import generate_board_fields
+from src.game_engine.game_logic.size import generate_size_fields, SizeFieldAbs
 from src.game_engine.session import Session
 
-BOARD_NEXT_CTX = GAME_MENU_CTX.CHOOSE_DIFFICULTY
+BOARD_NEXT_CTX = GAME_MENU_CTX.CHOOSE_SIZE
 DIFFICULTY_NEXT_CTX = GAME_MENU_CTX.PLAY_NEW
-
+SIZE_NEXT_CTX = GAME_MENU_CTX.CHOOSE_DIFFICULTY
 
 _MENU_FIELDS_MAP_TEMPLATE = {
     GAME_MENU_CTX.MENU: {
@@ -40,6 +41,10 @@ _MENU_FIELDS_MAP_TEMPLATE = {
     GAME_MENU_CTX.CHOOSE_BOARD: {
         "title": "Board Choice",
         "fields": generate_board_fields(BOARD_NEXT_CTX),
+    },
+    GAME_MENU_CTX.CHOOSE_SIZE: {
+        "title": "Board Size Choice",
+        "fields": generate_size_fields(SIZE_NEXT_CTX),
     },
     GAME_MENU_CTX.CHOOSE_DIFFICULTY: {
         "title": "Difficulty Choice",
@@ -148,27 +153,37 @@ class GameMenu:
         2. difficulty
         """
 
-        board_ctx, difficulty_ctx, current_ctx = (
+        board_ctx, size_ctx, difficulty_ctx, current_ctx = (
             GAME_MENU_CTX.CHOOSE_BOARD,
+            GAME_MENU_CTX.CHOOSE_SIZE,
             GAME_MENU_CTX.CHOOSE_DIFFICULTY,
             self.ctx,
         )
 
-        try:
-            self.ctx = board_ctx
-            board_field_id, _ = self._get_selected_field()
+        def _get_fields_by_ctx(ctx):
+            try:
+                self.ctx = ctx
+                return self._get_selected_field()
+            finally:
+                self.ctx = current_ctx
 
-            self.ctx = difficulty_ctx
-            difficulty_field_id, _ = self._get_selected_field()
-        finally:
-            self.ctx = current_ctx
+        board_field_id, _ = _get_fields_by_ctx(board_ctx)
 
-        board_class, difficulty_class = (
+        difficulty_field_id, _ = _get_fields_by_ctx(difficulty_ctx)
+
+        size_field_id, _ = _get_fields_by_ctx(size_ctx)
+
+        board_class, difficulty_class, size_class = (
             BoardFieldAbs.get_children_class_by_id(board_field_id),
             DifficultyFieldAbs.get_children_class_by_id(difficulty_field_id),
+            SizeFieldAbs.get_children_class_by_id(size_field_id),
         )
 
-        self.session = Session(board_class=board_class, difficulty=difficulty_class())
+        self.session = Session(
+            board_class=board_class,
+            difficulty_class=difficulty_class,
+            size_class=size_class,
+        )
 
     @_overload_field_id
     @_unselect_all_fields_before_execution
