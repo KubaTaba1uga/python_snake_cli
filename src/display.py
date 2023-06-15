@@ -194,7 +194,7 @@ class BashDisplay(DisplayAbs):
         for field in game_menu_fields.values():
             lines_to_print.append(cls.format_field(field, width))
 
-        cls._fill_empty_space(lines_to_print, height)
+        cls._fill_empty_space(lines_to_print, height - 1)
 
         rendered_lines = cls.format_lines(lines_to_print, height)
 

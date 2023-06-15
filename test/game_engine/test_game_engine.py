@@ -1,14 +1,15 @@
+from src.constants import get_key_value_by_display_name
+from src.game_engine.session import Session
+from src.game_engine.game_engine import GameEngine
+
+
 # def test_game_engine_set_direction_left():
-#     expected_matrix, expected_snake_body = (), ()
+#     game_engine, key_value = GameEngine(), get_key_value_by_display_name(
+#         "LEFT ARROW key"
+#     )
 
-#     game_engine, board, terminal_x, terminal_y = _game_engine(), BoardNoWalls(5), 30, 20
+#     game_engine.user_input.set(key_value)
 
-#     session = MagicMock(board=board)
-
-#     # game_engine.board = board
-
-#     display = BashDisplay(game_engine)
-#     with patch.object(display._game_engine, "_session", session):
-#         received_menu = display.render_game_engine(game_engine, terminal_x, terminal_y)
+#     game_engine._process_user_input()
 
 #     assert received_menu == expected_screen
