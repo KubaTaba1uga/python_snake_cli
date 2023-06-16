@@ -6,7 +6,7 @@ from src.game_engine.game_logic.board import generate_board_fields
 from src.game_engine.game_logic.matrix import Matrix2D
 
 
-def test_generate_fields_success():
+def test_generate_fields_success(board_no_walls_square):
     expected_results = {
         0: {
             "display_name": "No walls",
@@ -21,7 +21,7 @@ def test_generate_fields_success():
     assert received_results == expected_results
 
 
-def _ground_matrix():
+def _ground_matrix(board_no_walls_square):
     """Place snake on matrix's center. Matrix doesn't have any obstacles."""
 
     matrix_data = [
@@ -67,14 +67,10 @@ def _ground_matrix():
     return matrix
 
 
-def _no_walls_board():
-    return BoardNoWalls(5, 5)
-
-
-def test_board_no_walls_create_fruits():
+def test_board_no_walls_create_fruits(board_no_walls_square):
     max_fruits_no, min_fruits_no = 3, 1
 
-    board = _no_walls_board()
+    board = board_no_walls_square
     matrix = board.matrix
 
     received_fruits = board._create_fruits(matrix)
@@ -86,8 +82,8 @@ def test_board_no_walls_create_fruits():
         assert fruit_coordinates.y < matrix.height()
 
 
-def test_board_no_walls_render_fruits_simple():
-    board = _no_walls_board()
+def test_board_no_walls_render_fruits_simple(board_no_walls_square):
+    board = board_no_walls_square
     matrix = board.matrix
 
     fruits = [Coordinates(1, 2), Coordinates(3, 4), Coordinates(4, 3)]
@@ -98,8 +94,8 @@ def test_board_no_walls_render_fruits_simple():
         assert matrix.get(fruit.x, fruit.y) == BoardFieldType.FRUIT
 
 
-def test_board_no_walls_render_fruits_eaten_by_snake():
-    board = _no_walls_board()
+def test_board_no_walls_render_fruits_eaten_by_snake(board_no_walls_square):
+    board = board_no_walls_square
     matrix = board.matrix
 
     fruits = [Coordinates(1, 2), Coordinates(2, 2), Coordinates(2, 3)]
@@ -109,8 +105,8 @@ def test_board_no_walls_render_fruits_eaten_by_snake():
     assert len(fruits) == 2
 
 
-def test_board_no_walls_process_simple():
-    board = _no_walls_board()
+def test_board_no_walls_process_simple(board_no_walls_square):
+    board = board_no_walls_square
 
     board.process()
 
@@ -122,8 +118,8 @@ def test_board_no_walls_process_simple():
     assert board.matrix.get(snake_head.x, snake_head.y) == BoardFieldType.SNAKE
 
 
-def test_board_no_walls_process_fruit():
-    board, fruit = _no_walls_board(), Coordinates(2, 1)
+def test_board_no_walls_process_fruit(board_no_walls_square):
+    board, fruit = board_no_walls_square, Coordinates(2, 1)
 
     board.fruits = [fruit]
     board.matrix.set(BoardFieldType.FRUIT, fruit.x, fruit.y)
