@@ -6,7 +6,8 @@ from threading import Event
 from threading import Thread
 from time import sleep
 
-from src.constants import BoardFieldType, DEFAULT_GAME_FREQUENCY_IN_HZ
+from src.constants import BoardFieldType
+from src.constants import DEFAULT_GAME_FREQUENCY_IN_HZ
 from src.constants import GAME_ENGINE_CTX
 from src.game_engine.utils.si_utils import get_seconds_from_hz
 from src.utils.abc_utils import ContextManagerAbs
@@ -147,7 +148,8 @@ class BashDisplay(DisplayAbs):
 
     @classmethod
     def _get_max_render_size(cls, game_engine: "GameEngine", width: int, height: int):
-        """Check how much columns and rows of current gameplay can be rendered on the display."""
+        """Check how much columns and rows of current gameplay
+        can be rendered on the display."""
         max_x_i, max_y_i = game_engine.board.size
 
         # Count height and width in advance

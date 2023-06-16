@@ -1,5 +1,6 @@
-import pytest
 from unittest.mock import MagicMock
+
+import pytest
 
 from src.constants import GAME_ENGINE_CTX
 from src.game_engine.game_engine import GameEngine

@@ -1,6 +1,4 @@
-import os
 import typing
-import sys
 
 from pynput import keyboard as _keyboard
 

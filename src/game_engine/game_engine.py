@@ -2,14 +2,10 @@ import typing
 from threading import Thread
 from time import sleep
 
-from src.constants import (
-    GAME_ENGINE_CTX,
-    DISPLAY_NAMES_KEYS_MAP,
-    KEYS_VALUES_MAP,
-    SnakeDirection,
-    get_key_value_by_display_name,
-    DEFAULT_GAME_FREQUENCY_IN_HZ,
-)
+from src.constants import DEFAULT_GAME_FREQUENCY_IN_HZ
+from src.constants import GAME_ENGINE_CTX
+from src.constants import get_key_value_by_display_name
+from src.constants import SnakeDirection
 from src.game_engine.game_menu import GameMenu
 from src.game_engine.utils.si_utils import get_seconds_from_hz
 from src.user_input import UserInput

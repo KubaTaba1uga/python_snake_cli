@@ -1,9 +1,5 @@
-from unittest.mock import MagicMock
-from unittest.mock import patch
-
 from src.constants import GAME_MENU_CTX
 from src.display import BashDisplay
-from src.game_engine.game_logic.board import BoardNoWalls
 
 
 def test_bash_display_render_menu_menu(game_engine_menu):
@@ -75,26 +71,13 @@ def test_bash_display_render_menu_waiting_screen(game_engine_menu):
 
 def test_bash_display_render_engine_init(game_engine_game):
     expected_screen = (
-        "\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m"
-        "\n\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m"
-        "\n\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[44m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m"
-        "\n\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m"
-        "\n\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
+        "\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m"
+        " \x1b[0m\n\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m"
+        " \x1b[0m\x1b[47m \x1b[0m\n\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[44m"
+        " \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\n\x1b[47m \x1b[0m\x1b[47m"
+        " \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\n\x1b[47m"
+        " \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m"
+        " \x1b[0m\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
     )
 
     game_engine, terminal_x, terminal_y = (
@@ -112,47 +95,24 @@ def test_bash_display_render_engine_init(game_engine_game):
 
 def test_bash_display_render_engine_snake_moves(game_engine_game):
     expected_screen_before_move, expected_screen_after_move = (
-        "\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m"
-        "\n\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m"
-        "\n\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[44m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m"
-        "\n\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m"
-        "\n\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-    ), (
-        "\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m"
-        "\n\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[44m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m"
-        "\n\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m"
-        "\n\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m"
-        "\n\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
+        (
+            "\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m"
+            " \x1b[0m\n\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m"
+            " \x1b[0m\x1b[47m \x1b[0m\n\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[44m"
+            " \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\n\x1b[47m \x1b[0m\x1b[47m"
+            " \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\n\x1b[47m"
+            " \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m"
+            " \x1b[0m\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+        ),
+        (
+            "\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m"
+            " \x1b[0m\n\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[44m \x1b[0m\x1b[47m"
+            " \x1b[0m\x1b[47m \x1b[0m\n\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m"
+            " \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\n\x1b[47m \x1b[0m\x1b[47m"
+            " \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\n\x1b[47m"
+            " \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m \x1b[0m\x1b[47m"
+            " \x1b[0m\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+        ),
     )
 
     game_engine, terminal_x, terminal_y = (

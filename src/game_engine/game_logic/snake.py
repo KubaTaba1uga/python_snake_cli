@@ -3,11 +3,11 @@ from abc import ABC
 from abc import abstractmethod
 from dataclasses import dataclass
 
-from src.logging import log_snake_info
 from src.constants import BoardFieldType
 from src.constants import SnakeDirection
 from src.errors import SnakeDied
 from src.errors import ValidationError
+from src.logging import log_snake_info
 
 if typing.TYPE_CHECKING:
     from src.game_engine.game_logic.matrix import Matrix2D
@@ -71,7 +71,7 @@ def _log_snake_head(function):
         try:
             result = function(self, *args, **kwargs)
         except Exception as err:
-            log_snake_info("ERROR")
+            log_snake_info(err)
             exit(1)
 
         head_after = self.head()

@@ -1,8 +1,7 @@
 import pytest
 
-from src.constants import get_key_value_by_display_name, SnakeDirection
-from src.game_engine.session import Session
-from src.game_engine.game_engine import GameEngine
+from src.constants import get_key_value_by_display_name
+from src.constants import SnakeDirection
 
 
 @pytest.mark.parametrize(

@@ -1,6 +1,5 @@
 from src.constants import BoardFieldType
 from src.constants import GAME_MENU_CTX
-from src.game_engine.game_logic.board import BoardNoWalls
 from src.game_engine.game_logic.board import Coordinates
 from src.game_engine.game_logic.board import generate_board_fields
 from src.game_engine.game_logic.matrix import Matrix2D
