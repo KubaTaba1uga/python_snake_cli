@@ -4,13 +4,16 @@ from abc import abstractmethod
 from copy import copy
 from dataclasses import dataclass
 from random import randint
+from time import sleep
 
 from src.constants import BOARD_FIELD_TYPE
+from src.constants import DEFAULT_GAME_FREQUENCY_IN_HZ
 from src.constants import FIELD_TEMPLATE
 from src.constants import GAME_MENU_CTX
 from src.game_engine.game_logic.matrix import Matrix2D
 from src.game_engine.game_logic.snake import NormalSnake
 from src.game_engine.game_logic.snake import SnakeAbs
+from src.game_engine.utils.si_utils import get_seconds_from_hz
 
 
 @dataclass
@@ -44,36 +47,7 @@ class BoardFieldAbs(ABC):
 
 
 class BoardAbs(ABC):
-    def __init__(self, width: int, height: int):
-        self.matrix = Matrix2D(width=width, height=height)
-
-        self._initiate_board_basic(self.matrix)
-
-        self.snake: SnakeAbs = self._initiate_snake(self.matrix)
-
-        self.create_fruits()
-
-    @property
-    def size(self) -> typing.Tuple[int, int]:
-        return self.matrix.width(), self.matrix.height()
-
-    def process(self):
-        self._render_fruits(self.matrix, self.fruits)
-
-        if self.are_fruits_empty:
-            self.create_fruits()
-
-        self.move_snake()
-
-    @property
-    def are_fruits_empty(self) -> bool:
-        return len(self.fruits) == 0
-
-    def create_fruits(self):
-        self.fruits = self._create_fruits(self.matrix)
-
-    def move_snake(self):
-        self.snake.move(self.matrix)
+    DEFAULT_BOARD_FREQ_IN_HZ = DEFAULT_GAME_FREQUENCY_IN_HZ
 
     @classmethod
     @abstractmethod
@@ -101,6 +75,51 @@ class BoardAbs(ABC):
            deletes fruit from fruits list.
         """
         raise NotImplementedError(self, matrix, fruits)
+
+    @classmethod
+    def sleep(cls, time_in_sec: int):
+        sleep(time_in_sec)
+
+    def _sleep(self):
+        seconds_to_sleep = get_seconds_from_hz(self._sleep_freq)
+        sleep(seconds_to_sleep)
+
+    def __init__(
+        self, width: int, height: int, sleep_freq: typing.Optional[float] = None
+    ):
+        self.matrix = Matrix2D(width=width, height=height)
+
+        self._initiate_board_basic(self.matrix)
+
+        self.snake: SnakeAbs = self._initiate_snake(self.matrix)
+
+        self.fruits: typing.List[Coordinates] = []
+
+        if sleep_freq is None:
+            sleep_freq = self.DEFAULT_BOARD_FREQ_IN_HZ
+
+        self._sleep_freq = sleep_freq
+
+    def process(self):
+        if self.are_fruits_empty:
+            self.fruits = self._create_fruits(self.matrix)
+
+        self._render_fruits(self.matrix, self.fruits)
+
+        self.move_snake()
+
+        self._sleep()
+
+    def move_snake(self):
+        self.snake.move(self.matrix)
+
+    @property
+    def are_fruits_empty(self) -> bool:
+        return len(self.fruits) == 0
+
+    @property
+    def size(self) -> typing.Tuple[int, int]:
+        return self.matrix.width(), self.matrix.height()
 
 
 class BoardNoWalls(BoardAbs, BoardFieldAbs):
@@ -194,4 +213,4 @@ def generate_board_fields(next_ctx: GAME_MENU_CTX):
 
 
 # TO-DO
-# create board which moves upwords one y/x each 5 moves
+# create board which has a wall which moves upwords one y/x each n moves

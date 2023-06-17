@@ -81,4 +81,5 @@ def get_key_value_by_display_name(key_display_name: str) -> str:
     return KEYS_VALUES_MAP[DISPLAY_NAMES_KEYS_MAP[key_display_name]]
 
 
-DEFAULT_GAME_FREQUENCY_IN_HZ = 10
+# do not change this value please!
+DEFAULT_GAME_FREQUENCY_IN_HZ = 100

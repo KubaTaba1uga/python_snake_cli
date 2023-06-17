@@ -20,7 +20,7 @@ def game_engine_game():
     game_engine = GameEngine()
     game_engine.ctx = GAME_ENGINE_CTX.GAME
 
-    board = BoardNoWalls(5, 5)
+    board = BoardNoWalls(width=5, height=5)
 
     session = MagicMock(board=board)
 
