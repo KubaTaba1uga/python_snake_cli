@@ -45,6 +45,7 @@ class SnakeAbs(ABC):
 
     def die(self):
         """Kill a snake."""
+        log_snake_info("Snake died!")
         raise SnakeDied(self)
 
     def set_direction(self, direction: SNAKE_DIRECTION):
@@ -71,11 +72,7 @@ def _log_snake_head(function):
     def wrapped_func(self, *args, **kwargs):
         head_before = self.head()
 
-        try:
-            result = function(self, *args, **kwargs)
-        except Exception as err:
-            log_snake_info(f"Error: {err!s}")
-            exit(1)
+        result = function(self, *args, **kwargs)
 
         head_after = self.head()
 

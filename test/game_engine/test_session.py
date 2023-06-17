@@ -5,7 +5,8 @@ import pytest
 
 
 from src.constants import GAME_MENU_CTX
-from src.game_engine.session import SessionDummy, generate_session_fields
+from src.game_engine.session import generate_session_fields
+from src.game_engine.session import SessionDummy
 
 
 
@@ -14,7 +15,6 @@ def test_dummy_session():
 
     with pytest.raises(NotImplementedError):
         session.board
-
 
 
 def test_generate_session_fields(session_small_board_no_walls_easy):

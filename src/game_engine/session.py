@@ -1,13 +1,12 @@
 import typing
-from datetime import datetime
-from copy import copy
 
-from src.constants import DEFAULT_GAME_FREQUENCY_IN_HZ, FIELD_TEMPLATE, GAME_MENU_CTX
-from src.game_engine.difficulty import DifficultyEasy
-from src.game_engine.difficulty import DifficultyHard
-from src.game_engine.difficulty import DifficultyMedium
+from copy import copy
+from datetime import datetime
+
 
 from src.constants import DEFAULT_GAME_FREQUENCY_IN_HZ
+from src.constants import FIELD_TEMPLATE
+from src.constants import GAME_MENU_CTX
 from src.game_engine.difficulty import DifficultyEasy
 from src.game_engine.difficulty import DifficultyHard
 from src.game_engine.difficulty import DifficultyMedium
@@ -70,7 +69,7 @@ class Session:
 
 
     def is_session_finished(self):
-        return self.end_time is None
+        return self.end_time is not None
 
     def finish(self):
         if self.is_session_finished():

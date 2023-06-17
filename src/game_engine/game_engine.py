@@ -1,4 +1,5 @@
 import typing
+from datetime import datetime
 from threading import Thread
 from time import sleep
 from datetime import datetime
@@ -48,18 +49,13 @@ def _go_back_to_menu_if_snake_dead(function) -> typing.Any:
         self: GameEngine
 
         try:
-            result = function(self, *args, **kwargs)
-        except SnakeDied:
-            log_snake_info("SNAKE IS DEAD")
-            try:
-                self._session.finish()
-                self.game_menu.show_session()
-                self.ctx = GAME_ENGINE_CTX.MENU
-            except Exception as e:
-                log_snake_info(str(e))
-                exit(10)
 
-        return result
+            return function(self, *args, **kwargs)
+        except SnakeDied:
+            self._session.finish()
+            self.game_menu.show_session()
+            self.ctx = GAME_ENGINE_CTX.MENU
+
 
     return wrapped_func
 
