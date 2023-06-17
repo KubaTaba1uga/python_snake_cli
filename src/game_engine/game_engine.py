@@ -54,9 +54,10 @@ def _go_back_to_menu_if_snake_dead(function) -> typing.Any:
         except SnakeDied:
             self._session.finish()
             self.game_menu.show_session()
-            self.ctx = GAME_ENGINE_CTX.MENU
 
             sleep(3)  # let user watch the failure
+
+            self.ctx = GAME_ENGINE_CTX.MENU
 
     return wrapped_func
 
