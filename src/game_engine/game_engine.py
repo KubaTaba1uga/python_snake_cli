@@ -6,7 +6,7 @@ from src.constants import DEFAULT_GAME_FREQUENCY_IN_HZ
 from src.constants import GAME_ENGINE_CTX
 from src.constants import get_key_value_by_display_name
 from src.constants import SNAKE_DIRECTION
-from src.game_engine.difficulty import DifficultyEasy
+from src.game_engine.difficulty import DifficultyEasy, DifficultyMedium, DifficultyHard
 from src.game_engine.game_logic.board import BoardNoWalls
 from src.game_engine.game_logic.size import SizeSmall
 from src.game_engine.game_menu import GameMenu
@@ -14,6 +14,12 @@ from src.game_engine.session import Session
 from src.game_engine.session import SessionDummy
 from src.game_engine.utils.si_utils import get_seconds_from_hz
 from src.user_input import UserInput
+
+DIFFICULTY_SLEEP_MULTIPLIER_TIME = {
+    DifficultyEasy: 3,
+    DifficultyMedium: 2,
+    DifficultyHard: 1,
+}
 
 
 def _manage_game_menu_and_session(function) -> typing.Any:

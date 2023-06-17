@@ -136,5 +136,5 @@ def test_board_no_walls_process_fruit(board_no_walls_square):
     assert board.matrix.get(snake_tail.x, snake_tail.y) == BOARD_FIELD_TYPE.SNAKE
 
     board.process()
-
+    board.process()
     assert board.fruits[0] is not fruit
