@@ -71,7 +71,7 @@ def _log_snake_head(function):
         try:
             result = function(self, *args, **kwargs)
         except Exception as err:
-            log_snake_info(err)
+            log_snake_info(f"Error: {err!s}")
             exit(1)
 
         head_after = self.head()

@@ -178,7 +178,7 @@ def generate_board_fields(next_ctx: GAME_MENU_CTX):
 
     fields = {}
 
-    for sub_class in BoardAbs.__subclasses__():
+    for sub_class in BoardFieldAbs.__subclasses__():
         new_field = copy(FIELD_TEMPLATE)
         new_field["display_name"] = sub_class.display_name()
         new_field["next_ctx"] = next_ctx

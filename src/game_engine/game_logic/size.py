@@ -42,7 +42,7 @@ class SizeAbs(ABC):
         raise NotImplementedError()
 
 
-class SizeSmall(SizeFieldAbs):
+class SizeSmall(SizeAbs, SizeFieldAbs):
     @classmethod
     def display_name(cls) -> str:
         return "Small"
@@ -56,7 +56,7 @@ class SizeSmall(SizeFieldAbs):
         return 10
 
 
-class SizeMedium(SizeFieldAbs):
+class SizeMedium(SizeAbs, SizeFieldAbs):
     @classmethod
     def display_name(cls) -> str:
         return "Medium"
@@ -70,7 +70,7 @@ class SizeMedium(SizeFieldAbs):
         return 25
 
 
-class SizeBig(SizeFieldAbs):
+class SizeBig(SizeAbs, SizeFieldAbs):
     @classmethod
     def display_name(cls) -> str:
         return "Big"
@@ -84,7 +84,7 @@ class SizeBig(SizeFieldAbs):
         return 50
 
 
-class SizeLarge(SizeFieldAbs):
+class SizeLarge(SizeAbs, SizeFieldAbs):
     @classmethod
     def display_name(cls) -> str:
         return "Large"

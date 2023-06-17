@@ -26,7 +26,9 @@ class Controller(ContextManagerAbs, NonBlockingAbs):
 
     def __init__(self, game_engine):
         self.game_engine = game_engine
-        self._thread = _keyboard.Listener(on_press=self.write_key_to_game_engine)
+        self._thread = _keyboard.Listener(
+            on_press=self.write_key_to_game_engine  # type: ignore [arg-type]
+        )
 
     def __enter__(self):
         pass
