@@ -5,7 +5,7 @@ from copy import copy
 from dataclasses import dataclass
 from random import randint
 
-from src.constants import BoardFieldType
+from src.constants import BOARD_FIELD_TYPE
 from src.constants import FIELD_TEMPLATE
 from src.constants import GAME_MENU_CTX
 from src.game_engine.game_logic.matrix import Matrix2D
@@ -114,21 +114,21 @@ class BoardNoWalls(BoardAbs, BoardFieldAbs):
         """Fill matrix body with field types (GROUND, WALL)."""
         for x in range(matrix.width()):
             for y in range(matrix.height()):
-                matrix.set(BoardFieldType.GROUND, x, y)
+                matrix.set(BOARD_FIELD_TYPE.GROUND, x, y)
 
     @classmethod
     def _initiate_snake(cls, matrix) -> NormalSnake:
         """Fill matrix body with snake type fields and create snake obj."""
         start_x, start_y = int(matrix.width() / 2), int(matrix.height() / 2)
 
-        matrix.set(BoardFieldType.SNAKE, start_x, start_y)
+        matrix.set(BOARD_FIELD_TYPE.SNAKE, start_x, start_y)
 
         return NormalSnake(start_x, start_y)
 
     @classmethod
     def _create_fruits(self, matrix) -> typing.List[Coordinates]:
         """Create list of coordinates which represent fruits locations."""
-        field_types_allowed_to_overwrite = [BoardFieldType.GROUND]
+        field_types_allowed_to_overwrite = [BOARD_FIELD_TYPE.GROUND]
         max_fruits_no, min_fruits_no = 3, 1
         max_x_i, max_y_i = matrix.width() - 1, matrix.height() - 1
 
@@ -162,7 +162,7 @@ class BoardNoWalls(BoardAbs, BoardFieldAbs):
 
             x, y = fruit.x, fruit.y
 
-            fruit_eaten_by_snake = matrix.get(x=x, y=y) == BoardFieldType.SNAKE
+            fruit_eaten_by_snake = matrix.get(x=x, y=y) == BOARD_FIELD_TYPE.SNAKE
 
             if fruit_eaten_by_snake:
                 fruits.pop(i)
@@ -170,7 +170,7 @@ class BoardNoWalls(BoardAbs, BoardFieldAbs):
 
             i += 1
 
-            matrix.set(x=x, y=y, value=BoardFieldType.FRUIT)
+            matrix.set(x=x, y=y, value=BOARD_FIELD_TYPE.FRUIT)
 
 
 def generate_board_fields(next_ctx: GAME_MENU_CTX):

@@ -1,4 +1,4 @@
-from src.constants import BoardFieldType
+from src.constants import BOARD_FIELD_TYPE
 from src.constants import GAME_MENU_CTX
 from src.game_engine.game_logic.board import Coordinates
 from src.game_engine.game_logic.board import generate_board_fields
@@ -25,39 +25,39 @@ def _ground_matrix(board_no_walls_square):
 
     matrix_data = [
         [
-            BoardFieldType.GROUND,
-            BoardFieldType.GROUND,
-            BoardFieldType.GROUND,
-            BoardFieldType.GROUND,
-            BoardFieldType.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
         ],
         [
-            BoardFieldType.GROUND,
-            BoardFieldType.GROUND,
-            BoardFieldType.GROUND,
-            BoardFieldType.GROUND,
-            BoardFieldType.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
         ],
         [
-            BoardFieldType.GROUND,
-            BoardFieldType.GROUND,
-            BoardFieldType.SNAKE,
-            BoardFieldType.GROUND,
-            BoardFieldType.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
+            BOARD_FIELD_TYPE.SNAKE,
+            BOARD_FIELD_TYPE.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
         ],
         [
-            BoardFieldType.GROUND,
-            BoardFieldType.GROUND,
-            BoardFieldType.GROUND,
-            BoardFieldType.GROUND,
-            BoardFieldType.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
         ],
         [
-            BoardFieldType.GROUND,
-            BoardFieldType.GROUND,
-            BoardFieldType.GROUND,
-            BoardFieldType.GROUND,
-            BoardFieldType.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
         ],
     ]
 
@@ -90,7 +90,7 @@ def test_board_no_walls_render_fruits_simple(board_no_walls_square):
     board._render_fruits(matrix, fruits)
 
     for fruit in fruits:
-        assert matrix.get(fruit.x, fruit.y) == BoardFieldType.FRUIT
+        assert matrix.get(fruit.x, fruit.y) == BOARD_FIELD_TYPE.FRUIT
 
 
 def test_board_no_walls_render_fruits_eaten_by_snake(board_no_walls_square):
@@ -114,14 +114,14 @@ def test_board_no_walls_process_simple(board_no_walls_square):
     assert snake_head.x == 2
     assert snake_head.y == 1
 
-    assert board.matrix.get(snake_head.x, snake_head.y) == BoardFieldType.SNAKE
+    assert board.matrix.get(snake_head.x, snake_head.y) == BOARD_FIELD_TYPE.SNAKE
 
 
 def test_board_no_walls_process_fruit(board_no_walls_square):
     board, fruit = board_no_walls_square, Coordinates(2, 1)
 
     board.fruits = [fruit]
-    board.matrix.set(BoardFieldType.FRUIT, fruit.x, fruit.y)
+    board.matrix.set(BOARD_FIELD_TYPE.FRUIT, fruit.x, fruit.y)
 
     board.process()
 
@@ -132,8 +132,8 @@ def test_board_no_walls_process_fruit(board_no_walls_square):
     assert snake_tail.x == 2
     assert snake_tail.y == 2
 
-    assert board.matrix.get(snake_head.x, snake_head.y) == BoardFieldType.SNAKE
-    assert board.matrix.get(snake_tail.x, snake_tail.y) == BoardFieldType.SNAKE
+    assert board.matrix.get(snake_head.x, snake_head.y) == BOARD_FIELD_TYPE.SNAKE
+    assert board.matrix.get(snake_tail.x, snake_tail.y) == BOARD_FIELD_TYPE.SNAKE
 
     board.process()
 

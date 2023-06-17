@@ -3,7 +3,7 @@ from abc import ABC
 from abc import abstractmethod
 from dataclasses import dataclass
 
-from src.constants import BoardFieldType
+from src.constants import BOARD_FIELD_TYPE
 from src.constants import SnakeDirection
 from src.errors import SnakeDied
 from src.errors import ValidationError
@@ -104,15 +104,15 @@ class NormalSnake(SnakeAbs):
 
     def _clear_tail(self, matrix: "Matrix2D"):
         tail = self.tail()
-        matrix.set(BoardFieldType.GROUND, tail.x, tail.y)
+        matrix.set(BOARD_FIELD_TYPE.GROUND, tail.x, tail.y)
 
     def _render_tail(self, matrix: "Matrix2D"):
         tail = self.tail()
-        matrix.set(BoardFieldType.SNAKE, tail.x, tail.y)
+        matrix.set(BOARD_FIELD_TYPE.SNAKE, tail.x, tail.y)
 
     def _render_head(self, matrix: "Matrix2D"):
         tail = self.head()
-        matrix.set(BoardFieldType.SNAKE, tail.x, tail.y)
+        matrix.set(BOARD_FIELD_TYPE.SNAKE, tail.x, tail.y)
 
     def _move(self, matrix: "Matrix2D"):
         """Move snake by creating new head and deleting a tail."""
@@ -126,9 +126,9 @@ class NormalSnake(SnakeAbs):
 
     def _process_move(self, matrix: "Matrix2D", move_x: int, move_y: int):
         FIELD_TYPE_FUNC_MAP = {
-            BoardFieldType.WALL: self.die,
-            BoardFieldType.SNAKE: self.die,
-            BoardFieldType.FRUIT: self._grow_dummy_tail,
+            BOARD_FIELD_TYPE.WALL: self.die,
+            BOARD_FIELD_TYPE.SNAKE: self.die,
+            BOARD_FIELD_TYPE.FRUIT: self._grow_dummy_tail,
         }
 
         field_type = matrix.get(move_x, move_y)
