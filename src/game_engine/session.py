@@ -7,6 +7,11 @@ from src.game_engine.difficulty import DifficultyEasy
 from src.game_engine.difficulty import DifficultyHard
 from src.game_engine.difficulty import DifficultyMedium
 
+from src.constants import DEFAULT_GAME_FREQUENCY_IN_HZ
+from src.game_engine.difficulty import DifficultyEasy
+from src.game_engine.difficulty import DifficultyHard
+from src.game_engine.difficulty import DifficultyMedium
+
 if typing.TYPE_CHECKING:
     from src.game_engine.difficulty import DifficultyAbs
     from src.game_engine.game_logic.board import BoardAbs
@@ -63,6 +68,7 @@ class Session:
         self._size = self._init_size(self._size_class)
         self._board = self._init_board(self._board_class, self._size, self._difficulty)
 
+
     def is_session_finished(self):
         return self.end_time is None
 
@@ -97,6 +103,7 @@ class SessionDummy(Session):
         raise NotImplementedError(self)
 
 
+
 def generate_session_fields(session: Session) -> dict:
     FIELD_SYNTAX, NEXT_CTX = "{}: {}", GAME_MENU_CTX.MENU
 
@@ -123,3 +130,4 @@ def generate_session_fields(session: Session) -> dict:
     fields[0]["selected"] = True
 
     return fields
+
