@@ -6,7 +6,7 @@ from src.constants import DEFAULT_GAME_FREQUENCY_IN_HZ
 from src.constants import GAME_ENGINE_CTX
 from src.constants import get_key_value_by_display_name
 from src.constants import SNAKE_DIRECTION
-from src.game_engine.difficulty import DifficultyEasy, DifficultyMedium, DifficultyHard
+from src.game_engine.difficulty import DifficultyEasy
 from src.game_engine.game_logic.board import BoardNoWalls
 from src.game_engine.game_logic.size import SizeSmall
 from src.game_engine.game_menu import GameMenu
@@ -15,24 +15,28 @@ from src.game_engine.session import SessionDummy
 from src.game_engine.utils.si_utils import get_seconds_from_hz
 from src.user_input import UserInput
 
-DIFFICULTY_SLEEP_MULTIPLIER_TIME = {
-    DifficultyEasy: 3,
-    DifficultyMedium: 2,
-    DifficultyHard: 1,
-}
-
 
 def _manage_game_menu_and_session(function) -> typing.Any:
     """Manages the current session or creates a new one.
     Makes sure that game_menu is always available."""
 
     def wrapped_func(self, *args, **kwargs):
-        result = function(self, *args, **kwargs)
+        from src.logging import log_snake_info
+
+        try:
+            result = function(self, *args, **kwargs)
+        except Exception as err:
+            log_snake_info(str(err))
 
         if self.game_menu.is_session_ready():
             self._session, self.ctx = self.game_menu.session, GAME_ENGINE_CTX.GAME
 
+            log_snake_info("SESSION IS READY")
+
             self.game_menu = GameMenu(self._session)
+
+        else:
+            log_snake_info("SESSION IS READY")
 
         return result
 

@@ -2,11 +2,14 @@ import typing
 from abc import ABC
 from abc import abstractmethod
 from dataclasses import dataclass
+from time import sleep
 
 from src.constants import BOARD_FIELD_TYPE
+from src.constants import DEFAULT_GAME_FREQUENCY_IN_HZ
 from src.constants import SNAKE_DIRECTION
 from src.errors import SnakeDied
 from src.errors import ValidationError
+from src.game_engine.utils.si_utils import get_seconds_from_hz
 from src.logging import log_snake_info
 
 if typing.TYPE_CHECKING:
@@ -91,6 +94,16 @@ def _log_snake_head(function):
 
 
 class NormalSnake(SnakeAbs):
+    DEFAULT_SLEEP_FREQ_IN_HZ = DEFAULT_GAME_FREQUENCY_IN_HZ
+
+    @classmethod
+    def sleep(cls, time_in_sec):
+        sleep(time_in_sec)
+
+    def _sleep(self):
+        seconds_to_sleep = get_seconds_from_hz(self.DEFAULT_SLEEP_FREQ_IN_HZ)
+        sleep(seconds_to_sleep)
+
     @_log_snake_head
     def move(self, matrix: "Matrix2D"):
         self._clear_tail(matrix)
