@@ -13,6 +13,7 @@ from src.game_engine.game_logic.size import SizeFieldAbs
 from src.game_engine.session import generate_session_fields
 from src.game_engine.session import Session
 
+from src.logging import log_snake_error
 
 BOARD_NEXT_CTX = GAME_MENU_CTX.CHOOSE_SIZE
 DIFFICULTY_NEXT_CTX = GAME_MENU_CTX.PLAY_NEW
@@ -52,7 +53,6 @@ _MENU_FIELDS_MAP_TEMPLATE = {
         "title": "Difficulty Choice",
         "fields": generate_difficulty_fields(DIFFICULTY_NEXT_CTX),
     },
-
     GAME_MENU_CTX.PLAY_END: {
         "title": "Snake is dead! You lost!",
         "fields": {
@@ -84,10 +84,26 @@ def _overload_field_id(function):
     """If field_id drops below 0 assign the biggest id to it.
     If field_id raises over the biggest id assign 0 to it."""
 
+    def find_fields_to_select(fields):
+        ids_to_overload = []
+
+        for id_, field in fields.items():
+            if field["disabled"]:
+                continue
+
+            ids_to_overload.append(id_)
+
+        return ids_to_overload
+
     def wrapped_function(self, field_id, *args, **kwargs):
         fields = self.get_fields()
 
-        max_id, min_id = len(fields) - 1, 0
+        ids_to_overload = find_fields_to_select(fields)
+
+        try:
+            max_id, min_id = ids_to_overload[-1], ids_to_overload[0]
+        except IndexError:
+            return function(self, field_id, *args, **kwargs)
 
         if field_id > max_id:
             field_id = min_id
@@ -152,6 +168,7 @@ class GameMenu:
     def get_title(self) -> str:
         return self.fields_map[self.ctx]["title"]
 
+    @log_snake_error
     def process_ctx(self):
         GAME_MENU_CTX_PROCESS_FUNC_MAP = {
             GAME_MENU_CTX.PLAY_NEW: self._create_session,
@@ -162,10 +179,9 @@ class GameMenu:
         except KeyError:
             pass
 
+    @log_snake_error
     def show_session(self):
-
         self.ctx = GAME_MENU_CTX.PLAY_END
-
 
         self.fields_map[GAME_MENU_CTX.SHOW_SESSION]["fields"] = generate_session_fields(
             self.session

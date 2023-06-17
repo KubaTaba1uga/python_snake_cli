@@ -19,7 +19,7 @@ from src.game_engine.utils.si_utils import get_seconds_from_hz
 from src.user_input import UserInput
 
 
-from src.logging import log_snake_info
+from src.logging import log_snake_info, log_snake_error
 
 
 def _manage_game_menu_and_session(function) -> typing.Any:
@@ -41,6 +41,7 @@ def _manage_game_menu_and_session(function) -> typing.Any:
     return wrapped_func
 
 
+@log_snake_error
 def _go_back_to_menu_if_snake_dead(function) -> typing.Any:
     """Makes sure that game won't crash when snake is dead.
     Instead go back to menu and show game results."""
@@ -49,13 +50,13 @@ def _go_back_to_menu_if_snake_dead(function) -> typing.Any:
         self: GameEngine
 
         try:
-
             return function(self, *args, **kwargs)
         except SnakeDied:
             self._session.finish()
             self.game_menu.show_session()
             self.ctx = GAME_ENGINE_CTX.MENU
 
+            sleep(3)  # let user watch the failure
 
     return wrapped_func
 

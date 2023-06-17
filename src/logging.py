@@ -37,3 +37,15 @@ def log_snake_info(msg: str):
     logger = get_snake_logger()
 
     logger.info(msg)
+
+
+def log_snake_error(function):
+    logger = get_snake_logger()
+
+    def wrapped_func(*args, **kwargs):
+        try:
+            return function(*args, **kwargs)
+        except Exception as err:
+            logger.error(err)
+
+    return wrapped_func

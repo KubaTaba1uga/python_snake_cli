@@ -214,14 +214,22 @@ class BashDisplay(DisplayAbs):
 
     @classmethod
     def format_field(cls, field: dict, width: int) -> str:
-        FIELD_LINE_SYNTAX = "      - {field_name}"
+        FIELD_LINE_SYNTAX, DISABLED_FIELD_SYNTAX = (
+            "      - {field_name}",
+            "        {field_name}",
+        )
 
         field_name = field["display_name"]
 
         if field["selected"]:
             field_name = cls.render_selected(field_name)
 
-        return cls.format_line(FIELD_LINE_SYNTAX.format(field_name=field_name), width)
+        line = FIELD_LINE_SYNTAX.format(field_name=field_name)
+
+        if field["disabled"]:
+            line = DISABLED_FIELD_SYNTAX.format(field_name=field_name)
+
+        return cls.format_line(line, width)
 
     @classmethod
     def format_line(cls, line: str, width: int) -> str:

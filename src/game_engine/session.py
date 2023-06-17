@@ -67,7 +67,6 @@ class Session:
         self._size = self._init_size(self._size_class)
         self._board = self._init_board(self._board_class, self._size, self._difficulty)
 
-
     def is_session_finished(self):
         return self.end_time is not None
 
@@ -102,7 +101,6 @@ class SessionDummy(Session):
         raise NotImplementedError(self)
 
 
-
 def generate_session_fields(session: Session) -> dict:
     FIELD_SYNTAX, NEXT_CTX = "{}: {}", GAME_MENU_CTX.MENU
 
@@ -121,12 +119,18 @@ def generate_session_fields(session: Session) -> dict:
 
         field["display_name"] = FIELD_SYNTAX.format(str(attribute), str(attr_value))
         field["next_ctx"] = NEXT_CTX
+        field["disabled"] = True
 
         fields[i] = field
+
     if len(fields) == 0:
         raise NotImplementedError("At least one attribute is required to show.")
 
-    fields[0]["selected"] = True
+    fields[len(fields)] = {
+        "display_name": "Continue",
+        "selected": True,
+        "next_ctx": NEXT_CTX,
+        "disabled": False,
+    }
 
     return fields
-
