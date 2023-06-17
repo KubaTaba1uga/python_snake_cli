@@ -1,11 +1,15 @@
 from datetime import datetime
 from unittest.mock import MagicMock
+from datetime import datetime
 
 import pytest
 
 from src.constants import GAME_ENGINE_CTX
 from src.game_engine.difficulty import DifficultyEasy
 from src.game_engine.game_engine import GameEngine
+from src.game_engine.session import Session
+from src.game_engine.difficulty import DifficultyEasy
+from src.game_engine.game_logic.size import SizeSmall
 from src.game_engine.game_logic.board import BoardNoWalls
 from src.game_engine.game_logic.size import SizeSmall
 from src.game_engine.session import Session

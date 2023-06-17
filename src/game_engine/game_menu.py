@@ -13,6 +13,7 @@ from src.game_engine.game_logic.size import SizeFieldAbs
 from src.game_engine.session import generate_session_fields
 from src.game_engine.session import Session
 
+
 BOARD_NEXT_CTX = GAME_MENU_CTX.CHOOSE_SIZE
 DIFFICULTY_NEXT_CTX = GAME_MENU_CTX.PLAY_NEW
 SIZE_NEXT_CTX = GAME_MENU_CTX.CHOOSE_DIFFICULTY
@@ -51,6 +52,7 @@ _MENU_FIELDS_MAP_TEMPLATE = {
         "title": "Difficulty Choice",
         "fields": generate_difficulty_fields(DIFFICULTY_NEXT_CTX),
     },
+
     GAME_MENU_CTX.PLAY_END: {
         "title": "Snake is dead! You lost!",
         "fields": {
@@ -161,7 +163,9 @@ class GameMenu:
             pass
 
     def show_session(self):
+
         self.ctx = GAME_MENU_CTX.PLAY_END
+
 
         self.fields_map[GAME_MENU_CTX.SHOW_SESSION]["fields"] = generate_session_fields(
             self.session
