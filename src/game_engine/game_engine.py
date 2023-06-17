@@ -21,22 +21,12 @@ def _manage_game_menu_and_session(function) -> typing.Any:
     Makes sure that game_menu is always available."""
 
     def wrapped_func(self, *args, **kwargs):
-        from src.logging import log_snake_info
-
-        try:
-            result = function(self, *args, **kwargs)
-        except Exception as err:
-            log_snake_info(str(err))
+        result = function(self, *args, **kwargs)
 
         if self.game_menu.is_session_ready():
             self._session, self.ctx = self.game_menu.session, GAME_ENGINE_CTX.GAME
 
-            log_snake_info("SESSION IS READY")
-
             self.game_menu = GameMenu(self._session)
-
-        else:
-            log_snake_info("SESSION IS READY")
 
         return result
 
