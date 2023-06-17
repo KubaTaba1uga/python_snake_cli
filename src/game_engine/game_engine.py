@@ -1,11 +1,13 @@
 import typing
 from threading import Thread
 from time import sleep
+from datetime import datetime
 
 from src.constants import DEFAULT_GAME_FREQUENCY_IN_HZ
 from src.constants import GAME_ENGINE_CTX
 from src.constants import get_key_value_by_display_name
 from src.constants import SNAKE_DIRECTION
+from src.errors import SnakeDied
 from src.game_engine.difficulty import DifficultyEasy
 from src.game_engine.game_logic.board import BoardNoWalls
 from src.game_engine.game_logic.size import SizeSmall
@@ -16,17 +18,46 @@ from src.game_engine.utils.si_utils import get_seconds_from_hz
 from src.user_input import UserInput
 
 
+from src.logging import log_snake_info
+
+
 def _manage_game_menu_and_session(function) -> typing.Any:
     """Manages the current session or creates a new one.
     Makes sure that game_menu is always available."""
 
     def wrapped_func(self, *args, **kwargs):
+        self: GameEngine
+
         result = function(self, *args, **kwargs)
 
         if self.game_menu.is_session_ready():
             self._session, self.ctx = self.game_menu.session, GAME_ENGINE_CTX.GAME
 
             self.game_menu = GameMenu(self._session)
+
+        return result
+
+    return wrapped_func
+
+
+def _go_back_to_menu_if_snake_dead(function) -> typing.Any:
+    """Makes sure that game won't crash when snake is dead.
+    Instead go back to menu and show game results."""
+
+    def wrapped_func(self, *args, **kwargs):
+        self: GameEngine
+
+        try:
+            result = function(self, *args, **kwargs)
+        except SnakeDied:
+            log_snake_info("SNAKE IS DEAD")
+            try:
+                self._session.finish()
+                self.game_menu.show_session()
+                self.ctx = GAME_ENGINE_CTX.MENU
+            except Exception as e:
+                log_snake_info(str(e))
+                exit(10)
 
         return result
 
@@ -118,6 +149,7 @@ class GameEngine:
     def _process_menu_ctx(self):
         self.game_menu.process_ctx()
 
+    @_go_back_to_menu_if_snake_dead
     def _process_game_ctx(self):
         """Performs game logic."""
         self._session.board.process()
