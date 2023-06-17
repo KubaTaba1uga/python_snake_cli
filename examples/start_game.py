@@ -2,14 +2,14 @@ from time import sleep
 from random import randint
 from unittest.mock import patch, MagicMock
 
-from src.constants import GAME_ENGINE_CTX, SnakeDirection
+from src.constants import GAME_ENGINE_CTX, SNAKE_DIRECTION
 from src.display import BashDisplay
 from src.controller import Controller
 from src.game_engine.game_engine import GameEngine
 from src.game_engine.game_logic.board import BoardNoWalls
 
 
-SNAKE_MOVES = [move for move in SnakeDirection]
+SNAKE_MOVES = [move for move in SNAKE_DIRECTION]
 
 
 def main():

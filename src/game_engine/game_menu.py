@@ -1,15 +1,15 @@
 import typing
 from copy import deepcopy
 
-from src.constants import DISPLAY_NAMES_KEYS_MAP, get_key_value_by_display_name
 from src.constants import GAME_MENU_CTX
-from src.constants import KEYS_VALUES_MAP
+from src.constants import get_key_value_by_display_name
 from src.errors import NoSelectedField
 from src.game_engine.difficulty import DifficultyFieldAbs
 from src.game_engine.difficulty import generate_difficulty_fields
 from src.game_engine.game_logic.board import BoardFieldAbs
 from src.game_engine.game_logic.board import generate_board_fields
-from src.game_engine.game_logic.size import generate_size_fields, SizeFieldAbs
+from src.game_engine.game_logic.size import generate_size_fields
+from src.game_engine.game_logic.size import SizeFieldAbs
 from src.game_engine.session import Session
 
 BOARD_NEXT_CTX = GAME_MENU_CTX.CHOOSE_SIZE
@@ -99,9 +99,9 @@ class GameMenu:
 
     DEFAULT_GAME_MENU_CTX = GAME_MENU_CTX.MENU
 
-    def __init__(self, session=None):
+    def __init__(self, session: typing.Optional[Session] = None):
         self.ctx = self.DEFAULT_GAME_MENU_CTX
-        self.fields_map = deepcopy(_MENU_FIELDS_MAP_TEMPLATE)
+        self.fields_map: dict = deepcopy(_MENU_FIELDS_MAP_TEMPLATE)
         self.session: typing.Optional[Session] = session
 
         self.USER_INPUT_FUNC_MAP = self._init_user_input_func_map()
@@ -128,7 +128,7 @@ class GameMenu:
         _, field = self._get_selected_field()
         self.ctx = field["next_ctx"]
 
-    def is_session_ready(self):
+    def is_session_ready(self) -> bool:
         return self.ctx in [GAME_MENU_CTX.PLAY_NEW, GAME_MENU_CTX.PLAY_LOADED]
 
     def get_fields(self) -> dict:

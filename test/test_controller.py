@@ -1,5 +1,3 @@
-from test.conftest import game_engine as GameEngine
-
 from pynput import keyboard as _keyboard
 
 from src.controller import Controller
@@ -11,8 +9,8 @@ def simulate_key_press(key):
     keyboard.release(key)
 
 
-def test_controller_thread_is_not_active():
-    game_engine = GameEngine()
+def test_controller_thread_is_not_active(game_engine_menu):
+    game_engine = game_engine_menu
     controller = Controller(game_engine)
 
     controller.start()
@@ -22,8 +20,8 @@ def test_controller_thread_is_not_active():
     assert controller.is_active() is False
 
 
-def test_controller_thread_is_active():
-    game_engine = GameEngine()
+def test_controller_thread_is_active(game_engine_menu):
+    game_engine = game_engine_menu
     controller = Controller(game_engine)
 
     controller.start()
@@ -34,8 +32,8 @@ def test_controller_thread_is_active():
         controller.stop()
 
 
-def test_controller_ctx_manager():
-    game_engine = GameEngine()
+def test_controller_ctx_manager(game_engine_menu):
+    game_engine = game_engine_menu
     controller = Controller(game_engine)
 
     with controller:
@@ -44,10 +42,10 @@ def test_controller_ctx_manager():
     assert controller.is_active() is False
 
 
-def test_controller_unrecognizable_key():
+def test_controller_unrecognizable_key(game_engine_menu):
     unrecognizable_key, expected_value = _keyboard.Key.ctrl, "foo"
 
-    game_engine, controller = GameEngine(), Controller
+    game_engine, controller = game_engine_menu, Controller
 
     game_engine.user_input.set(expected_value)
 
@@ -57,10 +55,10 @@ def test_controller_unrecognizable_key():
     assert game_engine.user_input.get() == expected_value
 
 
-def test_controller_recognizable_key():
+def test_controller_recognizable_key(game_engine_menu):
     unrecognizable_key, expected_value = _keyboard.Key.esc, "escape"
 
-    game_engine, controller = GameEngine(), Controller
+    game_engine, controller = game_engine_menu, Controller
 
     game_engine.user_input.set(expected_value)
 

@@ -30,19 +30,23 @@ class DifficultyFieldAbs(ABC):
         raise NotImplementedError(cls, id_)
 
 
-class DifficultyEasy(DifficultyFieldAbs):
+class DifficultyAbs(ABC):
+    """Difficulty logic."""
+
+
+class DifficultyEasy(DifficultyAbs, DifficultyFieldAbs):
     @classmethod
     def display_name(cls) -> str:
         return "Easy"
 
 
-class DifficultyMedium(DifficultyFieldAbs):
+class DifficultyMedium(DifficultyAbs, DifficultyFieldAbs):
     @classmethod
     def display_name(cls) -> str:
         return "Medium"
 
 
-class DifficultyHard(DifficultyFieldAbs):
+class DifficultyHard(DifficultyAbs, DifficultyFieldAbs):
     @classmethod
     def display_name(cls) -> str:
         return "Hard"

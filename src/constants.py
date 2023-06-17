@@ -55,7 +55,7 @@ class GAME_MENU_CTX(StrEnum):
     EXIT = auto()
 
 
-class BoardFieldType(StrEnum):
+class BOARD_FIELD_TYPE(StrEnum):
     WALL = auto()
     SNAKE = auto()
     FRUIT = auto()
@@ -70,7 +70,7 @@ FIELD_TEMPLATE = {
 }
 
 
-class SnakeDirection(StrEnum):
+class SNAKE_DIRECTION(StrEnum):
     UP = auto()
     DOWN = auto()
     LEFT = auto()

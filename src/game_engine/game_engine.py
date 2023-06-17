@@ -2,15 +2,16 @@ import typing
 from threading import Thread
 from time import sleep
 
-from src.constants import (
-    GAME_ENGINE_CTX,
-    DISPLAY_NAMES_KEYS_MAP,
-    KEYS_VALUES_MAP,
-    SnakeDirection,
-    get_key_value_by_display_name,
-    DEFAULT_GAME_FREQUENCY_IN_HZ,
-)
+from src.constants import DEFAULT_GAME_FREQUENCY_IN_HZ
+from src.constants import GAME_ENGINE_CTX
+from src.constants import get_key_value_by_display_name
+from src.constants import SNAKE_DIRECTION
+from src.game_engine.difficulty import DifficultyEasy
+from src.game_engine.game_logic.board import BoardNoWalls
+from src.game_engine.game_logic.size import SizeSmall
 from src.game_engine.game_menu import GameMenu
+from src.game_engine.session import Session
+from src.game_engine.session import SessionDummy
 from src.game_engine.utils.si_utils import get_seconds_from_hz
 from src.user_input import UserInput
 
@@ -42,6 +43,10 @@ class GameEngine:
 
     DEFAULT_FREQ_IN_HZ = DEFAULT_GAME_FREQUENCY_IN_HZ
 
+    DEFAULT_SESSION = SessionDummy(
+        difficulty_class=DifficultyEasy, board_class=BoardNoWalls, size_class=SizeSmall
+    )
+
     @classmethod
     def sleep(cls):
         sleep(get_seconds_from_hz(cls.DEFAULT_FREQ_IN_HZ))
@@ -56,7 +61,7 @@ class GameEngine:
         self.game_menu: GameMenu = GameMenu()
 
         self._thread: Thread = Thread(target=self._process_game_engine)
-        self._session = None
+        self._session: Session = self.DEFAULT_SESSION
 
         self.USER_INPUT_FUNC_MAP = self._init_user_input_func_map()
 
@@ -64,16 +69,16 @@ class GameEngine:
         return {
             get_key_value_by_display_name(
                 "UP ARROW key"
-            ): lambda: self.board.snake.set_direction(SnakeDirection.UP),
+            ): lambda: self.board.snake.set_direction(SNAKE_DIRECTION.UP),
             get_key_value_by_display_name(
                 "DOWN ARROW key"
-            ): lambda: self.board.snake.set_direction(SnakeDirection.DOWN),
+            ): lambda: self.board.snake.set_direction(SNAKE_DIRECTION.DOWN),
             get_key_value_by_display_name(
                 "LEFT ARROW key"
-            ): lambda: self.board.snake.set_direction(SnakeDirection.LEFT),
+            ): lambda: self.board.snake.set_direction(SNAKE_DIRECTION.LEFT),
             get_key_value_by_display_name(
                 "RIGHT ARROW key"
-            ): lambda: self.board.snake.set_direction(SnakeDirection.RIGHT),
+            ): lambda: self.board.snake.set_direction(SNAKE_DIRECTION.RIGHT),
         }
 
     def start(self):

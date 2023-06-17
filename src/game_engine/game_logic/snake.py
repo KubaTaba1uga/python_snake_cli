@@ -3,11 +3,11 @@ from abc import ABC
 from abc import abstractmethod
 from dataclasses import dataclass
 
-from src.logging import log_snake_info
-from src.constants import BoardFieldType
-from src.constants import SnakeDirection
+from src.constants import BOARD_FIELD_TYPE
+from src.constants import SNAKE_DIRECTION
 from src.errors import SnakeDied
 from src.errors import ValidationError
+from src.logging import log_snake_info
 
 if typing.TYPE_CHECKING:
     from src.game_engine.game_logic.matrix import Matrix2D
@@ -24,7 +24,7 @@ class SnakeBody:
 
 
 class SnakeAbs(ABC):
-    def __init__(self, start_x: int, start_y: int, direction=SnakeDirection.UP):
+    def __init__(self, start_x: int, start_y: int, direction=SNAKE_DIRECTION.UP):
         self._direction = direction
         self._body: typing.List[SnakeBody] = [SnakeBody(x=start_x, y=start_y)]
 
@@ -44,7 +44,7 @@ class SnakeAbs(ABC):
         """Kill a snake."""
         raise SnakeDied(self)
 
-    def set_direction(self, direction: SnakeDirection):
+    def set_direction(self, direction: SNAKE_DIRECTION):
         try:
             self.validate_direction(direction)
         except ValidationError:
@@ -58,7 +58,7 @@ class SnakeAbs(ABC):
         pass
 
     @abstractmethod
-    def validate_direction(self, new_direction: SnakeDirection):
+    def validate_direction(self, new_direction: SNAKE_DIRECTION):
         pass
 
 
@@ -71,7 +71,7 @@ def _log_snake_head(function):
         try:
             result = function(self, *args, **kwargs)
         except Exception as err:
-            log_snake_info("ERROR")
+            log_snake_info(f"Error: {err!s}")
             exit(1)
 
         head_after = self.head()
@@ -104,15 +104,15 @@ class NormalSnake(SnakeAbs):
 
     def _clear_tail(self, matrix: "Matrix2D"):
         tail = self.tail()
-        matrix.set(BoardFieldType.GROUND, tail.x, tail.y)
+        matrix.set(BOARD_FIELD_TYPE.GROUND, tail.x, tail.y)
 
     def _render_tail(self, matrix: "Matrix2D"):
         tail = self.tail()
-        matrix.set(BoardFieldType.SNAKE, tail.x, tail.y)
+        matrix.set(BOARD_FIELD_TYPE.SNAKE, tail.x, tail.y)
 
     def _render_head(self, matrix: "Matrix2D"):
         tail = self.head()
-        matrix.set(BoardFieldType.SNAKE, tail.x, tail.y)
+        matrix.set(BOARD_FIELD_TYPE.SNAKE, tail.x, tail.y)
 
     def _move(self, matrix: "Matrix2D"):
         """Move snake by creating new head and deleting a tail."""
@@ -126,9 +126,9 @@ class NormalSnake(SnakeAbs):
 
     def _process_move(self, matrix: "Matrix2D", move_x: int, move_y: int):
         FIELD_TYPE_FUNC_MAP = {
-            BoardFieldType.WALL: self.die,
-            BoardFieldType.SNAKE: self.die,
-            BoardFieldType.FRUIT: self._grow_dummy_tail,
+            BOARD_FIELD_TYPE.WALL: self.die,
+            BOARD_FIELD_TYPE.SNAKE: self.die,
+            BOARD_FIELD_TYPE.FRUIT: self._grow_dummy_tail,
         }
 
         field_type = matrix.get(move_x, move_y)
@@ -152,11 +152,11 @@ class NormalSnake(SnakeAbs):
 
     @classmethod
     def _calculate_new_head_x(
-        cls, matrix: "Matrix2D", current_head_x: int, direction: SnakeDirection
+        cls, matrix: "Matrix2D", current_head_x: int, direction: SNAKE_DIRECTION
     ) -> int:
         DIRECTION_MOVE_MAP = {
-            SnakeDirection.LEFT: cls._move_prev,
-            SnakeDirection.RIGHT: cls._move_next,
+            SNAKE_DIRECTION.LEFT: cls._move_prev,
+            SNAKE_DIRECTION.RIGHT: cls._move_next,
         }
 
         matrix_max_x_i, matrix_min_x_i = matrix.width() - 1, 0
@@ -170,11 +170,11 @@ class NormalSnake(SnakeAbs):
 
     @classmethod
     def _calculate_new_head_y(
-        cls, matrix: "Matrix2D", current_head_y: int, direction: SnakeDirection
+        cls, matrix: "Matrix2D", current_head_y: int, direction: SNAKE_DIRECTION
     ) -> int:
         DIRECTION_MOVE_MAP = {
-            SnakeDirection.UP: cls._move_prev,
-            SnakeDirection.DOWN: cls._move_next,
+            SNAKE_DIRECTION.UP: cls._move_prev,
+            SNAKE_DIRECTION.DOWN: cls._move_next,
         }
 
         matrix_max_y_i, matrix_min_y_i = matrix.height() - 1, 0
@@ -211,12 +211,12 @@ class NormalSnake(SnakeAbs):
     def _shrink(self):
         self._body.pop()
 
-    def validate_direction(self, new_direction: SnakeDirection):
+    def validate_direction(self, new_direction: SNAKE_DIRECTION):
         SELF_DIRECTION_FORBIDDEN_DIRECTION_MAP = {
-            SnakeDirection.UP: SnakeDirection.DOWN,
-            SnakeDirection.DOWN: SnakeDirection.UP,
-            SnakeDirection.LEFT: SnakeDirection.RIGHT,
-            SnakeDirection.RIGHT: SnakeDirection.LEFT,
+            SNAKE_DIRECTION.UP: SNAKE_DIRECTION.DOWN,
+            SNAKE_DIRECTION.DOWN: SNAKE_DIRECTION.UP,
+            SNAKE_DIRECTION.LEFT: SNAKE_DIRECTION.RIGHT,
+            SNAKE_DIRECTION.RIGHT: SNAKE_DIRECTION.LEFT,
         }
 
         if new_direction == SELF_DIRECTION_FORBIDDEN_DIRECTION_MAP[self._direction]:

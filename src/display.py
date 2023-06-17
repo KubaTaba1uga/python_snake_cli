@@ -6,7 +6,8 @@ from threading import Event
 from threading import Thread
 from time import sleep
 
-from src.constants import BoardFieldType, DEFAULT_GAME_FREQUENCY_IN_HZ
+from src.constants import BOARD_FIELD_TYPE
+from src.constants import DEFAULT_GAME_FREQUENCY_IN_HZ
 from src.constants import GAME_ENGINE_CTX
 from src.game_engine.utils.si_utils import get_seconds_from_hz
 from src.utils.abc_utils import ContextManagerAbs
@@ -118,10 +119,10 @@ def _print_result(function):
 
 class BashDisplay(DisplayAbs):
     _BOARD_FIELD_STRING_MAP = {
-        BoardFieldType.GROUND: lambda: paint_white(" ", True),
-        BoardFieldType.SNAKE: lambda: paint_blue(" ", True),
-        BoardFieldType.WALL: lambda: paint_black(" ", True),
-        BoardFieldType.FRUIT: lambda: paint_red(" ", True),
+        BOARD_FIELD_TYPE.GROUND: lambda: paint_white(" ", True),
+        BOARD_FIELD_TYPE.SNAKE: lambda: paint_blue(" ", True),
+        BOARD_FIELD_TYPE.WALL: lambda: paint_black(" ", True),
+        BOARD_FIELD_TYPE.FRUIT: lambda: paint_red(" ", True),
     }
 
     @classmethod
@@ -147,7 +148,8 @@ class BashDisplay(DisplayAbs):
 
     @classmethod
     def _get_max_render_size(cls, game_engine: "GameEngine", width: int, height: int):
-        """Check how much columns and rows of current gameplay can be rendered on the display."""
+        """Check how much columns and rows of current gameplay
+        can be rendered on the display."""
         max_x_i, max_y_i = game_engine.board.size
 
         # Count height and width in advance
@@ -172,7 +174,7 @@ class BashDisplay(DisplayAbs):
         return "".join(line_l)
 
     @classmethod
-    def _render_board_field(cls, board_field: BoardFieldType) -> str:
+    def _render_board_field(cls, board_field: BOARD_FIELD_TYPE) -> str:
         return cls._BOARD_FIELD_STRING_MAP[board_field]()
 
     @classmethod
@@ -194,7 +196,7 @@ class BashDisplay(DisplayAbs):
         for field in game_menu_fields.values():
             lines_to_print.append(cls.format_field(field, width))
 
-        cls._fill_empty_space(lines_to_print, height)
+        cls._fill_empty_space(lines_to_print, height - 1)
 
         rendered_lines = cls.format_lines(lines_to_print, height)
 

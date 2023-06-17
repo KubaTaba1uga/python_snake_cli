@@ -1,7 +1,7 @@
 import pytest
 
-from src.constants import BoardFieldType
-from src.constants import SnakeDirection
+from src.constants import BOARD_FIELD_TYPE
+from src.constants import SNAKE_DIRECTION
 from src.errors import SnakeDied
 from src.game_engine.game_logic.matrix import Matrix2D
 from src.game_engine.game_logic.snake import NormalSnake
@@ -12,39 +12,39 @@ def _ground_matrix():
 
     return [
         [
-            BoardFieldType.GROUND,
-            BoardFieldType.GROUND,
-            BoardFieldType.GROUND,
-            BoardFieldType.GROUND,
-            BoardFieldType.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
         ],
         [
-            BoardFieldType.GROUND,
-            BoardFieldType.GROUND,
-            BoardFieldType.GROUND,
-            BoardFieldType.GROUND,
-            BoardFieldType.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
         ],
         [
-            BoardFieldType.GROUND,
-            BoardFieldType.GROUND,
-            BoardFieldType.SNAKE,
-            BoardFieldType.GROUND,
-            BoardFieldType.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
+            BOARD_FIELD_TYPE.SNAKE,
+            BOARD_FIELD_TYPE.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
         ],
         [
-            BoardFieldType.GROUND,
-            BoardFieldType.GROUND,
-            BoardFieldType.GROUND,
-            BoardFieldType.GROUND,
-            BoardFieldType.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
         ],
         [
-            BoardFieldType.GROUND,
-            BoardFieldType.GROUND,
-            BoardFieldType.GROUND,
-            BoardFieldType.GROUND,
-            BoardFieldType.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
+            BOARD_FIELD_TYPE.GROUND,
         ],
     ]
 
@@ -52,7 +52,7 @@ def _ground_matrix():
 def test_normal_snake_move_up():
     matrix_data, snake, matrix = (
         _ground_matrix(),
-        NormalSnake(2, 2, SnakeDirection.UP),
+        NormalSnake(2, 2, SNAKE_DIRECTION.UP),
         Matrix2D(5, 5),
     )
 
@@ -73,7 +73,7 @@ def test_normal_snake_move_up():
 def test_normal_snake_move_down():
     matrix_data, snake, matrix = (
         _ground_matrix(),
-        NormalSnake(2, 2, SnakeDirection.DOWN),
+        NormalSnake(2, 2, SNAKE_DIRECTION.DOWN),
         Matrix2D(5, 5),
     )
 
@@ -94,7 +94,7 @@ def test_normal_snake_move_down():
 def test_normal_snake_move_left():
     matrix_data, snake, matrix = (
         _ground_matrix(),
-        NormalSnake(2, 2, SnakeDirection.LEFT),
+        NormalSnake(2, 2, SNAKE_DIRECTION.LEFT),
         Matrix2D(5, 5),
     )
 
@@ -115,7 +115,7 @@ def test_normal_snake_move_left():
 def test_normal_snake_move_right():
     matrix_data, snake, matrix = (
         _ground_matrix(),
-        NormalSnake(2, 2, SnakeDirection.RIGHT),
+        NormalSnake(2, 2, SNAKE_DIRECTION.RIGHT),
         Matrix2D(5, 5),
     )
 
@@ -136,7 +136,7 @@ def test_normal_snake_move_right():
 def test_normal_snake_move_into_wall():
     matrix_data, snake, matrix = (
         _ground_matrix(),
-        NormalSnake(2, 1, SnakeDirection.RIGHT),
+        NormalSnake(2, 1, SNAKE_DIRECTION.RIGHT),
         Matrix2D(5, 5),
     )
 
@@ -145,7 +145,7 @@ def test_normal_snake_move_into_wall():
 
     matrix._data = matrix_data
 
-    matrix.set(BoardFieldType.WALL, 3, 2)
+    matrix.set(BOARD_FIELD_TYPE.WALL, 3, 2)
 
     with pytest.raises(SnakeDied):
         snake.move(matrix)
@@ -154,7 +154,7 @@ def test_normal_snake_move_into_wall():
 def test_normal_snake_move_into_snake():
     matrix_data, snake, matrix = (
         _ground_matrix(),
-        NormalSnake(1, 2, SnakeDirection.RIGHT),
+        NormalSnake(1, 2, SNAKE_DIRECTION.RIGHT),
         Matrix2D(5, 5),
     )
 
@@ -163,7 +163,7 @@ def test_normal_snake_move_into_snake():
 
     matrix._data = matrix_data
 
-    matrix.set(BoardFieldType.SNAKE, 3, 2)
+    matrix.set(BOARD_FIELD_TYPE.SNAKE, 3, 2)
 
     with pytest.raises(SnakeDied):
         snake.move(matrix)
@@ -172,13 +172,13 @@ def test_normal_snake_move_into_snake():
 def test_normal_snake_move_into_fruit():
     matrix_data, snake, matrix = (
         _ground_matrix(),
-        NormalSnake(2, 2, SnakeDirection.RIGHT),
+        NormalSnake(2, 2, SNAKE_DIRECTION.RIGHT),
         Matrix2D(5, 5),
     )
 
     matrix._data = matrix_data
 
-    matrix.set(BoardFieldType.FRUIT, 3, 2)
+    matrix.set(BOARD_FIELD_TYPE.FRUIT, 3, 2)
 
     snake.move(matrix)
 
@@ -186,7 +186,7 @@ def test_normal_snake_move_into_fruit():
 
 
 def test_normal_snake_do_not_turn_around_down():
-    org_direction, new_direction = SnakeDirection.UP, SnakeDirection.DOWN
+    org_direction, new_direction = SNAKE_DIRECTION.UP, SNAKE_DIRECTION.DOWN
 
     snake = NormalSnake(2, 2, org_direction)
 
@@ -196,7 +196,7 @@ def test_normal_snake_do_not_turn_around_down():
 
 
 def test_normal_snake_do_not_turn_around_up():
-    org_direction, new_direction = SnakeDirection.DOWN, SnakeDirection.UP
+    org_direction, new_direction = SNAKE_DIRECTION.DOWN, SNAKE_DIRECTION.UP
 
     snake = NormalSnake(2, 2, org_direction)
 
@@ -206,7 +206,7 @@ def test_normal_snake_do_not_turn_around_up():
 
 
 def test_normal_snake_do_not_turn_around_left():
-    org_direction, new_direction = SnakeDirection.RIGHT, SnakeDirection.LEFT
+    org_direction, new_direction = SNAKE_DIRECTION.RIGHT, SNAKE_DIRECTION.LEFT
 
     snake = NormalSnake(2, 2, org_direction)
 
@@ -216,7 +216,7 @@ def test_normal_snake_do_not_turn_around_left():
 
 
 def test_normal_snake_do_not_turn_around_right():
-    org_direction, new_direction = SnakeDirection.LEFT, SnakeDirection.RIGHT
+    org_direction, new_direction = SNAKE_DIRECTION.LEFT, SNAKE_DIRECTION.RIGHT
 
     snake = NormalSnake(2, 2, org_direction)
 
@@ -228,7 +228,7 @@ def test_normal_snake_do_not_turn_around_right():
 def test_normal_snake_move_show_on_board():
     matrix_data, snake, matrix = (
         _ground_matrix(),
-        NormalSnake(2, 2, SnakeDirection.RIGHT),
+        NormalSnake(2, 2, SNAKE_DIRECTION.RIGHT),
         Matrix2D(5, 5),
     )
 
@@ -236,21 +236,21 @@ def test_normal_snake_move_show_on_board():
 
     snake.move(matrix)
 
-    assert matrix.get(3, 2) == BoardFieldType.SNAKE
-    assert matrix.get(2, 2) == BoardFieldType.GROUND
+    assert matrix.get(3, 2) == BOARD_FIELD_TYPE.SNAKE
+    assert matrix.get(2, 2) == BOARD_FIELD_TYPE.GROUND
 
 
 def test_normal_snake_eat_fruit_show_on_board():
     matrix_data, snake, matrix = (
         _ground_matrix(),
-        NormalSnake(2, 2, SnakeDirection.RIGHT),
+        NormalSnake(2, 2, SNAKE_DIRECTION.RIGHT),
         Matrix2D(5, 5),
     )
 
     matrix._data = matrix_data
-    matrix.set(BoardFieldType.FRUIT, 3, 2)
+    matrix.set(BOARD_FIELD_TYPE.FRUIT, 3, 2)
 
     snake.move(matrix)
 
-    assert matrix.get(3, 2) == BoardFieldType.SNAKE
-    assert matrix.get(2, 2) == BoardFieldType.SNAKE
+    assert matrix.get(3, 2) == BOARD_FIELD_TYPE.SNAKE
+    assert matrix.get(2, 2) == BOARD_FIELD_TYPE.SNAKE
