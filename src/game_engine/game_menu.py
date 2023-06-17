@@ -10,7 +10,7 @@ from src.game_engine.game_logic.board import BoardFieldAbs
 from src.game_engine.game_logic.board import generate_board_fields
 from src.game_engine.game_logic.size import generate_size_fields
 from src.game_engine.game_logic.size import SizeFieldAbs
-from src.game_engine.session import Session
+from src.game_engine.session import Session, generate_session_fields
 
 BOARD_NEXT_CTX = GAME_MENU_CTX.CHOOSE_SIZE
 DIFFICULTY_NEXT_CTX = GAME_MENU_CTX.PLAY_NEW
@@ -50,6 +50,7 @@ _MENU_FIELDS_MAP_TEMPLATE = {
         "title": "Difficulty Choice",
         "fields": generate_difficulty_fields(DIFFICULTY_NEXT_CTX),
     },
+    GAME_MENU_CTX.SHOW_SESSION: {"title": "Session info", "fields": {}},
 }
 
 
@@ -146,6 +147,13 @@ class GameMenu:
             GAME_MENU_CTX_PROCESS_FUNC_MAP[self.ctx]()
         except KeyError:
             pass
+
+    def show_session(self):
+        self.ctx = GAME_MENU_CTX.SHOW_SESSION
+
+        self.fields_map[GAME_MENU_CTX.SHOW_SESSION]["fields"] = generate_session_fields(
+            self.session
+        )
 
     def _create_session(self):
         """create session based on selected:
