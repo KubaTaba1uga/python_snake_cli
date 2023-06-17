@@ -5,7 +5,7 @@ from time import sleep
 from src.constants import DEFAULT_GAME_FREQUENCY_IN_HZ
 from src.constants import GAME_ENGINE_CTX
 from src.constants import get_key_value_by_display_name
-from src.constants import SnakeDirection
+from src.constants import SNAKE_DIRECTION
 from src.game_engine.difficulty import DifficultyEasy
 from src.game_engine.game_logic.board import BoardNoWalls
 from src.game_engine.game_logic.size import SizeSmall
@@ -69,16 +69,16 @@ class GameEngine:
         return {
             get_key_value_by_display_name(
                 "UP ARROW key"
-            ): lambda: self.board.snake.set_direction(SnakeDirection.UP),
+            ): lambda: self.board.snake.set_direction(SNAKE_DIRECTION.UP),
             get_key_value_by_display_name(
                 "DOWN ARROW key"
-            ): lambda: self.board.snake.set_direction(SnakeDirection.DOWN),
+            ): lambda: self.board.snake.set_direction(SNAKE_DIRECTION.DOWN),
             get_key_value_by_display_name(
                 "LEFT ARROW key"
-            ): lambda: self.board.snake.set_direction(SnakeDirection.LEFT),
+            ): lambda: self.board.snake.set_direction(SNAKE_DIRECTION.LEFT),
             get_key_value_by_display_name(
                 "RIGHT ARROW key"
-            ): lambda: self.board.snake.set_direction(SnakeDirection.RIGHT),
+            ): lambda: self.board.snake.set_direction(SNAKE_DIRECTION.RIGHT),
         }
 
     def start(self):

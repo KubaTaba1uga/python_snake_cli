@@ -1,7 +1,7 @@
 import pytest
 
 from src.constants import get_key_value_by_display_name
-from src.constants import SnakeDirection
+from src.constants import SNAKE_DIRECTION
 
 
 @pytest.mark.parametrize(
@@ -9,26 +9,26 @@ from src.constants import SnakeDirection
     [
         pytest.param(
             get_key_value_by_display_name("LEFT ARROW key"),
-            SnakeDirection.UP,
-            SnakeDirection.LEFT,
+            SNAKE_DIRECTION.UP,
+            SNAKE_DIRECTION.LEFT,
             id="left arrow",
         ),
         pytest.param(
             get_key_value_by_display_name("RIGHT ARROW key"),
-            SnakeDirection.UP,
-            SnakeDirection.RIGHT,
+            SNAKE_DIRECTION.UP,
+            SNAKE_DIRECTION.RIGHT,
             id="right arrow",
         ),
         pytest.param(
             get_key_value_by_display_name("UP ARROW key"),
-            SnakeDirection.LEFT,
-            SnakeDirection.UP,
+            SNAKE_DIRECTION.LEFT,
+            SNAKE_DIRECTION.UP,
             id="up arrow",
         ),
         pytest.param(
             get_key_value_by_display_name("DOWN ARROW key"),
-            SnakeDirection.LEFT,
-            SnakeDirection.DOWN,
+            SNAKE_DIRECTION.LEFT,
+            SNAKE_DIRECTION.DOWN,
             id="down arrow",
         ),
     ],

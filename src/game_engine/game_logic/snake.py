@@ -4,7 +4,7 @@ from abc import abstractmethod
 from dataclasses import dataclass
 
 from src.constants import BOARD_FIELD_TYPE
-from src.constants import SnakeDirection
+from src.constants import SNAKE_DIRECTION
 from src.errors import SnakeDied
 from src.errors import ValidationError
 from src.logging import log_snake_info
@@ -24,7 +24,7 @@ class SnakeBody:
 
 
 class SnakeAbs(ABC):
-    def __init__(self, start_x: int, start_y: int, direction=SnakeDirection.UP):
+    def __init__(self, start_x: int, start_y: int, direction=SNAKE_DIRECTION.UP):
         self._direction = direction
         self._body: typing.List[SnakeBody] = [SnakeBody(x=start_x, y=start_y)]
 
@@ -44,7 +44,7 @@ class SnakeAbs(ABC):
         """Kill a snake."""
         raise SnakeDied(self)
 
-    def set_direction(self, direction: SnakeDirection):
+    def set_direction(self, direction: SNAKE_DIRECTION):
         try:
             self.validate_direction(direction)
         except ValidationError:
@@ -58,7 +58,7 @@ class SnakeAbs(ABC):
         pass
 
     @abstractmethod
-    def validate_direction(self, new_direction: SnakeDirection):
+    def validate_direction(self, new_direction: SNAKE_DIRECTION):
         pass
 
 
@@ -152,11 +152,11 @@ class NormalSnake(SnakeAbs):
 
     @classmethod
     def _calculate_new_head_x(
-        cls, matrix: "Matrix2D", current_head_x: int, direction: SnakeDirection
+        cls, matrix: "Matrix2D", current_head_x: int, direction: SNAKE_DIRECTION
     ) -> int:
         DIRECTION_MOVE_MAP = {
-            SnakeDirection.LEFT: cls._move_prev,
-            SnakeDirection.RIGHT: cls._move_next,
+            SNAKE_DIRECTION.LEFT: cls._move_prev,
+            SNAKE_DIRECTION.RIGHT: cls._move_next,
         }
 
         matrix_max_x_i, matrix_min_x_i = matrix.width() - 1, 0
@@ -170,11 +170,11 @@ class NormalSnake(SnakeAbs):
 
     @classmethod
     def _calculate_new_head_y(
-        cls, matrix: "Matrix2D", current_head_y: int, direction: SnakeDirection
+        cls, matrix: "Matrix2D", current_head_y: int, direction: SNAKE_DIRECTION
     ) -> int:
         DIRECTION_MOVE_MAP = {
-            SnakeDirection.UP: cls._move_prev,
-            SnakeDirection.DOWN: cls._move_next,
+            SNAKE_DIRECTION.UP: cls._move_prev,
+            SNAKE_DIRECTION.DOWN: cls._move_next,
         }
 
         matrix_max_y_i, matrix_min_y_i = matrix.height() - 1, 0
@@ -211,12 +211,12 @@ class NormalSnake(SnakeAbs):
     def _shrink(self):
         self._body.pop()
 
-    def validate_direction(self, new_direction: SnakeDirection):
+    def validate_direction(self, new_direction: SNAKE_DIRECTION):
         SELF_DIRECTION_FORBIDDEN_DIRECTION_MAP = {
-            SnakeDirection.UP: SnakeDirection.DOWN,
-            SnakeDirection.DOWN: SnakeDirection.UP,
-            SnakeDirection.LEFT: SnakeDirection.RIGHT,
-            SnakeDirection.RIGHT: SnakeDirection.LEFT,
+            SNAKE_DIRECTION.UP: SNAKE_DIRECTION.DOWN,
+            SNAKE_DIRECTION.DOWN: SNAKE_DIRECTION.UP,
+            SNAKE_DIRECTION.LEFT: SNAKE_DIRECTION.RIGHT,
+            SNAKE_DIRECTION.RIGHT: SNAKE_DIRECTION.LEFT,
         }
 
         if new_direction == SELF_DIRECTION_FORBIDDEN_DIRECTION_MAP[self._direction]:

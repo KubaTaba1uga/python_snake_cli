@@ -70,7 +70,7 @@ FIELD_TEMPLATE = {
 }
 
 
-class SnakeDirection(StrEnum):
+class SNAKE_DIRECTION(StrEnum):
     UP = auto()
     DOWN = auto()
     LEFT = auto()
