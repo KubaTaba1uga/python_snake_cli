@@ -54,6 +54,8 @@ class GAME_MENU_CTX(StrEnum):
 
     SHOW_SESSION = auto()
 
+    PLAY_END = auto()
+
     EXIT = auto()
 
 

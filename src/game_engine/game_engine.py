@@ -1,7 +1,7 @@
 import typing
+from datetime import datetime
 from threading import Thread
 from time import sleep
-from datetime import datetime
 
 from src.constants import DEFAULT_GAME_FREQUENCY_IN_HZ
 from src.constants import GAME_ENGINE_CTX
@@ -16,9 +16,6 @@ from src.game_engine.session import Session
 from src.game_engine.session import SessionDummy
 from src.game_engine.utils.si_utils import get_seconds_from_hz
 from src.user_input import UserInput
-
-
-from src.logging import log_snake_info
 
 
 def _manage_game_menu_and_session(function) -> typing.Any:
@@ -48,18 +45,11 @@ def _go_back_to_menu_if_snake_dead(function) -> typing.Any:
         self: GameEngine
 
         try:
-            result = function(self, *args, **kwargs)
+            return function(self, *args, **kwargs)
         except SnakeDied:
-            log_snake_info("SNAKE IS DEAD")
-            try:
-                self._session.finish()
-                self.game_menu.show_session()
-                self.ctx = GAME_ENGINE_CTX.MENU
-            except Exception as e:
-                log_snake_info(str(e))
-                exit(10)
-
-        return result
+            self._session.finish()
+            self.game_menu.show_session()
+            self.ctx = GAME_ENGINE_CTX.MENU
 
     return wrapped_func
 
