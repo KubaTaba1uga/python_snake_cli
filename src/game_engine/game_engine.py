@@ -44,26 +44,13 @@ def _go_back_to_menu_if_snake_dead(function) -> typing.Any:
     def wrapped_func(self, *args, **kwargs):
         self: GameEngine
 
-        self.game_menu.loose_session()
-
-        sleep(3)  # let user watch the failure
-
-        self.ctx = GAME_ENGINE_CTX.MENU
-
         try:
             return function(self, *args, **kwargs)
         except SnakeDied:
-            pass
-            # self.game_menu.loose_session()
-            # self.ctx = GAME_ENGINE_CTX.MENU
+            self.game_menu.loose_session()
+            self.ctx = GAME_ENGINE_CTX.MENU
 
-            # sleep(3)  # let user watch the failure
-
-        self.game_menu.loose_session()
-
-        sleep(3)  # let user watch the failure
-
-        self.ctx = GAME_ENGINE_CTX.MENU
+            sleep(3)  # let user watch the failure
 
     return wrapped_func
 
