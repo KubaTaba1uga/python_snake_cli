@@ -7,7 +7,7 @@ def test_bash_display_render_menu_menu(game_engine_menu):
         "\n"
         "\x1b[1K   \x1b[1mGame menu\x1b[0m\x1b[0m\n"
         "\x1b[1K      - \x1b[41mStart New Game\x1b[0\x1b[0m\n"
-        "\x1b[1K      - Save Current Game\x1b[0m\n"
+        "\x1b[1K      - Exit\x1b[0m\n"
         "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
     )
 

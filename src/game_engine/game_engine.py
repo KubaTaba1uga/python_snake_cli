@@ -41,9 +41,10 @@ def _go_back_to_menu_if_snake_dead(function) -> typing.Any:
             return function(self, *args, **kwargs)
         except SnakeDied:
             self.game_menu.loose_session()
-            self.ctx = GAME_ENGINE_CTX.MENU
 
-            sleep(3)  # let user watch the failure
+            sleep(1)  # let user watch the failure
+
+            self.ctx = GAME_ENGINE_CTX.MENU
 
     return wrapped_func
 
@@ -77,9 +78,13 @@ class GameEngine:
 
         self._thread: Thread = Thread(target=self._process_game_engine)
 
-        self.USER_INPUT_FUNC_MAP = self._init_user_input_func_map()
+        self.GAME_USER_INPUT_FUNC_MAP = self._init_game_user_input_func_map()
+        self.PAUSE_USER_INPUT_FUNC_MAP = self._init_pause_user_input_func_map()
 
-    def _init_user_input_func_map(self) -> typing.Dict[str, typing.Callable]:
+    def _init_game_user_input_func_map(self) -> typing.Dict[str, typing.Callable]:
+        def pause_game():
+            self.ctx = GAME_ENGINE_CTX.PAUSE
+
         return {
             get_key_value_by_display_name(
                 "UP ARROW key"
@@ -93,7 +98,14 @@ class GameEngine:
             get_key_value_by_display_name(
                 "RIGHT ARROW key"
             ): lambda: self.board.snake.set_direction(SNAKE_DIRECTION.RIGHT),
+            get_key_value_by_display_name("p key"): pause_game,
         }
+
+    def _init_pause_user_input_func_map(self) -> typing.Dict[str, typing.Callable]:
+        def unpause_game():
+            self.ctx = GAME_ENGINE_CTX.GAME
+
+        return {get_key_value_by_display_name("p key"): unpause_game}
 
     def start(self):
         self._thread.start()
@@ -110,7 +122,8 @@ class GameEngine:
     def _process_user_input(self):
         USER_INPUT_PROCESS_FUNC_MAP = {
             GAME_ENGINE_CTX.MENU: self.game_menu.USER_INPUT_FUNC_MAP,
-            GAME_ENGINE_CTX.GAME: self.USER_INPUT_FUNC_MAP,
+            GAME_ENGINE_CTX.GAME: self.GAME_USER_INPUT_FUNC_MAP,
+            GAME_ENGINE_CTX.PAUSE: self.PAUSE_USER_INPUT_FUNC_MAP,
         }
 
         try:
@@ -124,6 +137,7 @@ class GameEngine:
         GAME_ENGINE_CTX_PROCESS_FUNC_MAP = {
             GAME_ENGINE_CTX.MENU: self._process_menu_ctx,
             GAME_ENGINE_CTX.GAME: self._process_game_ctx,
+            GAME_ENGINE_CTX.PAUSE: self._process_pause_ctx,
         }
 
         GAME_ENGINE_CTX_PROCESS_FUNC_MAP[self.ctx]()
@@ -136,3 +150,7 @@ class GameEngine:
     def _process_game_ctx(self):
         """Performs game logic."""
         self.board.process()
+
+    def _process_pause_ctx(self):
+        """Do nothing."""
+        pass

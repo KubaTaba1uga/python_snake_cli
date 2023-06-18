@@ -16,6 +16,7 @@ from src.game_engine.game_logic.size import SizeSmall
 from src.game_engine.session import generate_session_fields
 from src.game_engine.session import Session
 from src.game_engine.session import SessionDummy
+from src.utils.os_utils import exit_no_error
 
 BOARD_NEXT_CTX = GAME_MENU_CTX.CHOOSE_SIZE
 DIFFICULTY_NEXT_CTX = GAME_MENU_CTX.PLAY_NEW
@@ -32,15 +33,19 @@ _MENU_FIELDS_MAP_TEMPLATE = {
                 "disabled": False,
             },
             1: {
-                "display_name": "Save Current Game",
+                "display_name": "Exit",
                 "selected": False,
-                "next_ctx": GAME_MENU_CTX.SAVE_CURRENT_SESSION,
+                "next_ctx": GAME_MENU_CTX.EXIT,
                 "disabled": False,
             },
         },
     },
     GAME_MENU_CTX.PLAY_NEW: {
         "title": "Game is loading...",
+        "fields": {},
+    },
+    GAME_MENU_CTX.EXIT: {
+        "title": "Game is exiting...",
         "fields": {},
     },
     GAME_MENU_CTX.CHOOSE_BOARD: {
@@ -184,14 +189,18 @@ class GameMenu:
 
     def process_ctx(self):
         GAME_MENU_CTX_PROCESS_FUNC_MAP = {
-            GAME_MENU_CTX.PLAY_NEW: self._create_session,
+            GAME_MENU_CTX.EXIT: self._exit,
             GAME_MENU_CTX.SHOW_SESSION: self._show_session,
+            GAME_MENU_CTX.PLAY_NEW: self._create_session,
         }
 
         try:
             GAME_MENU_CTX_PROCESS_FUNC_MAP[self.ctx]()
         except KeyError:
             pass
+
+    def _exit(self):
+        exit_no_error()
 
     def _show_session(self):
         self.fields_map[GAME_MENU_CTX.SHOW_SESSION]["fields"] = generate_session_fields(

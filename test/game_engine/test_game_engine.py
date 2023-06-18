@@ -68,3 +68,25 @@ def test_game_engine_show_menu_if_snake_dead(game_engine_game):
 
     assert game_engine.session.is_finished() is True
     assert game_engine.ctx == GAME_ENGINE_CTX.MENU
+
+
+def test_game_engine_pause(game_engine_game):
+    game_engine = game_engine_game
+    game_engine.ctx = GAME_ENGINE_CTX.GAME
+
+    game_engine.user_input.set(get_key_value_by_display_name("p key"))
+
+    game_engine._process()
+
+    assert game_engine.ctx == GAME_ENGINE_CTX.PAUSE
+
+
+def test_game_engine_unpause(game_engine_game):
+    game_engine = game_engine_game
+    game_engine.ctx = GAME_ENGINE_CTX.PAUSE
+
+    game_engine.user_input.set(get_key_value_by_display_name("p key"))
+
+    game_engine._process()
+
+    assert game_engine.ctx == GAME_ENGINE_CTX.GAME

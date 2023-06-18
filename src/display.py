@@ -82,6 +82,7 @@ class DisplayAbs(ContextManagerAbs, NonBlockingAbs):
     def _init_ctx_render_map(self) -> dict:
         return {
             GAME_ENGINE_CTX.GAME: self._render_game_engine,
+            GAME_ENGINE_CTX.PAUSE: self._render_game_engine,
             GAME_ENGINE_CTX.MENU: self._render_game_menu,
         }
 
