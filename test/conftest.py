@@ -1,15 +1,11 @@
 from datetime import datetime
 from unittest.mock import MagicMock
-from datetime import datetime
 
 import pytest
 
 from src.constants import GAME_ENGINE_CTX
 from src.game_engine.difficulty import DifficultyEasy
 from src.game_engine.game_engine import GameEngine
-from src.game_engine.session import Session
-from src.game_engine.difficulty import DifficultyEasy
-from src.game_engine.game_logic.size import SizeSmall
 from src.game_engine.game_logic.board import BoardNoWalls
 from src.game_engine.game_logic.size import SizeSmall
 from src.game_engine.session import Session
@@ -24,15 +20,11 @@ def game_engine_menu():
 
 
 @pytest.fixture
-def game_engine_game():
+def game_engine_game(session_small_board_no_walls_easy_not_finished):
     game_engine = GameEngine()
     game_engine.ctx = GAME_ENGINE_CTX.GAME
 
-    board = BoardNoWalls(width=5, height=5)
-
-    session = MagicMock(board=board)
-
-    game_engine._session = session
+    game_engine.game_menu.session = session_small_board_no_walls_easy_not_finished
 
     return game_engine
 
@@ -55,5 +47,16 @@ def session_small_board_no_walls_easy():
 
     session.start_time = datetime.fromisoformat("2011-11-11T00:00:00")
     session.end_time = datetime.fromisoformat("2011-11-11T00:00:01")
+
+    return session
+
+
+@pytest.fixture
+def session_small_board_no_walls_easy_not_finished():
+    session = Session(
+        difficulty_class=DifficultyEasy, board_class=BoardNoWalls, size_class=SizeSmall
+    )
+
+    session.start_time = datetime.fromisoformat("2011-11-11T00:00:00")
 
     return session

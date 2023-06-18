@@ -112,6 +112,8 @@ class NormalSnake(SnakeAbs):
         # this is required in case fruit was eaten
         self._render_tail(matrix)
 
+        self._sleep()
+
     def _clear_tail(self, matrix: "Matrix2D"):
         tail = self.tail()
         matrix.set(BOARD_FIELD_TYPE.GROUND, tail.x, tail.y)

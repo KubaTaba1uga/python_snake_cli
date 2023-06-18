@@ -4,15 +4,18 @@ from copy import deepcopy
 from src.constants import GAME_MENU_CTX
 from src.constants import get_key_value_by_display_name
 from src.errors import NoSelectedField
+from src.game_engine.difficulty import DifficultyEasy
 from src.game_engine.difficulty import DifficultyFieldAbs
 from src.game_engine.difficulty import generate_difficulty_fields
 from src.game_engine.game_logic.board import BoardFieldAbs
+from src.game_engine.game_logic.board import BoardNoWalls
 from src.game_engine.game_logic.board import generate_board_fields
 from src.game_engine.game_logic.size import generate_size_fields
 from src.game_engine.game_logic.size import SizeFieldAbs
+from src.game_engine.game_logic.size import SizeSmall
 from src.game_engine.session import generate_session_fields
 from src.game_engine.session import Session
-
+from src.game_engine.session import SessionDummy
 from src.logging import log_snake_error
 
 BOARD_NEXT_CTX = GAME_MENU_CTX.CHOOSE_SIZE
@@ -130,10 +133,18 @@ class GameMenu:
 
     DEFAULT_GAME_MENU_CTX = GAME_MENU_CTX.MENU
 
+    DEFAULT_SESSION = SessionDummy(
+        difficulty_class=DifficultyEasy, board_class=BoardNoWalls, size_class=SizeSmall
+    )
+
     def __init__(self, session: typing.Optional[Session] = None):
         self.ctx = self.DEFAULT_GAME_MENU_CTX
         self.fields_map: dict = deepcopy(_MENU_FIELDS_MAP_TEMPLATE)
-        self.session: typing.Optional[Session] = session
+
+        if session is None:
+            session = self.DEFAULT_SESSION
+
+        self.session: Session = session
 
         self.USER_INPUT_FUNC_MAP = self._init_user_input_func_map()
 

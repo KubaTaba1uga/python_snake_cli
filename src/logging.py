@@ -1,4 +1,5 @@
 import logging
+import traceback
 
 
 def _create_file_handler(file_name):
@@ -46,6 +47,7 @@ def log_snake_error(function):
         try:
             return function(*args, **kwargs)
         except Exception as err:
-            logger.error(err)
+            tb = traceback.format_exc()
+            logger.error(tb)
 
     return wrapped_func

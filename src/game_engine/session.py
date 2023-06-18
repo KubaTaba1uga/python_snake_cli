@@ -1,8 +1,6 @@
 import typing
-
 from copy import copy
 from datetime import datetime
-
 
 from src.constants import DEFAULT_GAME_FREQUENCY_IN_HZ
 from src.constants import FIELD_TEMPLATE
@@ -67,11 +65,11 @@ class Session:
         self._size = self._init_size(self._size_class)
         self._board = self._init_board(self._board_class, self._size, self._difficulty)
 
-    def is_session_finished(self):
+    def is_finished(self):
         return self.end_time is not None
 
     def finish(self):
-        if self.is_session_finished():
+        if self.is_finished():
             raise ValueError(self.end_time)
 
         self.end_time = datetime.now()
@@ -81,7 +79,7 @@ class Session:
         return self._board
 
 
-# Inheritance by session is done only to keep typing clean.
+# Inheritance by session is done only to keep typing consistient.
 class SessionDummy(Session):
     """Dummy session doesn't have any capability.
     Allow objects creation. Do not allow objects usage."""
