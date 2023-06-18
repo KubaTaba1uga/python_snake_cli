@@ -4,13 +4,18 @@ from copy import deepcopy
 from src.constants import GAME_MENU_CTX
 from src.constants import get_key_value_by_display_name
 from src.errors import NoSelectedField
+from src.game_engine.difficulty import DifficultyEasy
 from src.game_engine.difficulty import DifficultyFieldAbs
 from src.game_engine.difficulty import generate_difficulty_fields
 from src.game_engine.game_logic.board import BoardFieldAbs
+from src.game_engine.game_logic.board import BoardNoWalls
 from src.game_engine.game_logic.board import generate_board_fields
 from src.game_engine.game_logic.size import generate_size_fields
 from src.game_engine.game_logic.size import SizeFieldAbs
+from src.game_engine.game_logic.size import SizeSmall
+from src.game_engine.session import generate_session_fields
 from src.game_engine.session import Session
+from src.game_engine.session import SessionDummy
 
 BOARD_NEXT_CTX = GAME_MENU_CTX.CHOOSE_SIZE
 DIFFICULTY_NEXT_CTX = GAME_MENU_CTX.PLAY_NEW
@@ -50,6 +55,18 @@ _MENU_FIELDS_MAP_TEMPLATE = {
         "title": "Difficulty Choice",
         "fields": generate_difficulty_fields(DIFFICULTY_NEXT_CTX),
     },
+    GAME_MENU_CTX.PLAY_END: {
+        "title": "Snake is dead! You lost!",
+        "fields": {
+            0: {
+                "display_name": "Continue",
+                "selected": True,
+                "next_ctx": GAME_MENU_CTX.SHOW_SESSION,
+                "disabled": False,
+            }
+        },
+    },
+    GAME_MENU_CTX.SHOW_SESSION: {"title": "Session info", "fields": {}},
 }
 
 
@@ -67,12 +84,28 @@ def _unselect_all_fields_before_execution(function):
 
 def _overload_field_id(function):
     """If field_id drops below 0 assign the biggest id to it.
-    If field_id raises over the biggest id assign 0 to it."""
+    If field_id raises over the biggest id assign lowwest id to it."""
+
+    def find_fields_to_select(fields):
+        ids_to_overload = []
+
+        for id_, field in fields.items():
+            if field["disabled"]:
+                continue
+
+            ids_to_overload.append(id_)
+
+        return ids_to_overload
 
     def wrapped_function(self, field_id, *args, **kwargs):
         fields = self.get_fields()
 
-        max_id, min_id = len(fields) - 1, 0
+        ids_to_overload = find_fields_to_select(fields)
+
+        try:
+            max_id, min_id = ids_to_overload[-1], ids_to_overload[0]
+        except IndexError:
+            return function(self, field_id, *args, **kwargs)
 
         if field_id > max_id:
             field_id = min_id
@@ -99,10 +132,18 @@ class GameMenu:
 
     DEFAULT_GAME_MENU_CTX = GAME_MENU_CTX.MENU
 
+    DEFAULT_SESSION = SessionDummy(
+        difficulty_class=DifficultyEasy, board_class=BoardNoWalls, size_class=SizeSmall
+    )
+
     def __init__(self, session: typing.Optional[Session] = None):
         self.ctx = self.DEFAULT_GAME_MENU_CTX
         self.fields_map: dict = deepcopy(_MENU_FIELDS_MAP_TEMPLATE)
-        self.session: typing.Optional[Session] = session
+
+        if session is None:
+            session = self.DEFAULT_SESSION
+
+        self.session: Session = session
 
         self.USER_INPUT_FUNC_MAP = self._init_user_input_func_map()
 
@@ -131,6 +172,10 @@ class GameMenu:
     def is_session_ready(self) -> bool:
         return self.ctx in [GAME_MENU_CTX.PLAY_NEW, GAME_MENU_CTX.PLAY_LOADED]
 
+    def loose_session(self):
+        self.session.finish()
+        self.ctx = GAME_MENU_CTX.PLAY_END
+
     def get_fields(self) -> dict:
         return self.fields_map[self.ctx]["fields"]
 
@@ -140,6 +185,7 @@ class GameMenu:
     def process_ctx(self):
         GAME_MENU_CTX_PROCESS_FUNC_MAP = {
             GAME_MENU_CTX.PLAY_NEW: self._create_session,
+            GAME_MENU_CTX.SHOW_SESSION: self._show_session,
         }
 
         try:
@@ -147,10 +193,16 @@ class GameMenu:
         except KeyError:
             pass
 
+    def _show_session(self):
+        self.fields_map[GAME_MENU_CTX.SHOW_SESSION]["fields"] = generate_session_fields(
+            self.session
+        )
+
     def _create_session(self):
         """create session based on selected:
         1. board
         2. difficulty
+        3. size
         """
 
         board_ctx, size_ctx, difficulty_ctx, current_ctx = (

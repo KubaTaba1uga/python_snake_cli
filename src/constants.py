@@ -52,6 +52,10 @@ class GAME_MENU_CTX(StrEnum):
     PLAY_LOADED = auto()
     # session load end
 
+    SHOW_SESSION = auto()
+
+    PLAY_END = auto()
+
     EXIT = auto()
 
 

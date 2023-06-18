@@ -1,6 +1,10 @@
 import typing
+from copy import copy
+from datetime import datetime
 
 from src.constants import DEFAULT_GAME_FREQUENCY_IN_HZ
+from src.constants import FIELD_TEMPLATE
+from src.constants import GAME_MENU_CTX
 from src.game_engine.difficulty import DifficultyEasy
 from src.game_engine.difficulty import DifficultyHard
 from src.game_engine.difficulty import DifficultyMedium
@@ -50,6 +54,9 @@ class Session:
         board_class: typing.Type["BoardAbs"],
         size_class: typing.Type["SizeAbs"],
     ):
+        self.start_time: datetime = datetime.now()
+        self.end_time: typing.Optional[datetime] = None
+
         self._difficulty_class = difficulty_class
         self._board_class = board_class
         self._size_class = size_class
@@ -58,12 +65,21 @@ class Session:
         self._size = self._init_size(self._size_class)
         self._board = self._init_board(self._board_class, self._size, self._difficulty)
 
+    def is_finished(self):
+        return self.end_time is not None
+
+    def finish(self):
+        if self.is_finished():
+            raise ValueError(self.end_time)
+
+        self.end_time = datetime.now()
+
     @property
     def board(self):
         return self._board
 
 
-# Inheritance by session is done only to keep typing clean.
+# Inheritance by session is done only to keep typing consistient.
 class SessionDummy(Session):
     """Dummy session doesn't have any capability.
     Allow objects creation. Do not allow objects usage."""
@@ -81,3 +97,38 @@ class SessionDummy(Session):
     @property
     def board(self):
         raise NotImplementedError(self)
+
+
+def generate_session_fields(session: Session) -> dict:
+    FIELD_SYNTAX, NEXT_CTX = "{}: {}", GAME_MENU_CTX.MENU
+
+    attributes_to_show = [
+        "start_time",
+        "end_time",
+        "_difficulty_class",
+        "_size_class",
+        "_board_class",
+    ]
+
+    fields = {}
+
+    for i, attribute in enumerate(attributes_to_show):
+        attr_value, field = getattr(session, attribute), copy(FIELD_TEMPLATE)
+
+        field["display_name"] = FIELD_SYNTAX.format(str(attribute), str(attr_value))
+        field["next_ctx"] = NEXT_CTX
+        field["disabled"] = True
+
+        fields[i] = field
+
+    if len(fields) == 0:
+        raise NotImplementedError("At least one attribute is required to show.")
+
+    fields[len(fields)] = {
+        "display_name": "Continue",
+        "selected": True,
+        "next_ctx": NEXT_CTX,
+        "disabled": False,
+    }
+
+    return fields

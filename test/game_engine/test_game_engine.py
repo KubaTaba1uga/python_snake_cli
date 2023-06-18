@@ -1,7 +1,12 @@
+from unittest.mock import MagicMock
+from unittest.mock import patch
+
 import pytest
 
+from src.constants import GAME_ENGINE_CTX
 from src.constants import get_key_value_by_display_name
 from src.constants import SNAKE_DIRECTION
+from src.errors import SnakeDied
 
 
 @pytest.mark.parametrize(
@@ -47,3 +52,19 @@ def test_game_engine_process_user_input(
     received_snake_direction = game_engine.board.snake._direction
 
     assert received_snake_direction == expected_snake_direction
+
+
+def test_game_engine_show_menu_if_snake_dead(game_engine_game):
+    game_engine = game_engine_game
+
+    def kill_snake():
+        raise SnakeDied("")
+
+    snake_mock = MagicMock(process=kill_snake)
+
+    with patch("src.game_engine.game_engine.GameEngine.board", snake_mock):
+        with patch("src.game_engine.game_engine.sleep", lambda _: None):
+            game_engine._process_ctx()
+
+    assert game_engine.session.is_finished() is True
+    assert game_engine.ctx == GAME_ENGINE_CTX.MENU
