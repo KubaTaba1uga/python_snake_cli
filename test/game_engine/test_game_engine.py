@@ -3,6 +3,7 @@ from unittest.mock import patch
 
 import pytest
 
+from src.constants import GAME_ENGINE_CTX
 from src.constants import get_key_value_by_display_name
 from src.constants import SNAKE_DIRECTION
 from src.errors import SnakeDied
@@ -66,4 +67,4 @@ def test_game_engine_show_menu_if_snake_dead(game_engine_game):
             game_engine._process_ctx()
 
     assert game_engine.session.is_finished() is True
-    assert False
+    assert game_engine.ctx == GAME_ENGINE_CTX.MENU

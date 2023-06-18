@@ -106,7 +106,7 @@ def test_game_menu_create_new_session():
         0,
     )
 
-    assert game_menu.session is None
+    assert game_menu.session is game_menu.DEFAULT_SESSION
 
     game_menu.fields_map[GAME_MENU_CTX.CHOOSE_BOARD]["fields"][board_id][
         "selected"
