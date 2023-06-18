@@ -16,7 +16,6 @@ from src.game_engine.game_logic.size import SizeSmall
 from src.game_engine.session import generate_session_fields
 from src.game_engine.session import Session
 from src.game_engine.session import SessionDummy
-from src.logging import log_snake_error
 
 BOARD_NEXT_CTX = GAME_MENU_CTX.CHOOSE_SIZE
 DIFFICULTY_NEXT_CTX = GAME_MENU_CTX.PLAY_NEW

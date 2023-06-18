@@ -1,5 +1,4 @@
 import typing
-from datetime import datetime
 from threading import Thread
 from time import sleep
 
@@ -10,10 +9,8 @@ from src.constants import SNAKE_DIRECTION
 from src.errors import SnakeDied
 from src.game_engine.game_menu import GameMenu
 from src.game_engine.session import Session
-from src.game_engine.session import SessionDummy
 from src.game_engine.utils.si_utils import get_seconds_from_hz
 from src.logging import log_snake_error
-from src.logging import log_snake_info
 from src.user_input import UserInput
 
 
@@ -21,9 +18,7 @@ def _manage_game_menu_and_session(function) -> typing.Any:
     """Manages the current session or creates a new one.
     Makes sure that game_menu is always available."""
 
-    def wrapped_func(self, *args, **kwargs):
-        self: GameEngine
-
+    def wrapped_func(self: "GameEngine", *args, **kwargs):
         result = function(self, *args, **kwargs)
 
         if self.game_menu.is_session_ready():
@@ -41,9 +36,7 @@ def _go_back_to_menu_if_snake_dead(function) -> typing.Any:
     """Makes sure that game won't crash when snake is dead.
     Instead go back to menu and show game results."""
 
-    def wrapped_func(self, *args, **kwargs):
-        self: GameEngine
-
+    def wrapped_func(self: "GameEngine", *args, **kwargs):
         try:
             return function(self, *args, **kwargs)
         except SnakeDied:

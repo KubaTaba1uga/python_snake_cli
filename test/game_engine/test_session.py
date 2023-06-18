@@ -19,31 +19,36 @@ def test_dummy_session():
 def test_generate_session_fields(session_small_board_no_walls_easy):
     session, expected_value = session_small_board_no_walls_easy, {
         0: {
-            "display_name": f"start_time: {datetime.fromisoformat('2011-11-11T00:00:00')}",
+            "display_name": "start_time: "
+            f"{datetime.fromisoformat('2011-11-11T00:00:00')}",
             "selected": False,
             "next_ctx": GAME_MENU_CTX.MENU,
             "disabled": True,
         },
         1: {
-            "display_name": f"end_time: {datetime.fromisoformat('2011-11-11T00:00:01')}",
+            "display_name": "end_time: "
+            f"{datetime.fromisoformat('2011-11-11T00:00:01')}",
             "selected": False,
             "next_ctx": GAME_MENU_CTX.MENU,
             "disabled": True,
         },
         2: {
-            "display_name": "_difficulty_class: <class 'src.game_engine.difficulty.DifficultyEasy'>",
+            "display_name": "_difficulty_class: <class "
+            "'src.game_engine.difficulty.DifficultyEasy'>",
             "selected": False,
             "next_ctx": GAME_MENU_CTX.MENU,
             "disabled": True,
         },
         3: {
-            "display_name": "_size_class: <class 'src.game_engine.game_logic.size.SizeSmall'>",
+            "display_name": "_size_class: <class "
+            "'src.game_engine.game_logic.size.SizeSmall'>",
             "selected": False,
             "next_ctx": GAME_MENU_CTX.MENU,
             "disabled": True,
         },
         4: {
-            "display_name": "_board_class: <class 'src.game_engine.game_logic.board.BoardNoWalls'>",
+            "display_name": "_board_class: <class "
+            "'src.game_engine.game_logic.board.BoardNoWalls'>",
             "selected": False,
             "next_ctx": GAME_MENU_CTX.MENU,
             "disabled": True,

@@ -46,7 +46,7 @@ def log_snake_error(function):
     def wrapped_func(*args, **kwargs):
         try:
             return function(*args, **kwargs)
-        except Exception as err:
+        except Exception:
             tb = traceback.format_exc()
             logger.error(tb)
 
