@@ -39,15 +39,6 @@ def main():
     controller.start()
     display.start()
 
-    sleep(5)
-    display.stop()
-
-    sleep(1000)
-
-    controller.stop()
-    display.stop()
-    # game_engine.stop()
-
 
 if __name__ == "__main__":
     main()
