@@ -39,6 +39,9 @@ def main():
     controller.start()
     display.start()
 
+    sleep(5)
+    display.stop()
+
     sleep(1000)
 
     controller.stop()

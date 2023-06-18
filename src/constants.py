@@ -7,7 +7,7 @@ from pynput import keyboard as _keyboard
 # Please do not use pynupt directly.
 
 # Interface to pynput keys values
-KEYS_VALUES_MAP: typing.Dict[_keyboard.Key, str] = {
+KEYS_VALUES_MAP: typing.Dict[typing.Union[_keyboard.Key, _keyboard.KeyCode], str] = {
     _keyboard.Key.esc: "escape",
     _keyboard.Key.enter: "enter",
     _keyboard.Key.up: "arrow-up",
@@ -18,7 +18,9 @@ KEYS_VALUES_MAP: typing.Dict[_keyboard.Key, str] = {
 }
 
 # Interface to pynput keys
-DISPLAY_NAMES_KEYS_MAP: typing.Dict[str, _keyboard.Key] = {
+DISPLAY_NAMES_KEYS_MAP: typing.Dict[
+    str, typing.Union[_keyboard.Key, _keyboard.KeyCode]
+] = {
     "ESC key": _keyboard.Key.esc,
     "ENTER key": _keyboard.Key.enter,
     "UP ARROW key": _keyboard.Key.up,
