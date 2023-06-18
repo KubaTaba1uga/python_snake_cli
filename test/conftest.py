@@ -12,9 +12,11 @@ from src.game_engine.session import Session
 
 
 @pytest.fixture
-def game_engine_menu():
+def game_engine_menu(session_small_board_no_walls_easy):
     game_engine = GameEngine()
     game_engine.ctx = GAME_ENGINE_CTX.MENU
+
+    game_engine.game_menu.session = session_small_board_no_walls_easy
 
     return game_engine
 

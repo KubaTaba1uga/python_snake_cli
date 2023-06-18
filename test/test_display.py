@@ -34,19 +34,39 @@ def test_bash_display_render_menu_choose_board(game_engine_menu):
     assert received_menu == expected_menu
 
 
-def test_bash_display_render_menu_choose_difficulty(game_engine_menu):
+def test_bash_display_render_menu_choose_board(game_engine_menu):
     expected_menu = (
-        "\n"
-        "\x1b[1K   \x1b[1mDifficulty choice\x1b[0m\x1b[0m\n"
-        "\x1b[1K      - \x1b[41mEasy\x1b[0m\x1b[0m\n"
-        "\x1b[1K      - Medium\x1b[0m\n"
-        "\x1b[1K      - Hard\x1b[0m\n"
-        "\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+        "\n\x1b[1K   \x1b[1mBoard choice\x1b[0m\x1b[0m\n"
+        "\x1b[1K      - \x1b[41mNo walls\x1b[0m\x1b[0m\n"
+        "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
     )
 
     game_engine, terminal_x, terminal_y = game_engine_menu, 30, 20
 
-    game_engine.game_menu.ctx = GAME_MENU_CTX.CHOOSE_DIFFICULTY
+    game_engine.game_menu.ctx = GAME_MENU_CTX.CHOOSE_BOARD
+
+    received_menu = BashDisplay.render_game_menu(game_engine, terminal_x, terminal_y)
+
+    assert received_menu == expected_menu
+
+
+def test_bash_display_render_menu_show_session(game_engine_menu):
+    expected_menu = (
+        "\n\x1b[1K   \x1b[1mSession info\x1b[0m\x1b[0m\n"
+        "\x1b[1K        start_time: 2011-11-11 00:00:00\x1b[0m\n"
+        "\x1b[1K        end_time: 2011-11-11 00:00:01\x1b[0m\n"
+        "\x1b[1K        _difficulty_class: <class 'src.game_engine.difficulty.DifficultyEasy'>\x1b[0m\n"
+        "\x1b[1K        _size_class: <class 'src.game_engine.game_logic.size.SizeSmall'>\x1b[0m\n"
+        "\x1b[1K        _board_class: <class 'src.game_engine.game_logic.board.BoardNoWalls'>\x1b[0m\n"
+        "\x1b[1K      - \x1b[41mContinue\x1b[0m\x1b[0m\n"
+        "\n\n\n\n\n\n\n\n\n\n\n"
+    )
+
+    game_engine, terminal_x, terminal_y = game_engine_menu, 300, 20
+
+    game_engine.game_menu.show_session()
+
+    game_engine.game_menu.ctx = GAME_MENU_CTX.SHOW_SESSION
 
     received_menu = BashDisplay.render_game_menu(game_engine, terminal_x, terminal_y)
 
