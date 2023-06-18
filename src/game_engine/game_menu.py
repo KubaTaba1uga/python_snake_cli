@@ -31,12 +31,6 @@ _MENU_FIELDS_MAP_TEMPLATE = {
                 "next_ctx": GAME_MENU_CTX.CHOOSE_BOARD,
                 "disabled": False,
             },
-            1: {
-                "display_name": "Save Current Game",
-                "selected": False,
-                "next_ctx": GAME_MENU_CTX.SAVE_CURRENT_SESSION,
-                "disabled": False,
-            },
         },
     },
     GAME_MENU_CTX.PLAY_NEW: {

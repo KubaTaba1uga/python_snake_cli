@@ -14,6 +14,7 @@ KEYS_VALUES_MAP: typing.Dict[_keyboard.Key, str] = {
     _keyboard.Key.down: "arrow-down",
     _keyboard.Key.left: "arrow-left",
     _keyboard.Key.right: "arrow-right",
+    _keyboard.KeyCode(char="p"): "p",
 }
 
 # Interface to pynput keys
@@ -24,12 +25,14 @@ DISPLAY_NAMES_KEYS_MAP: typing.Dict[str, _keyboard.Key] = {
     "DOWN ARROW key": _keyboard.Key.down,
     "LEFT ARROW key": _keyboard.Key.left,
     "RIGHT ARROW key": _keyboard.Key.right,
+    "p key": _keyboard.KeyCode(char="p"),
 }
 
 
 class GAME_ENGINE_CTX(StrEnum):
     MENU = auto()
     GAME = auto()
+    PAUSE = auto()
 
 
 class GAME_MENU_CTX(StrEnum):
