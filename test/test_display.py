@@ -64,7 +64,7 @@ def test_bash_display_render_menu_show_session(game_engine_menu):
 
     game_engine, terminal_x, terminal_y = game_engine_menu, 300, 20
 
-    game_engine.game_menu.show_session()
+    game_engine.game_menu._show_session()
 
     game_engine.game_menu.ctx = GAME_MENU_CTX.SHOW_SESSION
 

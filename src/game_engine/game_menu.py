@@ -85,7 +85,7 @@ def _unselect_all_fields_before_execution(function):
 
 def _overload_field_id(function):
     """If field_id drops below 0 assign the biggest id to it.
-    If field_id raises over the biggest id assign 0 to it."""
+    If field_id raises over the biggest id assign lowwest id to it."""
 
     def find_fields_to_select(fields):
         ids_to_overload = []
@@ -173,16 +173,20 @@ class GameMenu:
     def is_session_ready(self) -> bool:
         return self.ctx in [GAME_MENU_CTX.PLAY_NEW, GAME_MENU_CTX.PLAY_LOADED]
 
+    def loose_session(self):
+        self.session.finish()
+        self.ctx = GAME_MENU_CTX.PLAY_END
+
     def get_fields(self) -> dict:
         return self.fields_map[self.ctx]["fields"]
 
     def get_title(self) -> str:
         return self.fields_map[self.ctx]["title"]
 
-    @log_snake_error
     def process_ctx(self):
         GAME_MENU_CTX_PROCESS_FUNC_MAP = {
             GAME_MENU_CTX.PLAY_NEW: self._create_session,
+            GAME_MENU_CTX.SHOW_SESSION: self._show_session,
         }
 
         try:
@@ -190,10 +194,7 @@ class GameMenu:
         except KeyError:
             pass
 
-    @log_snake_error
-    def show_session(self):
-        self.ctx = GAME_MENU_CTX.PLAY_END
-
+    def _show_session(self):
         self.fields_map[GAME_MENU_CTX.SHOW_SESSION]["fields"] = generate_session_fields(
             self.session
         )
@@ -202,6 +203,7 @@ class GameMenu:
         """create session based on selected:
         1. board
         2. difficulty
+        3. size
         """
 
         board_ctx, size_ctx, difficulty_ctx, current_ctx = (
