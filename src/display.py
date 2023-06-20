@@ -25,7 +25,7 @@ if typing.TYPE_CHECKING:
 
 
 class DisplayAbs(ContextManagerAbs, NonBlockingAbs):
-    # less than 300hz makes LARGE board lagging on HARD
+    # less than 300hz makes LARGE board lagging
     DEFAULT_FREQ_IN_HZ = DEFAULT_GAME_FREQUENCY_IN_HZ * 3
 
     @classmethod
