@@ -185,8 +185,6 @@ class BashDisplay(DisplayAbs):
     def render_game_menu(
         cls, game_engine: "GameEngine", width: int, height: int
     ) -> str:
-        """Display game's menu. Returns string of what was displayed."""
-
         game_menu_fields, game_menu = (
             game_engine.game_menu.get_fields(),
             game_engine.game_menu,
