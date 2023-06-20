@@ -144,11 +144,8 @@ class BashDisplay(DisplayAbs):
             line = cls._format_game_engine_row(game_engine, max_x_i, y_i)
             lines_to_print.append(line)
 
-        cls._fill_empty_space(
-            lines_to_print, height  # - 1  # do not delete `- 1` (hack but working),
-        )
+        cls._fill_empty_space(lines_to_print, height)
 
-        log_display_info(f"{max_y_i=}, {len(lines_to_print)=}")
         lines_to_print.pop()
 
         return cls.format_lines(lines_to_print, None)
@@ -159,8 +156,6 @@ class BashDisplay(DisplayAbs):
         can be rendered on the display."""
 
         max_x_i, max_y_i = game_engine.board.size
-
-        log_display_info(f"{max_y_i=}, {height=}")
 
         # Count height and width in advance
         # So trimming is redundant

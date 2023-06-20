@@ -251,3 +251,18 @@ def test_bash_display_render_engine_snake_moves(game_engine_game):
 
     assert received_screen_before_move == expected_screen_before_move
     assert received_screen_after_move == expected_screen_after_move
+
+
+def test_bash_display_output_height(game_engine_game):
+    game_engine, terminal_x, terminal_y = (
+        game_engine_game,
+        30,
+        20,
+    )
+
+    display = BashDisplay(game_engine)
+
+    received_screen = display.render_game_engine(game_engine, terminal_x, terminal_y)
+
+    # important test! do not modify unless You know consequences
+    assert len(received_screen) == terminal_y + 1
