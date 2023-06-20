@@ -10,7 +10,7 @@ from src.constants import SNAKE_DIRECTION
 from src.errors import SnakeDied
 from src.errors import ValidationError
 from src.game_engine.utils.si_utils import get_seconds_from_hz
-from src.logging import log_snake_info
+from src.logging import log_game_engine_info
 
 if typing.TYPE_CHECKING:
     from src.game_engine.game_logic.matrix import Matrix2D
@@ -45,7 +45,7 @@ class SnakeAbs(ABC):
 
     def die(self):
         """Kill a snake."""
-        log_snake_info("Snake died!")
+        log_game_engine_info("Snake died!")
         raise SnakeDied(self)
 
     def set_direction(self, direction: SNAKE_DIRECTION):
@@ -76,7 +76,7 @@ def _log_snake_head(function):
 
         head_after = self.head()
 
-        log_snake_info(
+        log_game_engine_info(
             LOG_SYNTAX.format(
                 old_x=head_before.x,
                 new_x=head_after.x,
