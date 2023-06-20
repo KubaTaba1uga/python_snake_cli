@@ -10,7 +10,8 @@ from src.constants import BOARD_FIELD_TYPE
 from src.constants import DEFAULT_GAME_FREQUENCY_IN_HZ
 from src.constants import GAME_ENGINE_CTX
 from src.game_engine.utils.si_utils import get_seconds_from_hz
-from src.logging import log_display_error, log_display_info
+from src.logging import log_display_error
+from src.logging import log_display_info
 from src.utils.abc_utils import ContextManagerAbs
 from src.utils.abc_utils import NonBlockingAbs
 from src.utils.ansi_utils import move_cursor_to_line_beginning
