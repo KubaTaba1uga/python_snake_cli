@@ -39,9 +39,9 @@ def main():
     controller.start()
     display.start()
 
-    sleep(3)
+    sleep(3000)
 
-    display.stop()
+    # display.stop()
 
 
 if __name__ == "__main__":
