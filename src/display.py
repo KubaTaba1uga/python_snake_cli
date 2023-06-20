@@ -70,7 +70,7 @@ class DisplayAbs(ContextManagerAbs, NonBlockingAbs):
         game_engine: "GameEngine",
     ):
         self._game_engine: "GameEngine" = game_engine
-        self._thread: Thread = Thread(target=self._process_display)
+        self._thread: Thread = Thread(target=self._process)
         self._stop_thread: Event = Event()
 
         self.CTX_RENDER_MAP = self._init_ctx_render_map()
@@ -98,14 +98,13 @@ class DisplayAbs(ContextManagerAbs, NonBlockingAbs):
         self.render_game_engine(self._game_engine, self.width(), self.height())
 
     @log_display_error
-    def _process_display(self):
+    def _process(self):
         while True:
             self._render()
             self.sleep()
 
             if self._stop_thread.is_set():
-                # break
-                raise ValueError()
+                break
 
     def start(self):
         self._thread.start()
