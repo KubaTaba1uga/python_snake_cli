@@ -3,6 +3,7 @@ import typing
 from pynput import keyboard as _keyboard
 
 from src.constants import KEYS_VALUES_MAP
+from src.logging import log_controller_error
 from src.errors import UnableToRecognizeKey
 from src.utils.abc_utils import ContextManagerAbs
 from src.utils.abc_utils import NonBlockingAbs
@@ -37,6 +38,7 @@ class Controller(ContextManagerAbs, NonBlockingAbs):
         if self.is_active():
             self.stop()
 
+    @log_controller_error
     def write_key_to_game_engine(self, key: _keyboard.Key):
         self._write_key_value_to_game_engine(self.game_engine, key)
 
@@ -67,5 +69,5 @@ class Controller(ContextManagerAbs, NonBlockingAbs):
         self._thread.stop()
 
     def is_active(self) -> bool:
-        """Does controller take user's input?"""
+        """Is controller taking user's input?"""
         return self._thread.running

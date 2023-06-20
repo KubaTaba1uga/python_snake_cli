@@ -10,7 +10,7 @@ from src.errors import SnakeDied
 from src.game_engine.game_menu import GameMenu
 from src.game_engine.session import Session
 from src.game_engine.utils.si_utils import get_seconds_from_hz
-from src.logging import log_snake_error
+from src.logging import log_game_engine_error
 from src.user_input import UserInput
 
 
@@ -31,7 +31,6 @@ def _manage_game_menu_and_session(function) -> typing.Any:
     return wrapped_func
 
 
-@log_snake_error
 def _go_back_to_menu_if_snake_dead(function) -> typing.Any:
     """Makes sure that game won't crash when snake is dead.
     Instead go back to menu and show game results."""
@@ -110,6 +109,7 @@ class GameEngine:
     def start(self):
         self._thread.start()
 
+    @log_game_engine_error
     def _process_game_engine(self):
         while True:
             self._process()

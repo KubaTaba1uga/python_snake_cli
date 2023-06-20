@@ -6,6 +6,7 @@ from threading import Event
 from threading import Thread
 from time import sleep
 
+from src.logging import log_display_error
 from src.constants import BOARD_FIELD_TYPE
 from src.constants import DEFAULT_GAME_FREQUENCY_IN_HZ
 from src.constants import GAME_ENGINE_CTX
@@ -18,6 +19,7 @@ from src.utils.ansi_utils import paint_blue
 from src.utils.ansi_utils import paint_bold
 from src.utils.ansi_utils import paint_red
 from src.utils.ansi_utils import paint_white
+
 
 if typing.TYPE_CHECKING:
     from src.game_engine.game_engine import GameEngine
@@ -95,13 +97,15 @@ class DisplayAbs(ContextManagerAbs, NonBlockingAbs):
     def _render_game_engine(self):
         self.render_game_engine(self._game_engine, self.width(), self.height())
 
+    @log_display_error
     def _process_display(self):
         while True:
             self._render()
             self.sleep()
 
             if self._stop_thread.is_set():
-                break
+                # break
+                raise ValueError()
 
     def start(self):
         self._thread.start()

@@ -1,6 +1,7 @@
 import typing
 from enum import auto
 from enum import StrEnum
+from pathlib import Path
 
 from pynput import keyboard as _keyboard
 
@@ -92,3 +93,5 @@ def get_key_value_by_display_name(key_display_name: str) -> str:
 
 # do not change this value please!
 DEFAULT_GAME_FREQUENCY_IN_HZ = 100
+
+LOGS_DIR = Path(__file__).parent.parent.joinpath("logs")
