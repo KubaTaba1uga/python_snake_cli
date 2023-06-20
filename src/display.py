@@ -146,7 +146,7 @@ class BashDisplay(DisplayAbs):
 
         cls._fill_empty_space(lines_to_print, height)
 
-        lines_to_print.pop()
+        log_display_info(f"{max_y_i=}, {len(lines_to_print)=}")
 
         return cls.format_lines(lines_to_print, None)
 
@@ -156,6 +156,8 @@ class BashDisplay(DisplayAbs):
         can be rendered on the display."""
 
         max_x_i, max_y_i = game_engine.board.size
+
+        log_display_info(f"{max_y_i=}, {height=}")
 
         # Count height and width in advance
         # So trimming is redundant
@@ -268,7 +270,7 @@ class BashDisplay(DisplayAbs):
 
     @classmethod
     def _fill_empty_space(cls, lines_to_print, height):
-        rendered_lines_height = len(lines_to_print) - 1
+        rendered_lines_height = len(lines_to_print)
         lines_to_fill = height - rendered_lines_height
 
         for _ in range(lines_to_fill):

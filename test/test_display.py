@@ -265,4 +265,4 @@ def test_bash_display_output_height(game_engine_game):
     received_screen = display.render_game_engine(game_engine, terminal_x, terminal_y)
 
     # important test! do not modify unless You know consequences
-    assert len(received_screen) == terminal_y + 1
+    assert len(received_screen) == terminal_y
