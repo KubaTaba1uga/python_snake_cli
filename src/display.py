@@ -11,7 +11,6 @@ from src.constants import DEFAULT_GAME_FREQUENCY_IN_HZ
 from src.constants import GAME_ENGINE_CTX
 from src.game_engine.utils.si_utils import get_seconds_from_hz
 from src.logging import log_display_error
-from src.logging import log_display_info
 from src.utils.abc_utils import ContextManagerAbs
 from src.utils.abc_utils import NonBlockingAbs
 from src.utils.ansi_utils import move_cursor_to_line_beginning
@@ -147,8 +146,6 @@ class BashDisplay(DisplayAbs):
 
         cls._fill_empty_space(lines_to_print, height)
 
-        log_display_info(f"{max_y_i=}, {len(lines_to_print)=}")
-
         return cls.format_lines(lines_to_print, None)
 
     @classmethod
@@ -157,8 +154,6 @@ class BashDisplay(DisplayAbs):
         can be rendered on the display."""
 
         max_x_i, max_y_i = game_engine.board.size
-
-        log_display_info(f"{max_y_i=}, {height=}")
 
         # Count height and width in advance
         # So trimming is redundant
