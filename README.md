@@ -12,4 +12,6 @@
     * 1\.2\.3 Game ends when there is no more boards to play
     * 1\.2\.4 Score required to pass a level is dependent on difficulty and board size
 * 2\. High scores board
-* 3\. 
+* 3\.`Pause screen
+    * 3\.1 Show pasue on screen center
+    * 3\.2 Show controls like q to quit arrows to change snake direction etc.
