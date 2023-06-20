@@ -3,8 +3,8 @@ import typing
 from pynput import keyboard as _keyboard
 
 from src.constants import KEYS_VALUES_MAP
-from src.logging import log_controller_error
 from src.errors import UnableToRecognizeKey
+from src.logging import log_controller_error
 from src.utils.abc_utils import ContextManagerAbs
 from src.utils.abc_utils import NonBlockingAbs
 

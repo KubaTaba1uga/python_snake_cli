@@ -10,7 +10,7 @@ from src.constants import SNAKE_DIRECTION
 from src.errors import SnakeDied
 from src.errors import ValidationError
 from src.game_engine.utils.si_utils import get_seconds_from_hz
-from src.logging import log_game_engine_info, log_game_engine_error
+from src.logging import log_game_engine_info
 
 if typing.TYPE_CHECKING:
     from src.game_engine.game_logic.matrix import Matrix2D
